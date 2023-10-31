@@ -1,6 +1,7 @@
 import numpy as np
 import numpy.typing as npt
-
+import matplotlib.pyplot as plt
+import tsplib95
 
 class TSPSolver:
     """Class to instantiate a TSP solver, through a genetic algorithm.
@@ -146,15 +147,43 @@ class TSPSolver:
         Returns:
             best_solution : Best solution found by the algorithm
         """
+        #initialization phase
         population_set = self.genesis(self.names_list)
+        fitness_list = self.getAllFitness(population_set)
+        progenitor_list = self.selectProgenitor(population_set,fitness_list)
+        new_population_set = self.matePopulation(progenitor_list)
+        mutated_pop = self.mutatePopulation(new_population_set)
         best_solution = [-1,np.inf,np.array([])]
-        for i in range(n_generation):
+        for i in range(n_generation - 1):
             fitness_list = self.getAllFitness(population_set)
             if fitness_list.min() < best_solution[1]:
                 best_solution[0] = i
                 best_solution[1] = fitness_list.min()
                 best_solution[2] = np.array(mutated_pop)[fitness_list.min() == fitness_list]
-            progenitor_list = self.progenitorSelection(population_set,fitness_list)
+            progenitor_list = self.selectProgenitor(population_set,fitness_list)
             new_population_set = self.matePopulation(progenitor_list)
             mutated_pop = self.mutatePopulation(new_population_set)
         return best_solution
+
+def distance_function(city_1 : list[int,int],city_2 : list[int,int]) -> float:
+    return ((city_1[0] - city_2[0])**2 + (city_1[1] - city_2[1])**2)**0.5
+
+data = tsplib95.load('berlin52.tsp')
+cities = list(data.get_nodes())
+coords = list(data.node_coords.values())
+
+tsp = TSPSolver(coords,1000,0.3,distance_function)
+
+xs = [coord[0] for coord in coords]
+ys = [coord[1] for coord in coords]
+plt.scatter(xs,ys)
+
+res = tsp.solve(1000)
+arr = res[2]
+
+xs = [coords[i-1][0] for i in arr[0]]
+ys = [coords[i-1][1] for i in arr[0]]
+plt.plot(xs,ys)
+
+print(res)
+plt.show()
