@@ -154,11 +154,6 @@ def mutatePopulation(children,mutation_rate):
     for i in range(0,10):
         muated_child=mutate(children[i],mutation_rate)
         new_generation.append(muated_child)
-    """
-    for i in children:
-        muated_child=mutate(i,mutation_rate)
-        new_generation.append(muated_child)
-    """
     return new_generation
 #------------------------------------------------------------------------------------
 def matingPool(population, selectionResults):

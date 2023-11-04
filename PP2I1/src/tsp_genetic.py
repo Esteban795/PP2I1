@@ -1,188 +1,241 @@
 import numpy as np
-
 import matplotlib.pyplot as plt
-import tsplib95
 from typing import Callable
+import random
 
-#City_List,size_population=1000,elite_size=75,mutation_Rate=0.01,generation=1000,num_selected=500
+
 class TSPSolver:
 
-    def __init__(self,coords : list[tuple[float,float]], pop_size : int, dist_function : Callable,mutation_rate : float = 0.01,elite_size : int = 75) -> None:
+    def __init__(self,coords : list[tuple[float,float]], pop_size : int, dist_function : Callable, mutation_rate : float = 0.01, elite_size = 75) -> None:
         self.coords = coords
         self.pop_size = pop_size
+        self.dist_func = dist_function
         self.mutation_rate = mutation_rate
-        self.dist_function = dist_function
         self.elite_size = elite_size
-    
-    def generateInitPopulation(self) -> list[list[int]]:
+
+    def createGenesis(self) -> list[list[int]]:
         """
-        Generates the initial population of the genetic algorithm
-        Returns:
-            npt.NDArray: Initial population 
+        Creates the first generation of routes randomly
+        Args :
+            None
+        Returns :
+            list : list of routes
         """
         return [np.random.permutation(len(self.coords)) for i in range(self.pop_size)]
 
-    def getDistance(self, city_1 : tuple[int,int], city_2 : tuple[int,int]) -> float:
+    def getFitness(self,route : list[int]) -> float:
         """
-        Calculates the distance between two cities
-        Args:
-            city_1 (tuple[int,int]): First city
-            city_2 (tuple[int,int]): Second city
-        Returns:
-            float: Distance between the two cities
-        """
-        return self.dist_function(city_1,city_2)
-    
-    def getPopulationScore(self,population : list[list[int]]) -> list[float]:  
-        """
-        Calculates the fitness score for each individual in the population
-        Args:
-            population (list[list[int]]): Population to calculate the fitness scores of
-        Returns:
-            list[float]: Fitness scores of the population
-        """
-        return [self.getFitness(route) for route in population]
-    
-    def getFitness(self,route):
-        """
-        Calculates the fitness of a route
-        Args:
-            route : Route to calculate the fitness of
-        Returns:
-            float: Fitness of the route
-        """
-        fitness_score = 0
-        for i in range(len(route)):
-            j = (i + 1) % len(route)
-            fitness_score += self.getDistance(self.coords[route[i]],self.coords[route[j]])
-        return fitness_score
-    
-    def makeCrossover(self, parent_1 : list[int], parent_2 : list[int]) -> list[int]:
-        """
-        Makes a crossover between two parents
-        Args:
-            parent_1 : First parent
-            parent_2 : Second parent
-        Returns:
-            list[int]: Child route
-        """
-        childP1 = [0 for i in range(len(parent_1))]
-        geneA = int(np.random.random() * len(parent_1))
-        geneB = int(np.random.random() * len(parent_1))
-        startGene = min(geneA, geneB)
-        endGene = max(geneA, geneB)
-        for i in range(startGene, endGene):
-            childP1.append(parent_1[i])
-        childP2 = [item for item in parent_2 if item not in childP1]
-        return childP1 + childP2
-
-    #Centre Inverse Mutation (CIM)
-    def applyCIM(self,route : list[int]) -> list[int]:
-        """
-        Applies the CIM (Centre Inverse Mutation) mutation to a route
-        Args:
-            route : Route to apply the mutation to
-        Returns:
-            list[int]: Route after the mutation
-        """
-        index = len(route) // 2
-        first_half = route[:index][::-1]
-        second_half = route[index:][::-1]
-        return first_half + second_half
-    
-    def selectBestResults(self, population_ranked : list[int]) -> list[list[int]]:
-        """
-        Selects the best results from a ranked population
-        Args:s
-            population_ranked: Ranked population 
-        Returns:
-            list[list[int]]: Best results from the ranked population
-        """
-        return [population_ranked[i][0] for i in range(self.elite_size)]
-    
-    def sortElitistRoutes(self, population : list[list[int]]) -> list[list[int]]:
-        """
-        Sorts the population by elitism (best fitness score)
-        Args:
-            population : Population to sort
-        Returns:
-            list[(i,fitness_score)]: Sorted population
-        """
-        return sorted([(i,self.getFitness(population[i])) for i in range(len(population))],key=lambda x: x[1],reverse=False)
-    
-    def breedPopulation(self, mating_pool : list[list[int]]) -> list[list[int]]:
-        """
-        breeds the population together.
-        Args:
-            mating_pool : Mating pool
-        """
-        return [self.makeCrossover(mating_pool[i],mating_pool[i + 1]) for i in range(len(mating_pool) - 1)]
-
-    def mutatePopulation(self,children : list[list[int]]) -> list[list[int]]:
-        """
-        mutate the population by applying the CIM mutation
+        Calculates individual fitness for a route.
         Args :
-            children : children
-        Returns : 
-            list[list[int]] : a list of the mutated children
+            route : list of cities' numbers in a certain order
+        Returns :
+            float : fitness of the route
         """
-        return [self.applyCIM(children[i]) for i in range(10)]
+        score = 0
+        for i in range(len(route)):
+            score += self.dist_func(self.coords[route[i]], self.coords[route[(i+1)%len(route)]])
+        return score
 
-    def matingPool(self, population : list[list[int]], selection_results : list[int]) -> list[list[int]]:
+    def makeCrossover(self,route1 : list[int],route2 : list[int]) -> list[int]:
         """
-        Creates a mating pool from a population
-        Args:
-            population : Population to create the mating pool from
-            selection_results : Selection results
-        Returns:
-            list[list[int]]: Mating pool
+        Performs crossover between two routes.
+        Args :
+            route1 : list of cities' numbers in a certain order
+            route2 : list of cities' numbers in a certain order
+        Returns :
+            list : list of cities' numbers in a certain order
+        """
+        gene1 = int(random.random() * len(route1))
+        gene2 = int(random.random() * len(route1))
+        start_gene = min(gene1,gene2)
+        end_gene = max(gene1,gene2)
+        child1 = [] * len(route1)
+        for i in range(start_gene,end_gene):
+            child1.append(route1[i])
+        child2 = [item for item in route2 if item not in child1]
+        return child1 + child2
+
+    def applyMutation(self,route : list[int]) -> list[int]:
+        """
+        Mutates a route with a certain probability.
+        It applies Centre Inversion Mutation.
+        """
+        if random.random() < self.mutation_rate:
+            return route
+        route_one = route[:len(route)//2][::-1]
+        route_two = route[len(route) //2:][::-1]
+        return route_one + route_two
+        
+    def selectFittest(self,pop_ranked : list[tuple[int,float]]) -> list[int]:
+        """
+        Selects the best routes from the population.
+        Args :
+            pop_ranked : list of tuples (route, fitness) sorted by fitness
+        Returns :
+            list : list of the first elite_size routes
+        """
+        return [pop_ranked[i][0] for i in range(self.elite_size)]
+
+    def getElitistRoutes(self,population : list[list[int]]) -> list[tuple[int,float]]:
+        """
+        Sorts the population by fitness.
+        Args :
+            population : list of routes
+        Returns :
+            list : list of tuples (route, fitness) sorted by fitness
+        """
+        return sorted([(i,self.getFitness(population[i])) for i in range(len(population))],key = lambda x: x[1],reverse=False)
+    
+    def breedPopulation(self,mating_pool : list[list[int]]) -> list[list[int]]:
+        """
+        Breeds the population with itself. Each member reproduces with the following one.
+        Args : 
+            mating_pool : list of routes
+        Returns :
+            list : list of children
+        """
+        return [self.makeCrossover(mating_pool[i],mating_pool[i + 1]) for i in range(len(mating_pool) - 1)] 
+
+    def mutatePopulation(self,children : list[int]):
+        """
+        Mutates the first 10 children of the population.
+        Args :
+            children : list of routes
+        Returns :
+            list : list of mutated children
+        """
+        return [self.applyMutation(children[i]) for i in range(10)]
+
+    def getMatingPool(self,population, selection_results):
+        """
+        Selects the routes from the population according to the selection results (which mean they are currently
+        the fittest routes).
         """
         return [population[selection_results[i]] for i in range(len(selection_results))]
 
-    def generateNextGeneration(self, population : list[list[int]]) -> list[list[int]]:
+    def getNextGeneration(self,current_population):
         """
-        Generates the next generation
-        Args:
-            population : Population to generate the next generation from
-        Returns:
-            list[list[int]]: Next generation
+        Applies the whole genetic algorithm to the current population.
+        Args :
+            current_population : list of routes
+        Returns :   
+            list : list of the next generation's routes
         """
-        population_ranked = self.sortElitistRoutes(population)
-        selection_results = self.selectBestResults(population_ranked)
-        mating_pool = self.matingPool(population,selection_results)
+        population_rank = self.getElitistRoutes(current_population)
+        selection_result = self.selectFittest(population_rank)
+        mating_pool = self.getMatingPool(current_population,selection_result)
         children = self.breedPopulation(mating_pool)
         next_generation = self.mutatePopulation(children)
         del children[:10]
         children.extend(next_generation)
         return children
 
-    def solve(self,n_generations : int) -> list[list[int]]:
+    def solve(self,n_generations):
         """
-        Solves the TSP problem
-        Args:
-            n_generations (int): Number of generations to run the algorithm for
-        Returns:
-            list[list[int]]: Best route found by the algorithm
+        Algorithm's main method.
+        Args :
+            n_generations : number of generations to be created
+        Returns :
+            tuple : (route, fitness) of the best route
         """
-        population = self.generateInitPopulation()
+        pop = []
+        progress = []
+        population= self.createGenesis()
+        progress.append(sorted(self.getElitistRoutes(population))[0][1])
         for i in range(n_generations):
-            pop = self.generateNextGeneration(population)
+            pop = self.getNextGeneration(population)
             population.extend(pop)
-            del population[:self.elite_size]
-            print("Generation=",i)         
-        ranked = sorted(self.sortElitistRoutes(pop))[0]
-        print("RANK_",ranked)
-        print(f"Best Route :{population[ranked[0]]} ")
-        print(f"best route distance {ranked[1]}")
+            del population[:74]           
+            progress.append(sorted(self.getElitistRoutes(pop))[0][1])
+            print("Generation=",i)
+        rank_= sorted(self.getElitistRoutes(pop))[0]
+        print("RANK_",rank_)
+        print(f"Best Route :{population[rank_[0]]} ")
+        print(f"best route distance {rank_[1]}")
+        plt.plot(progress)
         plt.ylabel('Distance')
         plt.xlabel('Generation')
         plt.show()
-        return ranked, pop
+        return rank_,pop
 
+def distance(i,j):
+    '''
+    Method calculate distance between two cities if coordinates are passed
+    i=(x,y) coordinates of first city
+    j=(x,y) coordinates of second city
+    '''
+    return np.sqrt((i[0]-j[0])**2 + (i[1]-j[1])**2)
 
 cityList= [(33, 89), (9, 81), (40, 126), (80, 96), (120, 124), (127, 110), (93, 67), (89, 140), (186, 104), (136, 192), (131, 169), (179, 181), (120, 7), (184, 130), (111, 185), (120, 187), (110, 193), (1, 27), (68, 5), (194, 173), (139, 52), (97, 74), (198, 11), (164, 60), (45, 145)]
+x_axis=[]
+y_axis=[]
+for i in cityList:
+    x_axis.append(i[0])
+    y_axis.append(i[1])
 
-tsp = TSPSolver(cityList,1000,lambda x,y : np.sqrt((x[0] - y[0])**2 + (x[1] - y[1])**2))
 
-res = tsp.solve(300)
-print(res)
+fig, ax = plt.subplots(1, 2) 
+fig.set_figheight(5)
+fig.set_figwidth(10)
+tsp = TSPSolver(cityList,1000,distance)
+
+rank_,pop= tsp.solve(300)
+
+x_axis=[]
+y_axis=[]
+for i in cityList:
+    x_axis.append(i[0])
+    y_axis.append(i[1])
+
+fig, ax = plt.subplots(1, 2) 
+fig.set_figheight(5)
+fig.set_figwidth(10)
+        # Prepare 2 plots
+ax[0].set_title('Raw nodes')
+ax[1].set_title('Optimized tour')
+ax[0].scatter(x_axis, y_axis)             # plot A
+ax[1].scatter(x_axis, y_axis)             # plot B
+start_node = 0
+distanca = 0.
+
+
+print(cityList)
+N=len(cityList)
+
+
+best_route = pop[rank_[0]]
+print(best_route)
+wbest_distance= rank_[1]
+
+for i in range(N):
+
+    if i<24:
+        a=int(best_route[i])
+        b=int(best_route[i+1])
+    
+        start_pos = cityList[a]
+        end_pos = cityList[b]
+        ax[1].annotate("",
+                xy=start_pos, xycoords='data',
+                xytext=end_pos, textcoords='data',
+                arrowprops=dict(arrowstyle="->",
+                                connectionstyle="arc3"))
+    else:
+        a=int(best_route[i])
+        b=int(best_route[0])
+        
+        start_pos = cityList[a]
+        end_pos = cityList[b]
+        ax[1].annotate("",
+                xy=start_pos, xycoords='data',
+                xytext=end_pos, textcoords='data',
+                arrowprops=dict(arrowstyle="->",
+                                connectionstyle="arc3"))
+    
+
+textstr = "Elitism Selection \n PMX , Scramble \nTotal length: %.3f" % (rank_[1])
+props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
+ax[1].text(0.05, 0.95, textstr, transform=ax[1].transAxes, fontsize=8,verticalalignment='top', bbox=props)
+
+plt.tight_layout()
+plt.show()
