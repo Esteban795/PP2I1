@@ -1,8 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import Callable
 import random
-
 
 class TSPSolver:
 
@@ -33,7 +31,7 @@ class TSPSolver:
         """
         score = 0
         for i in range(len(route)):
-            score += self.dist_func(self.coords[route[i]], self.coords[route[(i+1)%len(route)]])
+            score += self.dist_func(self.coords[route[i]], self.coords[route[(i + 1) % len(route)]])
         return score
 
     def makeCrossover(self,route1 : list[int],route2 : list[int]) -> list[int]:
@@ -45,7 +43,7 @@ class TSPSolver:
         Returns :
             list : list of cities' numbers in a certain order
         """
-        gene1 = int(random.random() * len(route1))
+        gene1 = int(random.random() * len(route1)) #route1 and route2 have the same length anyway
         gene2 = int(random.random() * len(route1))
         start_gene = min(gene1,gene2)
         end_gene = max(gene1,gene2)
@@ -62,8 +60,8 @@ class TSPSolver:
         """
         if random.random() < self.mutation_rate:
             return route
-        route_one = route[:len(route)//2][::-1]
-        route_two = route[len(route) //2:][::-1]
+        route_one = route[:len(route)// 2][::-1]
+        route_two = route[len(route) // 2:][::-1]
         return route_one + route_two
         
     def selectFittest(self,pop_ranked : list[tuple[int,float]]) -> list[int]:

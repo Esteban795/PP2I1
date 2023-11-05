@@ -1,8 +1,5 @@
-import tsplib95 #"@author of external package: Michael Ritter. Need to pip install this package"
 import random
 import math
-import time
-import matplotlib.pyplot as plt
 from typing import Callable
 
 class TSPSolver:
@@ -155,32 +152,3 @@ class TSPSolver:
             # decrement the temperature
             current_temp = current_temp * alpha
         return solution, 1/self.getRouteCost(solution)
-
-def distance(a,b):
-    """Calculates the distance between two cities"""
-    return math.sqrt((a[0] - b[0])**2 + (a[1] - b[1])**2)
-
-#Change tsp file name to run on separate tsp datasets
-data = tsplib95.load('berlin52.tsp')
-cities = list(data.node_coords.values())
-best_route_distance = []
-best_route = []
-convergence_time = []   
-start = time.time()
-solver = TSPSolver(cities, distance)
-route, route_distance = solver.simulatedAnnealing()
-print(route,route_distance)
-time_elapsed = time.time() - start
-best_route_distance.append(route_distance)
-best_route.append(route)
-convergence_time.append(time_elapsed)
-#Plot Routes
-xs = [cities[i][0] for i in route]
-ys = [cities[i][1] for i in route]
-
-plt.scatter(xs,ys)
-# 'bo-' means blue color, round points, solid lines
-plt.plot(xs,ys,'y--')
-plt.xlabel('X Coordinates')
-plt.ylabel('Y Coordinates')
-plt.show()
