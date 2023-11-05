@@ -70,9 +70,9 @@ class TSPSolver:
         """
         Selects the best routes from the population.
         Args :
-            pop_ranked : list of tuples (route, fitness) sorted by fitness
+            `pop_ranked` : list of tuples (route, fitness) sorted by fitness
         Returns :
-            list : list of the first elite_size routes
+            list : list of the first `elite_size` routes
         """
         return [pop_ranked[i][0] for i in range(self.elite_size)]
 
@@ -82,7 +82,7 @@ class TSPSolver:
         Args :
             population : list of routes
         Returns :
-            list : list of tuples (route, fitness) sorted by fitness
+            list : list of tuples (route_index, fitness) sorted by fitness
         """
         return sorted([(i,self.getFitness(population[i])) for i in range(len(population))],key = lambda x: x[1],reverse=False)
     
@@ -96,7 +96,7 @@ class TSPSolver:
         """
         return [self.makeCrossover(mating_pool[i],mating_pool[i + 1]) for i in range(len(mating_pool) - 1)] 
 
-    def mutatePopulation(self,children : list[int]):
+    def mutatePopulation(self,children : list[list[int]]) -> list[list[int]]:
         """
         Mutates the first 10 children of the population.
         Args :
@@ -106,14 +106,14 @@ class TSPSolver:
         """
         return [self.applyMutation(children[i]) for i in range(10)]
 
-    def getMatingPool(self,population, selection_results):
+    def getMatingPool(self,population : list[list[int]], selection_results : list[list[int]]) -> list[list[int]]:
         """
         Selects the routes from the population according to the selection results (which mean they are currently
         the fittest routes).
         """
         return [population[selection_results[i]] for i in range(len(selection_results))]
 
-    def getNextGeneration(self,current_population):
+    def getNextGeneration(self,current_population : list[list[int]]) -> list[list[int]]:
         """
         Applies the whole genetic algorithm to the current population.
         Args :
@@ -130,7 +130,7 @@ class TSPSolver:
         children.extend(next_generation)
         return children
 
-    def solve(self,n_generations):
+    def solve(self,n_generations : int) -> tuple[list[int],float]:
         """
         Algorithm's main method.
         Args :
@@ -139,103 +139,11 @@ class TSPSolver:
             tuple : (route, fitness) of the best route
         """
         pop = []
-        progress = []
         population= self.createGenesis()
-        progress.append(sorted(self.getElitistRoutes(population))[0][1])
         for i in range(n_generations):
             pop = self.getNextGeneration(population)
             population.extend(pop)
             del population[:74]           
-            progress.append(sorted(self.getElitistRoutes(pop))[0][1])
             print("Generation=",i)
         rank_= sorted(self.getElitistRoutes(pop))[0]
-        print("RANK_",rank_)
-        print(f"Best Route :{population[rank_[0]]} ")
-        print(f"best route distance {rank_[1]}")
-        plt.plot(progress)
-        plt.ylabel('Distance')
-        plt.xlabel('Generation')
-        plt.show()
-        return rank_,pop
-
-def distance(i,j):
-    '''
-    Method calculate distance between two cities if coordinates are passed
-    i=(x,y) coordinates of first city
-    j=(x,y) coordinates of second city
-    '''
-    return np.sqrt((i[0]-j[0])**2 + (i[1]-j[1])**2)
-
-cityList= [(33, 89), (9, 81), (40, 126), (80, 96), (120, 124), (127, 110), (93, 67), (89, 140), (186, 104), (136, 192), (131, 169), (179, 181), (120, 7), (184, 130), (111, 185), (120, 187), (110, 193), (1, 27), (68, 5), (194, 173), (139, 52), (97, 74), (198, 11), (164, 60), (45, 145)]
-x_axis=[]
-y_axis=[]
-for i in cityList:
-    x_axis.append(i[0])
-    y_axis.append(i[1])
-
-
-fig, ax = plt.subplots(1, 2) 
-fig.set_figheight(5)
-fig.set_figwidth(10)
-tsp = TSPSolver(cityList,1000,distance)
-
-rank_,pop= tsp.solve(300)
-
-x_axis=[]
-y_axis=[]
-for i in cityList:
-    x_axis.append(i[0])
-    y_axis.append(i[1])
-
-fig, ax = plt.subplots(1, 2) 
-fig.set_figheight(5)
-fig.set_figwidth(10)
-        # Prepare 2 plots
-ax[0].set_title('Raw nodes')
-ax[1].set_title('Optimized tour')
-ax[0].scatter(x_axis, y_axis)             # plot A
-ax[1].scatter(x_axis, y_axis)             # plot B
-start_node = 0
-distanca = 0.
-
-
-print(cityList)
-N=len(cityList)
-
-
-best_route = pop[rank_[0]]
-print(best_route)
-wbest_distance= rank_[1]
-
-for i in range(N):
-
-    if i<24:
-        a=int(best_route[i])
-        b=int(best_route[i+1])
-    
-        start_pos = cityList[a]
-        end_pos = cityList[b]
-        ax[1].annotate("",
-                xy=start_pos, xycoords='data',
-                xytext=end_pos, textcoords='data',
-                arrowprops=dict(arrowstyle="->",
-                                connectionstyle="arc3"))
-    else:
-        a=int(best_route[i])
-        b=int(best_route[0])
-        
-        start_pos = cityList[a]
-        end_pos = cityList[b]
-        ax[1].annotate("",
-                xy=start_pos, xycoords='data',
-                xytext=end_pos, textcoords='data',
-                arrowprops=dict(arrowstyle="->",
-                                connectionstyle="arc3"))
-    
-
-textstr = "Elitism Selection \n PMX , Scramble \nTotal length: %.3f" % (rank_[1])
-props = dict(boxstyle='round', facecolor='wheat', alpha=0.5)
-ax[1].text(0.05, 0.95, textstr, transform=ax[1].transAxes, fontsize=8,verticalalignment='top', bbox=props)
-
-plt.tight_layout()
-plt.show()
+        return population[rank_[0]],rank_[1]
