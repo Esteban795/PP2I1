@@ -142,6 +142,5 @@ class TSPSolver:
             pop = self.getNextGeneration(population)
             population.extend(pop)
             del population[:74]           
-            print("Generation=",i)
         rank_= sorted(self.getElitistRoutes(pop))[0]
         return population[rank_[0]],rank_[1]
