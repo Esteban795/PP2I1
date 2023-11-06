@@ -8,7 +8,7 @@
 
 <body>
     <div class="content">
-        <div class="content-left">
+        <div class="content-center">
           <div class="form-wrapper">
             <div class="logo">
               <img src="../static/images/trash.svg" alt="Logo" width="48" height="48"/>
@@ -18,33 +18,33 @@
 
             <div class="text-center">
                 Need an account? 
-                <a href="#register"> Create one! </a>
+                <a href="#register" class="transition-duration-300"> Create one! </a>
             </div>
-
-            <div class="field-group">
-              <label class="label" for="txt-email"> Username : </label>
-              <input class="input" type="email" id="txt-email" name="email" placeholder="Chuck Norris"/>
-            </div>
-            
-            <div class="field-group">
-              <div class="label-wrapper">
-                <label class="label" for="txt-password"> Password : </label>
-                <label class="label label--right" onclick="toggleEye()">
-                    <img src="../static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
-                    <img src="../static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
-                  </svg>
-                  <span class="label-text"> Show </span>
-                </label>
+            <form action="" method="get">
+              <div class="field-group">
+                <label class="label" for="txt-email"> Username : </label>
+                <input class="input" type="email" id="txt-email" name="email" placeholder="Chuck Norris"/>
               </div>
-              <input class="input" type="password" id="txt-password" name="password" placeholder="ChuckNorrisWatchesOverYou"/>
-            </div>
-
+              
+              <div class="field-group">
+                <div class="label-wrapper">
+                  <label class="label" for="txt-password"> Password : </label>
+                  <label class="label label--right" onclick="toggleEye()">
+                      <img src="../static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
+                      <img src="../static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
+                      <line x1="1" y1="1" x2="23" y2="23"></line>
+                    </svg>
+                    <span class="label-text"> Show </span>
+                  </label>
+                </div>
+                <input class="input" type="password" id="txt-password" name="password" placeholder="ChuckNorrisWatchesOverYou"/>
+              </div>
+            </form>
             <div class="field-group">
-              <input class="btn-submit" type="submit" value="Log In" />
+              <input class="btn-submit transition-duration-300" type="submit" value="Log In" />
             </div>
             <div class="field-group text-center">
-              <a href="#forgot-password">Forgot your password?</a>
+              <a href="#forgot-password" class="transition-duration-300">Forgot your password?</a>
             </div>
         </div>
       </div>

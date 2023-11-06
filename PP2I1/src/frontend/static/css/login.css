@@ -6,7 +6,7 @@ html {
   color: #241c15;
   line-height: 1.5;
   font-family: 'Open Sans', sans-serif;
-  background-image: url("../images/forest.avif");
+  background-image: url("../images/foret.jpg");
   background-size: cover;
 }
   
@@ -27,13 +27,13 @@ a:hover {
   display: flex;
   height: 100vh;
   flex-direction: column;
-
 }
 
-.content-left {
-  background-color: #fff;
+.content-center {
+  background-color: #000000;
   border: 4px solid rgba(36, 28, 21, 0.6);
   align-self: center;
+  box-shadow: -2px 20px 36px 14px #000000;
 }
 
 .content-right {
@@ -54,11 +54,19 @@ a:hover {
 
 .logo img {
   width: 64px;
+  transition: transform ease-in-out 0.3s;
+}
+
+.logo:hover img {
+  transform: scale(1.1) rotate3d(0, 0, 1, 360deg);
 }
 
 .text-title {
   text-align: center;
   font-weight: 600;
+  color: #444444;
+  background: #FFFFFF;
+  text-shadow: 1px 0px 1px #CCCCCC, 0px 1px 1px #EEEEEE, 2px 1px 1px #CCCCCC, 1px 2px 1px #EEEEEE, 3px 2px 1px #CCCCCC, 2px 3px 1px #EEEEEE, 4px 3px 1px #CCCCCC, 3px 4px 1px #EEEEEE, 5px 4px 1px #CCCCCC, 4px 5px 1px #EEEEEE, 6px 5px 1px #CCCCCC, 5px 6px 1px #EEEEEE, 7px 6px 1px #CCCCCC;
 }
 
 .field-group {
@@ -97,10 +105,6 @@ a:hover {
   color: #007c89;
 }
 
-.label--right svg {
-  margin-right: 0.5em;
-}
-
 .is--hide {
   display: none;
 }
@@ -115,15 +119,6 @@ a:hover {
   width: 180px;
 }
 
-/* Hide the browser's default checkbox */
-.checkbox-label input {
-  position: absolute;
-  opacity: 0;
-  cursor: pointer;
-  height: 0;
-  width: 0;
-}
-
 .btn-submit {
   background-color: #006570;
   color: #fff;
@@ -134,4 +129,13 @@ a:hover {
   width: 100%;
   cursor: pointer;
   box-sizing: border-box;
+  transition: background-color ease-in-out;
+}
+
+.btn-submit:hover {
+  background-color: #139a76;
+}
+
+.transition-duration-300 {
+  transition-duration: 300ms;
 }
