@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/css/login.css"/>
-    <title> Login </title>
+    <title> Se connecter </title>
 </head>
 
 <body>
@@ -14,37 +14,36 @@
               <img src="../static/images/trash.svg" alt="Logo" width="48" height="48"/>
             </div>
 
-            <h1 class="text-title"> Log In </h1>
+            <h1 class="text-title"> Se connecter </h1>
 
             <div class="text-center">
-                Need an account? 
-                <a href="#register" class="transition-duration-300"> Create one! </a>
+                Pas de compte ? 
+                <a href="#register" class="transition-duration-300"> Créez-en un ici! </a>
             </div>
             <form action="" method="get">
               <div class="field-group">
-                <label class="label" for="txt-email"> Username : </label>
-                <input class="input" type="email" id="txt-email" name="email" placeholder="Chuck Norris"/>
+                <label class="label" for="txt-email"> Adresse mail : </label>
+                <input class="input" type="email" id="txt-email" name="email"/>
               </div>
               
               <div class="field-group">
                 <div class="label-wrapper">
-                  <label class="label" for="txt-password"> Password : </label>
+                  <label class="label" for="txt-password"> Mot de passe : </label>
                   <label class="label label--right" onclick="toggleEye()">
                       <img src="../static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
                       <img src="../static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
                       <line x1="1" y1="1" x2="23" y2="23"></line>
-                    </svg>
                     <span class="label-text"> Show </span>
                   </label>
                 </div>
-                <input class="input" type="password" id="txt-password" name="password" placeholder="ChuckNorrisWatchesOverYou"/>
+                <input class="input" type="password" id="txt-password" name="password"/>
               </div>
             </form>
             <div class="field-group">
               <input class="btn-submit transition-duration-300" type="submit" value="Log In" />
             </div>
             <div class="field-group text-center">
-              <a href="#forgot-password" class="transition-duration-300">Forgot your password?</a>
+              <a href="#forgot-password" class="transition-duration-300"> Mot de passe oublié ?</a>
             </div>
         </div>
       </div>

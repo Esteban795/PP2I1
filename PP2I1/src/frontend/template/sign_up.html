@@ -2,11 +2,92 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/sign_up.css"/>
-    <title> Login </title>
+    <link rel="stylesheet" type="text/css" href="../static/css/sign_up.css"/>
+    <title> S'inscrire ! </title>
 </head>
 
 <body>
+  <div class="row content">
+      <div class="content-left column ">
+        <div class="title-div">
+          <h1 class="text-center"> Bienvenue chez nous ! </h2>
+          <h2 class="text-center"> Prêts à agir encore plus pour la planète ?</h3>
+          <span class="expand"> test</span>
+        </div>
+        <br>
 
+        <div class="presentation-div text-white">
+          <h1> test </h1>
+
+        </div>
+      </div>
+
+      <div class="content-right column">
+        <div class="form-wrapper ">
+          <div class="logo">
+            <img src="../static/images/trash.svg" alt="Logo" width="48" height="48"/>
+          </div>
+          <h1 class="text-title"> Sign up here! </h1>
+          <form action="" method="get">
+              <div class="field-group">
+                  <label for="first-name" class="label"> First name :</label>
+                  <input class="input" type="text" id="first-name" name="first-name">
+              </div>
+              <div class="field-group">
+                  <label for="last-name" class="label"> Last name :</label>
+                  <input class="input" type="text" id="last-name" name="last-name">
+              </div>
+              <div class="field-group">
+                  <label class="label" for="txt-email"> Email : </label>
+                  <input class="input" type="email" id="txt-email" name="email" placeholder="Chuck Norris"/>
+              </div>
+              <div class="field-group">
+                  <div class="label-wrapper">
+                      <label class="label" for="txt-password"> Password : </label>
+                      <label class="label label--right" onclick="toggleEye()">
+                          <img src="../static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
+                          <img src="../static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
+                          <line x1="1" y1="1" x2="23" y2="23"></line>
+                      <span class="label-text"> Show </span>
+                      </label>
+                  </div>
+                  <input class="input" type="password" id="txt-password" name="password" placeholder="ChuckNorrisWatchesOverYou"/>
+              </div>
+              <div class="field-group">
+                  <div class="label-wrapper">
+                      <label class="label" for="txt-password-repeat"> Confirm your password : </label>
+                  </div>
+                  <input class="input" type="password" id="txt-password-repeat" name="password-repeat" placeholder="ChuckNorrisWatchesOverYou"/>
+              </div>
+          </form>
+          <div class="field-group">
+            <input class="btn-submit transition-duration-300" type="submit" value="Sign up" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script>
+
+      function toggleEye() {
+        var p = document.querySelector('#txt-password');
+        var t = document.querySelector('.label-text');
+        var ey = document.querySelector('.eye');
+        var eyo = document.querySelector('.eye-off');
+        var currType = p.getAttribute('type');
+        if (currType === 'password') {
+          t.textContent = 'Hide';
+          p.setAttribute('type', 'text');
+          ey.classList.replace('is--show', 'is--hide');
+          eyo.classList.replace('is--hide', 'is--show');
+        } else {
+          t.textContent = 'Show';
+          p.setAttribute('type', 'password');
+          eyo.classList.replace('is--show', 'is--hide');
+          ey.classList.replace('is--hide', 'is--show');
+        }
+      }
+    </script>
 </body>
 </html>
