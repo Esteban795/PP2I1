@@ -10,6 +10,7 @@ html {
 
 body {
   margin:0;
+  display:flex;
 }
 
 a {
@@ -24,27 +25,49 @@ a:hover {
 .text-center {
   text-align: center;
 }
+.transition-duration-300 {
+  transition-duration: 300ms;
+}
+
+.left {
+  text-align: left;
+}
+
+.text-white {
+  color: white;
+}
 
 .content {
-  display: flex;
+  display:flex;
+  flex-direction:row;
+  width:100%;
+  flex-grow: 1;
+  flex:1;
 }
 
 .content-right {
-  width: 35%;
-  height: 100vh;
   box-shadow: -10px 2px 50px -6px #000000;
+  height:100%;
 }
 
 .content-left {
-  width: 65%;
-  height: 100vh;;
-  background-size: contain;
+  padding:5px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: -10px 2px 50px -6px #000000;
+  height:100%;
+}
+
+.content-center {
+  background-image: url("../images/globe.jpg");
+  background-size:cover;
   background-repeat: no-repeat;
+  background-color: transparent;
+  height:100%;
 }
 
 .form-wrapper {
   width: 30vw;
-  background-color: #fff;
   padding: 48px 40px 36px;
 }
 
@@ -119,64 +142,38 @@ a:hover {
   width: 100%;
   cursor: pointer;
   box-sizing: border-box;
-  transition: background-color ease-in-out;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .btn-submit:hover {
   background-color: #139a76;
 }
 
-.transition-duration-300 {
-  transition-duration: 300ms;
+.title-div {
+  text-shadow: 1px 0px 1px #CCCCCC, 0px 1px 1px #EEEEEE, 2px 1px 1px #CCCCCC, 1px 2px 1px #EEEEEE, 3px 2px 1px #CCCCCC, 2px 3px 1px #EEEEEE, 4px 3px 1px #CCCCCC, 3px 4px 1px #EEEEEE, 5px 4px 1px #CCCCCC, 4px 5px 1px #EEEEEE, 6px 5px 1px #CCCCCC, 5px 6px 1px #EEEEEE, 7px 6px 1px #CCCCCC;
+  font-size: 150%;
 }
 
 .column {
-  float: left;
-  padding: 10px;
-}
-
-/* Clear floats after the columns */
-.row:after {
-  content: "";
-  display: table;
-  clear: both;
-}
-
-.left {
-  text-align: left;
-}
-
-.header-group {
+  background-color: white;
   display: flex;
-  flex-direction: row;
+  flex:1;
+  padding:10px;
+  overflow:hidden;
+  transition: all .8s ease-in-out;
 }
 
-.text-white {
-  color: white;
+.row {
+  width:100%;
+  flex:1;
+  padding:10px;
 }
 
-.title-div {
-  position: relative;
-  top:5%;
+.content-center:hover {
+  flex:2;
+  filter: brightness(25%);
 }
 
-.presentation-div {
-  background-image: url("../images/globe.jpg");
-  background-size:cover;
-  background-repeat:no-repeat;
-  background-position:center center;   
-}
-.expand {
-  transform: none; transform-origin: left center 0px;
-  border-bottom: 1px solid #000;
-  display: block;
-  height: 1px;
-  max-width: 133px;
-  padding-top: 7px;
-  position: relative;
-  width: 100%;
-}
-/* Responsive layout - makes the two columns stack on top of each other instead of next to each other */
 @media screen and (max-width: 900px) {
   .content {
     flex-direction: column-reverse;
@@ -187,8 +184,16 @@ a:hover {
   .content-left {
     width: auto;
   }
-
   .form-wrapper {
     width:auto;
   }
+}
+
+
+.transparent {
+  color:transparent;
+}
+
+.column.content-center {
+  display:block;
 }
