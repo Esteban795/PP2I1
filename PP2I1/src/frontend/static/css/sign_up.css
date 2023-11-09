@@ -178,22 +178,17 @@ a:hover {
   .content {
     flex-direction: column-reverse;
   }
-  .content-right {
-    width: auto;
+
+  .column {
+    width: 100%;
   }
-  .content-left {
-    width: auto;
-  }
+
   .form-wrapper {
-    width:auto;
+    width:100%;
   }
-}
 
-
-.transparent {
-  color:transparent;
-}
-
-.column.content-center {
-  display:block;
+  .content-center {
+    display: none;
+    background: none;
+  }
 }
