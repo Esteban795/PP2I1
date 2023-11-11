@@ -54,6 +54,10 @@ a:hover {
   align-items: center;
 }
 
+.content-left {
+  box-shadow: -10px 2px 50px -6px #000000;
+}
+
 .form-wrapper {
   width: 30vw;
   padding: 48px 40px 36px;
@@ -154,8 +158,8 @@ a:hover {
 
 .row {
   width:100%;
+  height:100%;
   flex:1;
-  padding:10px;
 }
 
 .content-left:hover  .bg-image{
@@ -191,21 +195,8 @@ a:hover {
 }
 
 .next-slide {
-  overflow: hidden;
-}
+  position:relative;
 
-.next-slide img {
-  transition: all .5s cubic-bezier(1,-0.14,0,1.05);
-
-}
-
-.next-slide:hover img {
-  transform:scale(1.1);
-  filter:brightness(30%);
-}
-
-.bigger-font {
-  font-size: 150%;
 }
 
 .welcome-div {
@@ -218,62 +209,16 @@ a:hover {
   position: relative;
 }
 
-
 span {
   opacity: 0;
   filter: blur(10px);
+  animation-duration: 0.8s;
+  animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+  animation-fill-mode: forwards;
 }
 
-.content-left:hover span:nth-child(1) {
-  animation: fade-in 0.8s 0.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(2) {
-  animation: fade-in 0.8s 0.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(3) {
-  animation: fade-in 0.8s 0.3s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(4) {
-  animation: fade-in 0.8s 0.4s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(5) {
-  animation: fade-in 0.8s 0.5s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(6) {
-  animation: fade-in 0.8s 0.6s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(7) {
-  animation: fade-in 0.8s 0.7s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(8) {
-  animation: fade-in 0.8s 0.8s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(9) {
-  animation: fade-in 0.8s 0.9s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(10) {
-  animation: fade-in 0.8s 1s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(11) {
-  animation: fade-in 0.8s 1.1s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(12) {
-  animation: fade-in 0.8s 1.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
-}
-
-.content-left:hover span:nth-child(13) {
-  animation: fade-in 0.8s 1.2s forwards cubic-bezier(0.11, 0, 0.5, 0);
+.content-left:hover span {
+  animation-name: fade-in;
 }
 
 @keyframes fade-in {
@@ -298,4 +243,31 @@ span {
 .welcome-div h1 {
   position:relative;
   z-index: 2;
+}
+
+.row {
+  position: relative;
+  transition: all 0.4s ease-in-out;
+  border:3px solid blue;
+}
+
+.row:hover {
+  filter: drop-shadow(0 0 0.75rem #139a76);
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(300px, auto);
+  padding:50px;
+}
+
+.grid-item {
+  border:1px solid red;
+}
+
+.first-grid-item {
+  grid-column: 1;
+  grid-row: 1;
 }
