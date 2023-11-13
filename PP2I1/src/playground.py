@@ -29,7 +29,7 @@ def picking_bin_by_truck(bin: Bins.Bin, truck: Truck.Truck) -> Truck.Truck :
 
     return truck
 
-def get_amout_of_waste(bins: [Bins.Bin]) -> int:
+def get_amount_of_waste(bins: [Bins.Bin]) -> int:
     '''Cette fonction prend en parametre une liste de Bin et renvoie le total de déchets.'''
     out =  0
     for bin in bins:
