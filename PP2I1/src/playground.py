@@ -37,7 +37,7 @@ def get_amount_of_waste(bins: [Bins.Bin]) -> int:
     return out
 
 
-def order_bins_by_amont_of_waste(bins: [Bins.Bin]) -> [Bins.Bin]:
+def order_bins_by_amount_of_waste(bins: [Bins.Bin]) -> [Bins.Bin]:
     '''Cette focntion prend en parametre une liste de Bin et renvoie cette liste triée en fonction de leur remplissage.'''
     return bins.sort(key=lambda x: x.used)
 
