@@ -1,0 +1,8 @@
+\contentsline {section}{\numberline {I.}Ordre du jour}{1}{section.0.1}%
+\contentsline {section}{\numberline {II.}Frontend}{1}{section.0.2}%
+\contentsline {section}{\numberline {III.}Algorithmie}{2}{section.0.3}%
+\contentsline {section}{\numberline {IV.}Features}{2}{section.0.4}%
+\contentsline {subsection}{\numberline {IV.1.}Page profil}{2}{subsection.0.4.1}%
+\contentsline {subsection}{\numberline {IV.2.}Page admin}{2}{subsection.0.4.2}%
+\contentsline {section}{\numberline {V.}Developpement magasin}{3}{section.0.5}%
+\contentsline {section}{\numberline {VI.}ToDO-List}{3}{section.0.6}%
