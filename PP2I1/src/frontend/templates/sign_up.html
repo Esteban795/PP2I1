@@ -35,16 +35,9 @@
             <img src="../static/images/trash.svg" alt="Logo" width="48" height="48"/>
           </div>
           <h1 class="text-title text-center"> S'inscrire : </h1>
-          {% block content %}
-            {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-              <ul class="flashes-error">
-              {% for category, message in messages %}
-                <li class="{{ category }}">{{ message }}</li>
-              {% endfor %}
-              </ul>
-            {% endif %}
-          {% endwith %}
+          {% if error%}
+          <p class="error"> <strong> {{error}} </strong></p>
+          {% endif%}
           <form method="post">
             <div class="field-group">
               <label for="first-name" class="label"> Prénom :</label>
@@ -79,7 +72,6 @@
               <input class="btn-submit transition-duration-300" type="submit" value="Sign up" />
             </div>
           </form>
-          {% endblock %}
         </div>
       </div>
     </div>

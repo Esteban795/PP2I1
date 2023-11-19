@@ -17,9 +17,6 @@ class Client(UserMixin):
         self.password = password
         self.created_at = created_at
         self.recycled_volume = recycled_volume
-        self.is_active = True
-        self.authenticated = True
-        self.is_anonymous = False
 
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)
@@ -35,4 +32,4 @@ class Client(UserMixin):
                 self.recycled_volume)
     
     def get_id(self): #necessary for flask_login
-        return self.id
+        return self.client_id

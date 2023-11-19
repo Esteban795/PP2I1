@@ -318,9 +318,9 @@ ul {
   list-style-type: none;
 }
 
-.flashes-error {
-  color: rgb(131, 16, 16);
-  text-align:center;
+.error {
+  text-align: center;
+  color: rgb(133, 21, 21);
 }
 
 @media screen and (max-width: 900px) {
