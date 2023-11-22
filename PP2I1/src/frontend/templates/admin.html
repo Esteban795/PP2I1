@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
+    <title> Se connecter </title>
+</head>
+
+<body>
+<div class="map-container">
+    <div class="column map">
+        
+    </div>
+    <div class="column locations-container">
+        <ul>
+            {% for location in locations %}
+                <li class="bin-entry">
+                    
+                    <p class="bin-name">{{ location.first_name }} , id : {{ location.id }}</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+</body>
+</html>

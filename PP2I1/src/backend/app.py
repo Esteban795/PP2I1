@@ -90,6 +90,39 @@ def logout():
     return redirect(url_for('home'))
 
 
+def getBinInformation(bin_id : int):
+    FIELDS = ['first_name','last_name','volume','used','last_emptied','created','waste_type','numberplate']
+    infos = {}
+    SQL = """
+        SELECT first_name, last_name, volume,used,last_emptied,created,waste_type, numberplate FROM bins
+        JOIN clients ON bins.client_id = clients.client_id
+        JOIN trucks ON bins.truck_id = trucks.truck_id
+        WHERE bin_id = ?
+    """
+    cursor.execute(SQL, (bin_id,))
+    data = cursor.fetchone()
+    if data is not None:
+        for i in range(len(FIELDS)):
+            infos[FIELDS[i]] = data[i]
+        return infos
+    return None
+
+def getBinsInformation():
+    locations = []
+    cursor.execute("SELECT bin_id FROM bins")
+    bins = cursor.fetchall()
+    for bin in bins:
+        infos = getBinInformation(bin[0])
+        if infos is not None:
+            locations.append(infos)
+    return locations
+
+@app.route('/admin/')
+@login_required
+def admin():
+    locations = getBinsInformation()
+    return render_template('admin.html',locations=locations)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
