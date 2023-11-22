@@ -318,6 +318,11 @@ ul {
   list-style-type: none;
 }
 
+.error {
+  text-align: center;
+  color: rgb(133, 21, 21);
+}
+
 @media screen and (max-width: 900px) {
   .column {
     width: 100%;
