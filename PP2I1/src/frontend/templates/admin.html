@@ -3,24 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
-    <title> Se connecter </title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <title> Admin Page </title>
 </head>
 
 <body>
+
 <div class="map-container">
-    <div class="column map">
+    <div class="column map" id="map">
         
     </div>
     <div class="column locations-container">
-        <ul>
-            {% for location in locations %}
-                <li class="bin-entry">
-                    
-                    <p class="bin-name">{{ location.first_name }} , id : {{ location.id }}</p>
-                </li>
-            {% endfor %}
-        </ul>
+        <h1 class="text-center">  Localisations des poubelles </h1>
+        <div class="data-container">
+            {% if bins_data == [] %}
+                {% block nobins %}
+                <p> Aucune poubelle n'a été enregistrée.</p>
+                {% endblock %}
+            {% else %}
+                {% block content %}
+                    {% for bin in bins_data %}
+                    <div class="bin-entry" data-long="{{ bin.long }}" data-lat="{{ bin.lat}}">
+                        <div class="bin-entry-infos">
+                            <p> Volume utilisé : {{ bin.used }} </p>
+                            <p> Volume maximum : {{ bin.volume}} </p>
+                            <p>  Dernier vidage : {{ bin.last_emptied }}</p>
+                            <p> Dernier vidage par : {{ bin.numberplate }} </p>
+                            <p> Type de déchet :  {{ bin.waste_type}}</p>
+                        </div>
+                        <div class="bin-entry-name">
+                            <p> {{ bin.last_name }}  {{ bin.first_name }}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endblock %}
+            {% endif %}
+        </div>
     </div>
 </div>
+
+
+
+
+<script type="text/javascript" src="./../static/js/map.js"></script>
+<script>
+    {% for marker in bins_data %}
+        L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
+        .bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
+    {% endfor %}
+</script>
+
 </body>
 </html>

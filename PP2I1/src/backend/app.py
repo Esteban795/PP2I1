@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for,redirect,request
+from flask import Flask,render_template, url_for,redirect,request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import sqlite3
 import hashlib
@@ -89,39 +89,32 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-
-def getBinInformation(bin_id : int):
-    FIELDS = ['first_name','last_name','volume','used','last_emptied','created','waste_type','numberplate']
-    infos = {}
-    SQL = """
-        SELECT first_name, last_name, volume,used,last_emptied,created,waste_type, numberplate FROM bins
-        JOIN clients ON bins.client_id = clients.client_id
-        JOIN trucks ON bins.truck_id = trucks.truck_id
-        WHERE bin_id = ?
-    """
-    cursor.execute(SQL, (bin_id,))
-    data = cursor.fetchone()
-    if data is not None:
-        for i in range(len(FIELDS)):
-            infos[FIELDS[i]] = data[i]
-        return infos
-    return None
-
 def getBinsInformation():
-    locations = []
-    cursor.execute("SELECT bin_id FROM bins")
+    bins_data = []
+    DATA_FIELDS = ['first_name','last_name','lat','long','volume','used','last_emptied','created','waste_id','numberplate','waste_type']
+    SQL = """
+        SELECT first_name,last_name,lat,long,volume,used,last_emptied,created,waste_id,numberplate, name FROM bins
+        JOIN clients ON bins.owner_id = clients.client_id
+        LEFT JOIN trucks ON bins.last_emptied_by = trucks.truck_id
+        JOIN waste_type ON bins.waste_id = waste_type.waste_type_id
+    """
+    #LEFT JOIN because some bins might have never been emptied yet!
+    cursor.execute(SQL)
     bins = cursor.fetchall()
     for bin in bins:
-        infos = getBinInformation(bin[0])
-        if infos is not None:
-            locations.append(infos)
-    return locations
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = bin[i]
+        bins_data.append(infos)
+    return bins_data
+
+
 
 @app.route('/admin/')
 @login_required
 def admin():
-    locations = getBinsInformation()
-    return render_template('admin.html',locations=locations)
+    bins_data = getBinsInformation()
+    return render_template('admin.html',bins_data=bins_data)
 
 
 if __name__ == '__main__':

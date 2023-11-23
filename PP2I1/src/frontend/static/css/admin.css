@@ -8,6 +8,10 @@ html {
     font-family: 'Open Sans', sans-serif;
 }
 
+h1 {
+    color: #139a76;
+}
+
 a {
     color: #006570;
     text-decoration: underline;
@@ -22,17 +26,68 @@ a:hover {
 }
 
 .map-container {
+    position: relative;
     display: flex;
     flex-flow: row;
-    height:100%;
-    border:1px solid red;
+    height:75vh;
+    border: 4px inset #a19a9a;
+    box-shadow: 0px 0px 23px 8px #000000;
 }
 
 .column {
     background-color: white;
     display: flex;
     flex:1;
-    padding:10px;
     overflow:hidden;
     transition: all .8s ease-in-out;
-  }
+}
+
+.locations-container {
+    display: flex;
+    flex-flow: column;
+    flex:1;
+    align-items: center;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.data-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#map {
+    height:100%;
+}
+
+.bin-entry {
+    display:flex;
+    flex-flow:column-reverse;
+    width: fit-content;
+    border: 2px inset #a19a9a;
+    overflow:hidden;
+    border-radius: 5px;
+    box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
+}
+
+.bin-entry-name {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #139a76;
+    color:white;
+    height: 100%;
+}
+
+.bin-entry-infos {
+    padding-left: 5px;
+    padding-right: 5px;
+    max-height:0px;
+    transition: all .2s linear;
+}
+
+.active {
+    max-height:1000px;
+}
