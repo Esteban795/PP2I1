@@ -40,12 +40,17 @@ body{
 }
 
 .header-line{
-  width: 10%;
+  width: 50%;
   height: 2px;
   background-color: #000;
   margin: 0 auto;
 }
 
+.headerui{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
 .content{
   display: flex;
   flex-direction: column;
