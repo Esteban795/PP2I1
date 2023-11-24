@@ -61,9 +61,9 @@ def login():
         return redirect(url_for('home'))
         
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        
+        email : str = request.form['email']
+        password : str = request.form['password']
+        remember = request.form.get('remember-checkbox',-1) != -1
         if not utilities.checkValidInput(email,password):
             return render_template('login.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
         
@@ -77,7 +77,7 @@ def login():
         password = hash_object.hexdigest()
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
-        login_user(client)
+        login_user(client,remember=remember)
         return redirect(url_for('home'))
     else:
         return render_template('login.html')

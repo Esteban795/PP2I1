@@ -10,7 +10,7 @@
 
 <body>
 
-<div class="map-container">
+<div class="map-container flex-row">
     <div class="column map" id="map">
         
     </div>
@@ -28,8 +28,8 @@
                         <div class="bin-entry-infos">
                             <p> Volume utilisé : {{ bin.used }} </p>
                             <p> Volume maximum : {{ bin.volume}} </p>
-                            <p>  Dernier vidage : {{ bin.last_emptied }}</p>
-                            <p> Dernier vidage par : {{ bin.numberplate }} </p>
+                            <p> Dernier vidage : {{ bin.last_emptied }}</p>
+                            <p> Dernier vidage par : {{ bin.numberplate if bin.numberplate else "Jamais vidé" }} </p>
                             <p> Type de déchet :  {{ bin.waste_type}}</p>
                         </div>
                         <div class="bin-entry-name">
@@ -42,16 +42,61 @@
         </div>
     </div>
 </div>
-
+<div class="products flex-column">
+    <div class="current-products">
+        <div class="product-entry">
+            <h1> Nom Produit </h1>
+            <p> Description : blablabla</p>
+            <p> Prix : 10€</p>
+            <p> Volume : 100L</p>
+            <p> En stock : 10 </p>
+        </div>
+    </div>
+    <div class="add-products flex-row">
+      <div class="flex-column">
+          <h1> Ajouter un produit </h1>
+          <div class="form-wrapper">
+            <form class="flex-column" method="post">
+                <div class="field-group">
+                    <label for="product-name" class="label"> Nom du produit : </label>
+                    <input class="input" type="text" name="product-name">
+                  </div>
+                  <div class="field-group">
+                    <label for="img-url" class="label">Sélectionnez une image : </label>
+                    <input type="file" name="img-url">
+                  </div>
+                  <div class="field-group">
+                    <label class="label" for="desc"> Description du produit : </label>
+                    <input class="input" type="text" name="desc" />
+                  </div>
+                  <div class="field-group">
+                    <label class="label" for="volume"> Volume de la poubelle : </label>
+                    <input class="input" type="text" name="volume" />
+                  </div>
+                  <div class="field-group">
+                    <label class="label" for="stock"> Stock : </label>
+                    <input class="input" type="text" name="stock" />
+                  </div>
+                  <div class="field-group">
+                    <input class="btn-submit transition-duration-300" type="submit" value="Ajouter le produit" />
+                  </div>
+            </form>
+          </div>
+      </div>
+      <div class="preview flex-column"></div>
+    </div>
+</div>
 
 
 
 <script type="text/javascript" src="./../static/js/map.js"></script>
 <script>
+
     {% for marker in bins_data %}
         L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
         .bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
     {% endfor %}
+
 </script>
 
 </body>

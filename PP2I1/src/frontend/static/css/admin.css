@@ -27,8 +27,6 @@ a:hover {
 
 .map-container {
     position: relative;
-    display: flex;
-    flex-flow: row;
     height:75vh;
     border: 4px inset #a19a9a;
     box-shadow: 0px 0px 23px 8px #000000;
@@ -88,6 +86,85 @@ a:hover {
     transition: all .2s linear;
 }
 
+.products {
+    border:1px solid blue;
+    margin-top: 50px;
+}
+
+.product-entry {
+    border:1px solid red;
+    border-radius: 5px;
+    width:fit-content;
+    padding:3px;
+}
+
+.flex-column {
+    display:flex;
+    flex-flow:column;
+}
+
+.flex-row {
+    display:flex;
+    flex-flow:row;
+}
+
 .active {
     max-height:1000px;
 }
+
+.form-wrapper {
+    width: 30vw;
+    padding: 48px 40px 36px;
+    border: 5px double rgba(36, 28, 21, 0.3);
+}
+
+.field-group {
+    margin: 1em 0;
+}
+  
+.input {
+    padding: 0.5em 0 0.5em 1em;
+    width: 100%;
+    border: 2px solid rgba(36, 28, 21, 0.3);
+    border-radius: 2px;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    border: 2px solid #007c89;
+}
+
+.label-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.label {
+    display: flex;
+    align-items: center;
+    line-height: 2;
+}
+
+.label--right {
+    cursor: pointer;
+}
+
+.btn-submit {
+    background-color: #006570;
+    color: #fff;
+    padding: 0.7em;
+    border-radius: 2px;
+    outline: 0;
+    border: 0;
+    width: 100%;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .btn-submit:hover {
+    background-color: #139a76;
+  }
