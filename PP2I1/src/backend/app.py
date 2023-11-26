@@ -1,9 +1,9 @@
 from flask import Flask,render_template, url_for,redirect,request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from werkzeug.utils import secure_filename
 import sqlite3
 import hashlib
 import os
-
 
 from Client import Client
 import utilities
@@ -12,6 +12,7 @@ app = Flask(__name__,template_folder="../frontend/templates",static_folder="../f
 app.config["SECRET_KEY"] = os.urandom(24)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
+UPLOAD_FOLDER = './PP2I1/src/frontend/static/images/products/'
 
 conn = sqlite3.connect("./PP2I1/src/backend/db/main.db", check_same_thread=False)
 cursor = conn.cursor()
@@ -109,12 +110,55 @@ def getBinsInformation():
     return bins_data
 
 
+def getProducts():
+    products = []
+    DATA_FIELDS = ['product_id','name','price','img_url','desc','volume','stock']
+    SQL = """
+        SELECT * FROM products
+    """
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for product in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = product[i]
+        products.append(infos)
+    return products
 
 @app.route('/admin/')
-@login_required
 def admin():
     bins_data = getBinsInformation()
-    return render_template('admin.html',bins_data=bins_data)
+    products = getProducts()
+    #generate a list of dict with the following keys: id, price,img_url, desc, volume, stock
+    
+    # products = [{ 'id': 1, 'name':"bigard",'price': 10, 'img_url': 'https://cdn-imgix.headout.com/media/images/c9db3cea62133b6a6bb70597326b4a34-388-dubai-img-worlds-of-adventure-tickets-01.jpg', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 2, 'price': 20, 'img_url': 'https://cdn-imgix.headout.com/media/images/c9db3cea62133b6a6bb70597326b4a34-388-dubai-img-worlds-of-adventure-tickets-01.jpg', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 3, 'price': 30, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 4, 'price': 40, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 5, 'price': 50, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 6, 'price': 60, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 7, 'price': 70, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 8, 'price': 80, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
+    #             { 'id': 9, 'price': 90, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 }
+    #             ]
+    
+    return render_template('admin.html',bins_data=bins_data,products=products)
+
+@app.route('/admin/add-product/',methods=('GET','POST'))
+def addproduct():
+    if request.method == 'POST':
+        f = request.files['img'] # get the file from the files object
+        filepath = os.path.join(UPLOAD_FOLDER,secure_filename(f.filename))
+        f.save(filepath)
+        name = request.form['product-name']
+        price = request.form['price']
+        volume = request.form['volume']
+        desc = request.form['desc']
+        stock = request.form['stock']
+        cursor.execute("INSERT INTO products (name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,f.filename))
+        conn.commit()
+        return redirect(url_for('admin'))
+    return render_template('admin.html') #no get request here
 
 
 if __name__ == '__main__':

@@ -11,9 +11,7 @@
 <body>
 
 <div class="map-container flex-row">
-    <div class="column map" id="map">
-        
-    </div>
+    <div class="column map" id="map"> </div>
     <div class="column locations-container">
         <h1 class="text-center">  Localisations des poubelles </h1>
         <div class="data-container">
@@ -42,60 +40,154 @@
         </div>
     </div>
 </div>
-<div class="products flex-column">
-    <div class="current-products">
-        <div class="product-entry">
-            <h1> Nom Produit </h1>
-            <p> Description : blablabla</p>
-            <p> Prix : 10€</p>
-            <p> Volume : 100L</p>
-            <p> En stock : 10 </p>
+<div class="grid-layout">
+    <div class="div1 products-management flex-row">
+        <div class="management-option selected-option" data-id="0"> 
+            <p> Ajouter </p>
+        </div>
+        <div class="management-option" data-id="1"> 
+            <p> Modifier </p>
+        </div>
+        <div class="management-option" data-id="2">
+            <p> Supprimer </p>
         </div>
     </div>
-    <div class="add-products flex-row">
-      <div class="flex-column">
-          <h1> Ajouter un produit </h1>
-          <div class="form-wrapper">
-            <form class="flex-column" method="post">
+    <div class="div2">
+        <div class="form-wrapper" id="add-product">
+            <h1 class="text-center"> Ajouter un produit : </h1>
+            <form enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
                 <div class="field-group">
                     <label for="product-name" class="label"> Nom du produit : </label>
-                    <input class="input" type="text" name="product-name">
-                  </div>
-                  <div class="field-group">
-                    <label for="img-url" class="label">Sélectionnez une image : </label>
-                    <input type="file" name="img-url">
-                  </div>
-                  <div class="field-group">
+                    <input class="input add-input" type="text" name="product-name">
+                </div>
+                <div class="field-group">
+                    <label for="img" class="label">Sélectionnez une image : </label>
+                    <input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" id="file" name="img">
+                </div>
+                <div class="field-group">
+                    <label for="price" class="label"> Prix du produit : </label>
+                    <input class="input add-input" type="text" name="price">
+                </div>
+                <div class="field-group">
                     <label class="label" for="desc"> Description du produit : </label>
-                    <input class="input" type="text" name="desc" />
-                  </div>
-                  <div class="field-group">
+                    <input class="input add-input" type="text" name="desc" />
+                </div>
+                <div class="field-group">
                     <label class="label" for="volume"> Volume de la poubelle : </label>
-                    <input class="input" type="text" name="volume" />
-                  </div>
-                  <div class="field-group">
+                    <input class="input add-input" type="text" name="volume" />
+                </div>
+                <div class="field-group">
                     <label class="label" for="stock"> Stock : </label>
-                    <input class="input" type="text" name="stock" />
-                  </div>
-                  <div class="field-group">
+                    <input class="input add-input" type="text" name="stock" />
+                </div>
+                <div class="field-group">
                     <input class="btn-submit transition-duration-300" type="submit" value="Ajouter le produit" />
-                  </div>
+                </div>
             </form>
-          </div>
-      </div>
-      <div class="preview flex-column"></div>
+        </div>
+        <div class="hidden form-wrapper" id="modify-product"> 
+            <h1 class="text-center"> Modifier un produit : </h1>
+            <form action="/admin/modify-product/" class="flex-column" method="post">
+                <div class="field-group">
+                    <label for="product-name" class="label"> Nom du produit : </label>
+                    <input class="input modify-input" type="text" name="product-name">
+                </div>
+                <div class="field-group">
+                    <label for="img" class="label">Sélectionnez une image : </label>
+                    <input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" id="file" name="img">
+                </div>
+                <div class="field-group">
+                    <label for="price" class="label"> Prix du produit : </label>
+                    <input class="input modify-input" type="text" name="price">
+                </div>
+                <div class="field-group">
+                    <label class="label" for="desc"> Description du produit : </label>
+                    <input class="input modify-input" type="text" name="desc" />
+                </div>
+                <div class="field-group">
+                    <label class="label" for="volume"> Volume de la poubelle : </label>
+                    <input class="input modify-input" type="text" name="volume" />
+                </div>
+                <div class="field-group">
+                    <label class="label" for="stock"> Stock : </label>
+                    <input class="input modify-input" type="text" name="stock" />
+                </div>
+                <div class="field-group">
+                    <input class="btn-submit transition-duration-300" type="submit" value="Modifier le produit" />
+                </div>
+            </form>
+        </div>
+        <div class="hidden" id="remove-product">
+            test2
+        </div>
+    </div>
+    <div class="div3">
+        
+        <div class="preview"> 
+            <div class="product-entry">
+                <div class="product-entry-img">
+                    <img class="product-entry-img" src="./../static/images/products/Landscape-Color.jpg" alt="product-img"/>
+                </div>
+                <section class="itemInfo">
+                    <h2 class="itemName fields"> Poubelle Grise - 240L </h2>
+                    <p class="itemDesc fields"> 
+                        Une poubelle grise de 240L pour vos ordures ménagères, 
+                        équipées de nombreux capteurs facilitant votre vie et celle de la commune qui vous en remercie. 
+                    </p>
+                </section>
+                <section class="itemBuying">
+                    <p class = "itemPrice fields"> 999.99€ </p>
+                    <p class="fields"> En stock : 10 </p>
+                    <button> Ajouter au panier </button>
+                </section>
+            </div>
+        </div>
+        <div class="select-product hidden flex-column">
+            {% if products == [] %}
+                <p> Aucun produit n'a été enregistré. </p>
+            {% else %}
+                {% block products %}
+                    {% for product in products %}
+                    <div class="product-entry-container">
+                        <div class="product-entry" data-id="{{ product.id }}">
+                            <div class="product-entry-img">
+                                <img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
+                            </div>
+                            <section class = "itemInfo">
+                                <h2 class = "itemName"> Poubelle Grise - 240L </h2>
+                                <p class = "itemDesc"> Une poubelle grise de 240L pour vos ordures ménagères, 
+                                    équipées de nombreux capteurs facilitant votre vie et celle de la commune qui vous en remercie. 
+                                </p>
+                            </section>
+                            <section class = "itemBuying">
+                                <p class = "itemPrice"> 999.99€ </p>
+                                <button> Ajouter au panier </button>
+                            </section>
+                        </div>
+                        <img src="./../static/images/cross.svg" class="cancel-selection hidden"></img>
+                    </div>
+                    {% endfor %}
+                {% endblock %}
+            {% endif %}
+        </div>
+        <div class="hidden">
+            test2
+        </div>
     </div>
 </div>
 
 
-
 <script type="text/javascript" src="./../static/js/map.js"></script>
+<script type="text/javascript" src="./../static/js/products_admin.js"></script>
 <script>
 
     {% for marker in bins_data %}
         L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
         .bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
     {% endfor %}
+
+
+
 
 </script>
 
