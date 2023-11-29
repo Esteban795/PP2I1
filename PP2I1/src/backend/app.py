@@ -147,16 +147,8 @@ def add_product():
         return redirect(url_for('admin'))
     return render_template('admin.html') #no get request here
 
-@app.route('/admin/delete/<product_id>',methods=('GET','POST'))
-def delete_product(product_id):
-    if request.method == 'POST':
-        cursor.execute("DELETE FROM products WHERE product_id = ?",(product_id,))
-        conn.commit()
-    return redirect(url_for('admin'))
-
-
-@app.route('/admin/modify-product/<product_id>',methods=('GET','POST'))
-def modify_product(product_id):
+@app.route('/admin/modify-product/<int:product_id>',methods=('GET','POST'))
+def modify_product(product_id : int):
     if request.method == 'POST':
         f = request.files['img'] # get the file from the files object
         filepath = os.path.join(UPLOAD_FOLDER,secure_filename(f.filename))
@@ -175,6 +167,17 @@ def modify_product(product_id):
         conn.commit()
         return redirect(url_for('admin'))
     return render_template('admin.html') #no get request here
+
+@app.route('/admin/delete/<int:product_id>',methods=('GET','POST'))
+def delete_product(product_id : int):
+    if request.method == 'POST':
+        cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
+        filename = cursor.fetchone()[0]
+        filepath = os.path.join(UPLOAD_FOLDER,secure_filename(filename))
+        os.remove(filepath)
+        cursor.execute("DELETE FROM products WHERE product_id = ?",(product_id,))
+        conn.commit()
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)
