@@ -48,17 +48,14 @@
         <div class="management-option" data-id="1"> 
             <p> Modifier </p>
         </div>
-        <div class="management-option" data-id="2">
-            <p> Supprimer </p>
-        </div>
     </div>
     <div class="div2">
-        <div class="form-wrapper" id="add-product">
-            <h1 class="text-center"> Ajouter un produit : </h1>
-            <form enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
+        <div class="form-wrapper">
+            <h1 class="text-center" id="option-title"> Ajouter un produit : </h1>
+            <form id="form-products" enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
                 <div class="field-group">
                     <label for="product-name" class="label"> Nom du produit : </label>
-                    <input class="input add-input" type="text" name="product-name">
+                    <input class="input" type="text" name="product-name">
                 </div>
                 <div class="field-group">
                     <label for="img" class="label">Sélectionnez une image : </label>
@@ -66,112 +63,88 @@
                 </div>
                 <div class="field-group">
                     <label for="price" class="label"> Prix du produit : </label>
-                    <input class="input add-input" type="text" name="price">
+                    <input class="input" type="text" name="price">
                 </div>
                 <div class="field-group">
                     <label class="label" for="desc"> Description du produit : </label>
-                    <input class="input add-input" type="text" name="desc" />
+                    <input class="input" type="text" name="desc" />
                 </div>
                 <div class="field-group">
                     <label class="label" for="volume"> Volume de la poubelle : </label>
-                    <input class="input add-input" type="text" name="volume" />
+                    <input class="input" type="text" name="volume" />
                 </div>
                 <div class="field-group">
                     <label class="label" for="stock"> Stock : </label>
-                    <input class="input add-input" type="text" name="stock" />
+                    <input class="input" type="text" name="stock"/>
                 </div>
                 <div class="field-group">
-                    <input class="btn-submit transition-duration-300" type="submit" value="Ajouter le produit" />
+                    <input class="btn-submit transition-duration-300" type="submit" value="Valider" />
                 </div>
             </form>
-        </div>
-        <div class="hidden form-wrapper" id="modify-product"> 
-            <h1 class="text-center"> Modifier un produit : </h1>
-            <form action="/admin/modify-product/" class="flex-column" method="post">
-                <div class="field-group">
-                    <label for="product-name" class="label"> Nom du produit : </label>
-                    <input class="input modify-input" type="text" name="product-name">
-                </div>
-                <div class="field-group">
-                    <label for="img" class="label">Sélectionnez une image : </label>
-                    <input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" id="file" name="img">
-                </div>
-                <div class="field-group">
-                    <label for="price" class="label"> Prix du produit : </label>
-                    <input class="input modify-input" type="text" name="price">
-                </div>
-                <div class="field-group">
-                    <label class="label" for="desc"> Description du produit : </label>
-                    <input class="input modify-input" type="text" name="desc" />
-                </div>
-                <div class="field-group">
-                    <label class="label" for="volume"> Volume de la poubelle : </label>
-                    <input class="input modify-input" type="text" name="volume" />
-                </div>
-                <div class="field-group">
-                    <label class="label" for="stock"> Stock : </label>
-                    <input class="input modify-input" type="text" name="stock" />
-                </div>
-                <div class="field-group">
-                    <input class="btn-submit transition-duration-300" type="submit" value="Modifier le produit" />
-                </div>
-            </form>
-        </div>
-        <div class="hidden" id="remove-product">
-            test2
         </div>
     </div>
     <div class="div3">
-        
-        <div class="preview"> 
-            <div class="product-entry">
-                <div class="product-entry-img">
-                    <img class="product-entry-img" src="./../static/images/products/Landscape-Color.jpg" alt="product-img"/>
-                </div>
-                <section class="itemInfo">
-                    <h2 class="itemName fields"> Poubelle Grise - 240L </h2>
-                    <p class="itemDesc fields"> 
-                        Une poubelle grise de 240L pour vos ordures ménagères, 
-                        équipées de nombreux capteurs facilitant votre vie et celle de la commune qui vous en remercie. 
-                    </p>
-                </section>
-                <section class="itemBuying">
-                    <p class = "itemPrice fields"> 999.99€ </p>
-                    <p class="fields"> En stock : 10 </p>
-                    <button> Ajouter au panier </button>
-                </section>
+        <div id="add-preview" class="product-entry">
+            <div class="product-entry-img">
+                <img class="product-entry-img" src="./../static/images/products/Landscape-Color.jpg" alt="product-img"/>
             </div>
+            <section class="itemInfo">
+                <h2 class="itemName"> 
+                    <span class="fields"> Titre </span>
+                    - 
+                    <span class="fields"> Volume </span>
+                </h2>
+                <p class="itemDesc fields"> 
+                    Description
+                </p>
+            </section>
+            <section class="itemBuying">
+                <p class = "itemPrice fields"> Prix </p>
+                <p> En stock : <span class="fields"> stock</span> </p>
+                <button> Ajouter au panier </button>
+            </section>
         </div>
-        <div class="select-product hidden flex-column">
+        <div class="hidden select-product flex-column">
             {% if products == [] %}
                 <p> Aucun produit n'a été enregistré. </p>
             {% else %}
                 {% block products %}
                     {% for product in products %}
                     <div class="product-entry-container">
-                        <div class="product-entry" data-id="{{ product.id }}">
+                        <div class="product-entry" data-id="{{product.product_id}}">
                             <div class="product-entry-img">
                                 <img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
                             </div>
                             <section class = "itemInfo">
-                                <h2 class = "itemName"> Poubelle Grise - 240L </h2>
-                                <p class = "itemDesc"> Une poubelle grise de 240L pour vos ordures ménagères, 
-                                    équipées de nombreux capteurs facilitant votre vie et celle de la commune qui vous en remercie. 
+                                <h2 class = "itemName"> 
+                                    <span class="fields"> {{ product.name}} </span>
+                                    - 
+                                    <span class="fields"> {{product.volume}}L </span>
+                                 </h2>
+                                <p class="itemDesc fields"> 
+                                    {{ product.desc}} 
                                 </p>
                             </section>
                             <section class = "itemBuying">
-                                <p class = "itemPrice"> 999.99€ </p>
+                                <p class = "itemPrice fields"> {{ product.price}} </p>
+                                <p> En stock : <span class="fields">  {{product.stock}}</span> </p>
                                 <button> Ajouter au panier </button>
                             </section>
                         </div>
-                        <img src="./../static/images/cross.svg" class="cancel-selection hidden"></img>
+                        <div class="option-buttons" style="display: none;">
+                            <form method="post" action="/admin/delete/{{product.product_id}}">
+                                <div class="button cancel-selection">
+                                    <img class="red-filter" src="./../static/images/cross.svg" class="cancel-selection" alt="button" style="width:20px;"></img>
+                                </div>
+                                <button class="button" name="delete-button" type="submit">
+                                    <img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+                                </button>
+                            </form>
+                        </div>
                     </div>
                     {% endfor %}
                 {% endblock %}
             {% endif %}
-        </div>
-        <div class="hidden">
-            test2
         </div>
     </div>
 </div>

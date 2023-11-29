@@ -1,10 +1,12 @@
 const productsOptions = document.querySelectorAll('.management-option');
+const optionTitle = document.querySelector('#option-title');
 const div2 = document.querySelector('.div2');
 const div3 = document.querySelector('.div3');
+const previewAddProduct = document.querySelector("#add-preview");
+const formEndpoint = document.getElementById("form-products");
 
-const div2Children = div2.children;
-const div3Children = div3.children;
-let SELECTED_OPTION = false;
+let MODE = "add";
+let SELECTED_CONTAINER = previewAddProduct;
 
 productsOptions.forEach((option) => {
     option.addEventListener('click', () => {
@@ -12,88 +14,73 @@ productsOptions.forEach((option) => {
             productsOptions[i].classList.remove('selected-option');
         }
         option.classList.add('selected-option');
-
         let id = parseInt(option.getAttribute('data-id'));
-        var firstOtherNumber = (id + 1) % 3;
-        var secondOtherNumber = (id + 2) % 3;
-
-        div2Children[id].classList.remove('hidden');
-        div3Children[id].classList.remove('hidden');
-
-        div2Children[firstOtherNumber].classList.add('hidden');
-        div3Children[firstOtherNumber].classList.add('hidden');
-
-        div2Children[secondOtherNumber].classList.add('hidden');
-        div3Children[secondOtherNumber].classList.add('hidden');
+        MODE = id === 0 ? "add" : "modify";
+        if (MODE === "add") {
+            optionTitle.textContent = 'Ajouter un produit';
+            SELECTED_CONTAINER
+            SELECTED_CONTAINER = previewAddProduct;
+            previewAddProduct.style.display = 'flex';
+            formEndpoint.action = "/admin/add-product";
+        } else {
+            optionTitle.textContent = 'Modifier un produit';
+            SELECTED_CONTAINER = null;
+            previewAddProduct.style.display = 'none';
+        }
+        let other = 1 - id;
+        div3.children[id].classList.remove('hidden');
+        div3.children[other].classList.add('hidden');
   });
 }
 );
 
+const formInputs = document.querySelectorAll('.input');
 const productsEntriesContainers = document.querySelectorAll('.product-entry-container');
 const productsEntries = document.querySelectorAll('.product-entry');
-const modifyInputs = document.querySelectorAll('.modify-input');
-const addInputs = document.querySelectorAll('.add-input');
-const cancelSelectionBtns = document.querySelectorAll('.cancel-selection');
-const addPreview = document.querySelector('.preview');
+const cancelSelections = document.querySelectorAll('.cancel-selection');
+const findIndex = new Map([['product-name', 0], ['price',3], ['desc', 2], ['volume',1], ['stock', 4]]);
 
 productsEntries.forEach((entry) => {
     entry.addEventListener('click', () => {
-        SELECTED_OPTION = true;
-        let infos = entry.querySelectorAll('p');
-        productsEntriesContainers.forEach((temp) => {
-            temp.classList.add('hidden');
-        });
-        entry.parentElement.classList.remove('hidden');
-        entry.parentElement.children[1].classList.remove('hidden');
-        for (let i = 0; i < infos.length; i++) {
-            modifyInputs[i].value = infos[i].innerHTML;
+        if (MODE === 'add') return;
+        SELECTED_CONTAINER = entry.parentElement;
+        productsEntriesContainers.forEach((container) => {
+            container.style.display = 'none';
         }
+        );
+        SELECTED_CONTAINER.style.display = 'flex';
+        SELECTED_CONTAINER.children[1].style.display = 'flex';
+        let product_id = entry.getAttribute('data-id');
+        formEndpoint.action = "/admin/modify-product/" + product_id;
     });
 }
 );
 
-cancelSelectionBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-        for (let i = 0; i < productsEntriesContainers.length; i++) {
-            productsEntriesContainers[i].classList.remove('hidden'); 
+cancelSelections.forEach((cancel) => {
+    cancel.addEventListener('click', () => {
+        cancel.parentElement.parentElement.style.display = 'none';
+        productsEntriesContainers.forEach((container) => {
+            container.style.display = 'flex';
         }
-        btn.classList.add('hidden');
-        SELECTED_OPTION = false;
+        );
+        SELECTED_CONTAINER = null;
+        formEndpoint.action = "/admin/modify-product/";
     });
 }
 );
 
-function getSelectedProductContainer() {
-    for (let i = 0; i < productsEntriesContainers.length; i++) {
-        if (!productsEntriesContainers[i].classList.contains('hidden')) {
-            return productsEntriesContainers[i];
-        }
-    }
-};
-
-modifyInputs.forEach((input) => {
+formInputs.forEach((input) => {
     input.addEventListener('input', () => {
-        if (!SELECTED_OPTION) return;
-        let selectedProductContainer = getSelectedProductContainer();
-        let selectedProductInfos = selectedProductContainer.children[0].children[1];
-        for (let i = 0; i < selectedProductInfos.children.length; i++) {
-            selectedProductInfos.children[i].innerHTML = modifyInputs[i].value;
-        }
-    });
-}
-);
-
-addInputs.forEach((input) => {
-    input.addEventListener('input', () => {
-        let fields = addPreview.querySelectorAll('.fields');
-        console.log(fields)
+        let fields = SELECTED_CONTAINER.querySelectorAll('.fields');
+        let inputName = input.name;
+        let index = findIndex.get(inputName);
+        fields[index].innerHTML = input.value;
     });
 }
 );
 
 
 const previewImage = (event) => {
-    let selectedProductContainer = getSelectedProductContainer();
-    const imagePreviewElement = selectedProductContainer.querySelector(".product-entry-img").children[0];
+    const imagePreviewElement = SELECTED_CONTAINER.querySelector(".product-entry-img").children[0];
     imagePreviewElement.src = URL.createObjectURL(event.target.files[0]);
 };

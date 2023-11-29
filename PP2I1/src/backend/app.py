@@ -129,23 +129,10 @@ def getProducts():
 def admin():
     bins_data = getBinsInformation()
     products = getProducts()
-    #generate a list of dict with the following keys: id, price,img_url, desc, volume, stock
-    
-    # products = [{ 'id': 1, 'name':"bigard",'price': 10, 'img_url': 'https://cdn-imgix.headout.com/media/images/c9db3cea62133b6a6bb70597326b4a34-388-dubai-img-worlds-of-adventure-tickets-01.jpg', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 2, 'price': 20, 'img_url': 'https://cdn-imgix.headout.com/media/images/c9db3cea62133b6a6bb70597326b4a34-388-dubai-img-worlds-of-adventure-tickets-01.jpg', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 3, 'price': 30, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 4, 'price': 40, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 5, 'price': 50, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 6, 'price': 60, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 7, 'price': 70, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 8, 'price': 80, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 },
-    #             { 'id': 9, 'price': 90, 'img_url': 'https://www.ikea.com/fr/fr/images/products/bror-etagere-noir__0711552_pe728258_s5.jpg?f=xxs', 'desc': 'Etagère en métal', 'volume': 0.5, 'stock': 10 }
-    #             ]
-    
     return render_template('admin.html',bins_data=bins_data,products=products)
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
-def addproduct():
+def add_product():
     if request.method == 'POST':
         f = request.files['img'] # get the file from the files object
         filepath = os.path.join(UPLOAD_FOLDER,secure_filename(f.filename))
@@ -155,11 +142,39 @@ def addproduct():
         volume = request.form['volume']
         desc = request.form['desc']
         stock = request.form['stock']
-        cursor.execute("INSERT INTO products (name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,f.filename))
+        cursor.execute("INSERT INTO products (name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,secure_filename(f.filename)))
         conn.commit()
         return redirect(url_for('admin'))
     return render_template('admin.html') #no get request here
 
+@app.route('/admin/delete/<product_id>',methods=('GET','POST'))
+def delete_product(product_id):
+    if request.method == 'POST':
+        cursor.execute("DELETE FROM products WHERE product_id = ?",(product_id,))
+        conn.commit()
+    return redirect(url_for('admin'))
+
+
+@app.route('/admin/modify-product/<product_id>',methods=('GET','POST'))
+def modify_product(product_id):
+    if request.method == 'POST':
+        f = request.files['img'] # get the file from the files object
+        filepath = os.path.join(UPLOAD_FOLDER,secure_filename(f.filename))
+        f.save(filepath)
+        name = request.form['product-name']
+        price = request.form['price']
+        volume = request.form['volume']
+        desc = request.form['desc']
+        stock = request.form['stock']
+        SQL = """
+            UPDATE products 
+            SET name = ?,price = ?,volume = ?,desc = ?,stock = ?,img_url = ?
+            WHERE product_id = ?
+        """
+        cursor.execute(SQL,(name,price,volume,desc,stock,secure_filename(f.filename),product_id))
+        conn.commit()
+        return redirect(url_for('admin'))
+    return render_template('admin.html') #no get request here
 
 if __name__ == '__main__':
     app.run(debug=True)
