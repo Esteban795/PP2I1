@@ -18,7 +18,7 @@ cursor = conn.cursor()
 
 @login_manager.user_loader
 def load_user(client_id : int):
-    cursor.execute("SELECT client_id,first_name,last_name,email,pwd FROM clients WHERE client_id = ?", (client_id,))
+    cursor.execute("SELECT client_id,first_name,last_name,email,pwd,created_at,recycled_volume,is_admin FROM clients WHERE client_id = ?", (client_id,))
     db_data = cursor.fetchone()
     if db_data is not None:
         client = Client(*db_data)
@@ -77,8 +77,9 @@ def login():
         password = hash_object.hexdigest()
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
+        redirect_endpoint = 'home' if client.is_admin == 0 else 'admin'
         login_user(client,remember=remember)
-        return redirect(url_for('home'))
+        return redirect(url_for(redirect_endpoint))
     else:
         return render_template('login.html')
     
@@ -125,6 +126,7 @@ def getProducts():
     return products
 
 @app.route('/admin/')
+@utilities.admin_required
 def admin():
     error = request.args.get('error',None)
     bins_data = getBinsInformation()
