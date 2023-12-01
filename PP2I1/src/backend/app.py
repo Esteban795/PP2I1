@@ -1,6 +1,5 @@
 from flask import Flask,render_template, url_for,redirect,request
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
-from werkzeug.utils import secure_filename
 import sqlite3
 import hashlib
 import os
@@ -127,43 +126,65 @@ def getProducts():
 
 @app.route('/admin/')
 def admin():
+    error = request.args.get('error',None)
     bins_data = getBinsInformation()
     products = getProducts()
-    return render_template('admin.html',bins_data=bins_data,products=products)
+    return render_template('admin.html',bins_data=bins_data,products=products,error=error)
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
 def add_product():
     if request.method == 'POST':
-        f = request.files['img'] # get the file from the files object
-        filepath = os.path.join(UPLOAD_FOLDER,secure_filename(f.filename))
-        f.save(filepath)
         name = request.form['product-name']
         price = request.form['price']
         volume = request.form['volume']
         desc = request.form['desc']
         stock = request.form['stock']
-        cursor.execute("INSERT INTO products (name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,secure_filename(f.filename)))
+        f = request.files['img']
+        if not utilities.checkValidInput(name,price,volume,desc,stock,f.filename):
+            error = "Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."
+            return redirect(url_for('admin',error=error))
+        file_uuid = utilities.generateImgUUID(f.filename)
+        filepath = os.path.join(UPLOAD_FOLDER,file_uuid)
+        f.save(filepath)
+        cursor.execute("INSERT INTO products (name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,file_uuid))
         conn.commit()
         return redirect(url_for('admin'))
     return render_template('admin.html') #no get request here
 
+@app.route('/admin/modify-product/',methods=('GET','POST'))
+def modify_product_not_selected():
+    return redirect(url_for('admin',error="Veuillez sélectionner un produit à modifier."))
+
 @app.route('/admin/modify-product/<int:product_id>',methods=('GET','POST'))
 def modify_product(product_id : int):
     if request.method == 'POST':
-        f = request.files['img'] # get the file from the files object
-        filepath = os.path.join(UPLOAD_FOLDER,secure_filename(f.filename))
-        f.save(filepath)
-        name = request.form['product-name']
-        price = request.form['price']
-        volume = request.form['volume']
-        desc = request.form['desc']
-        stock = request.form['stock']
+        f = request.files['img']
+        file_uuid = utilities.generateImgUUID(f.filename)
+        if f.filename != '': #no picture was uploaded, use already existing one
+            file_uuid = utilities.generateImgUUID(f.filename)
+            filepath = os.path.join(UPLOAD_FOLDER,file_uuid)
+            f.save(filepath)
+            cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
+            old_pic = cursor.fetchone()[0]
+            os.remove(os.path.join(UPLOAD_FOLDER,old_pic))
+        name = request.form['product-name'] or None
+        price = request.form['price'] or None
+        volume = request.form['volume'] or None
+        desc = request.form['desc'] or None
+        stock = request.form['stock'] or None
+        safe_filename = file_uuid if f.filename != '' else None #because empty word still has an uuid
         SQL = """
             UPDATE products 
-            SET name = ?,price = ?,volume = ?,desc = ?,stock = ?,img_url = ?
+            SET 
+                name = coalesce(?,name),
+                price = coalesce(?,price),
+                volume = coalesce(?,volume),
+                desc = coalesce(?,desc),
+                stock = coalesce(?,stock),
+                img_url = coalesce(?,img_url)
             WHERE product_id = ?
         """
-        cursor.execute(SQL,(name,price,volume,desc,stock,secure_filename(f.filename),product_id))
+        cursor.execute(SQL,(name,price,volume,desc,stock,safe_filename,product_id))
         conn.commit()
         return redirect(url_for('admin'))
     return render_template('admin.html') #no get request here
@@ -173,7 +194,7 @@ def delete_product(product_id : int):
     if request.method == 'POST':
         cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
         filename = cursor.fetchone()[0]
-        filepath = os.path.join(UPLOAD_FOLDER,secure_filename(filename))
+        filepath = os.path.join(UPLOAD_FOLDER,filename)
         os.remove(filepath)
         cursor.execute("DELETE FROM products WHERE product_id = ?",(product_id,))
         conn.commit()

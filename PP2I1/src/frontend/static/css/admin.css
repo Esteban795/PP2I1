@@ -301,3 +301,8 @@ a:hover {
 .red-filter {  /* necessary to apply color to an svg file */
 	filter: invert(28%) sepia(98%) saturate(4535%) hue-rotate(349deg) brightness(88%) contrast(137%);
 }
+
+.error {
+	text-align: center;
+	color: rgb(133, 21, 21);
+  }

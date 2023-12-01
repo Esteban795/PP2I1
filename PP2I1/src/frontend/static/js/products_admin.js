@@ -26,6 +26,7 @@ productsOptions.forEach((option) => {
 			optionTitle.textContent = 'Modifier un produit';
 			SELECTED_CONTAINER = null;
 			previewAddProduct.style.display = 'none';
+			formEndpoint.action = "/admin/modify-product/";
 		}
 		let other = 1 - id;
 		div3.children[id].classList.remove('hidden');

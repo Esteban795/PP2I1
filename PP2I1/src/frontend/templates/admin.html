@@ -50,6 +50,9 @@
 			<div class="div2">
 				<div class="form-wrapper">
 					<h1 class="text-center" id="option-title"> Ajouter un produit : </h1>
+					{% if error %}
+					<p class="error"> <strong> {{ error }} </strong></p>
+					{% endif %}
 					<form id="form-products" enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
 						<div class="field-group">
 							<label for="product-name" class="label"> Nom du produit : </label>
@@ -57,7 +60,7 @@
 						</div>
 						<div class="field-group">
 							<label for="img" class="label">Sélectionnez une image : </label>
-							<input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" id="file" name="img">
+							<input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" name="img">
 						</div>
 						<div class="field-group">
 							<label for="price" class="label"> Prix du produit : </label>
