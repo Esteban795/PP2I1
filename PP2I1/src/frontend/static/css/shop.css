@@ -1,6 +1,7 @@
 
 * {
     font-family: 'Inter', sans-serif;
+    list-style-type: none;  
   }
   
 body{
@@ -51,12 +52,27 @@ body{
 
 .content{
   display: flex;
+  flex-direction: row;
+  /* align-items: center; */
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+}
+.middleZone{
+  display: flex;
   flex-direction: column;
   align-items: center;
   width: 100%;
   margin-top: 20px;
 }
+.itemList{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
 
+}
 .item{
   display: flex;
   flex-direction: row;
@@ -85,7 +101,7 @@ body{
 
 }
 
-.itemBuying button{
+.content button{
   width:70%;
   border: none;
   outline: none;
@@ -97,8 +113,12 @@ body{
   transition: background 0.3s ease;
   margin: 0 auto auto auto;
 }
-.itemBuying button:hover {
+.content button:hover {
   background: #004c4a;
+}
+
+#cartConfirmButton{
+  width:30%;
 }
 
 .itemInfo{
@@ -111,13 +131,65 @@ body{
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-/* .itemBuying{ */
-  /* background-color: aqua; */
-/* } */
+
 .itemPrice{
   font-size: 5em;
   margin-bottom: 0;
   margin: 0;
+}
+
+.shopping-cart{
+  display: flex;
+  flex-direction: column;
+  color:#000000;
+  position: fixed;
+  right:0;
+  height: 100%;
+  background-color: #f8f8f8;
+  overflow-y: auto;
+  width: 25%;
+  border: #000000 solid 1px;
+}
+
+.shoppingHeader{
+  display: flex;
+  
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.shoppingContent{
+  text-align: right;
+  width:80%;
+  align-self: center;
+  height:100vh;
+  font-size: 1.5em;
+}
+
+.shoppingContent li{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin: 10px;
+  padding: 10px;
+  border-bottom: 1px solid #000000;
+}
+
+#emptyCart {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.removeButton {
+  background-color: transparent;
+  border: none;
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .contact{
@@ -137,11 +209,4 @@ body{
 
 #contact_title{
   font-size: small;
-}
-
-#contact_list{
-  
-  list-style-type: none;
-  align-items: center;
-  
 }

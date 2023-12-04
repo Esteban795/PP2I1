@@ -1,56 +1,72 @@
 <!DOCTYPE html>
 <!-- Create an header and body for html -->
 <html lang="fr">
-    <head>
-        <meta charset="UTF-8">
-        <title>Boutique - ProjetPoubelle</title>
-        <link href="../static/css/shop.css" rel="stylesheet">
-        <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-    </head>
-    <body>
-        <div class="header">
-            <!-- Here you have the name of the project and 4 buttons leading to the other
-                pages : Accueil (here), Mon Compte (which will have all the account related things)
-                and Boutique which lead to the shop to get the magnificient Poubelles™-->
-            <a href="homepage.html" id="logo"><img src="../static/images/trash.svg" id="logo" alt = "Logo of the project" width="100" height="100"></a>
-            <!-- note : remplacer par le bon logo, si possible en svg-->
-            <h1>ProjetPoubelle</h1>
-            <!-- note : ajouter des mots clés en "strong" pour le référencement-->
-            <div class="header-right">
-                <a href="homepage.html">Accueil</a>
-                <a class="active" href="shop.html">Boutique</a>
-                <a href="myaccount.html">Mon compte</a>
-            </div>
-        </div>
-        <div class = "header-line"></div>
-        <div class="content">
+   <head>
+      <meta charset="UTF-8">
+      <title>Boutique - ProjetPoubelle</title>
+      <link href="../static/css/shop.css" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+   </head>
+   <body>
+      <div class="header">
+         <!-- Here you have the name of the project and 4 buttons leading to the other
+            pages : Accueil (here), Mon Compte (which will have all the account related things)
+            and Boutique which lead to the shop to get the magnificient Poubelles™-->
+         <a href="homepage.html" id="logo"><img src="../static/images/trash.svg" id="logo" alt = "Logo of the project" width="100" height="100"></a>
+         <!-- note : remplacer par le bon logo, si possible en svg-->
+         <h1>ProjetPoubelle</h1>
+         <!-- note : ajouter des mots clés en "strong" pour le référencement-->
+         <div class="header-right">
+            <a href="homepage.html">Accueil</a>
+            <a class="active" href="shop.html">Boutique</a>
+            <a href="myaccount.html">Mon compte</a>
+         </div>
+      </div>
+      <div class = "header-line"></div>
+      <div class="content">
+         <section class = "middleZone">
             <h1 id="titre_shop">Boutique</h1>
             <p> Phrase intro boutique ? </p>
-            <ul>
-                <il class = "item">
-                    <img class = "itemPic" src="../static/images/greyTrashcan240L.jpg" alt = "Poubelle Grise">
-                    <section class = "itemInfo">
-                        <h2 class = "itemName"> Poubelle Grise - 240L </h2>
-                        <p class = "itemDesc"> Une poubelle grise de 240L pour vos ordures ménagères, 
-                            équipées de nombreux capteurs facilitant votre vie et celle de la commune qui vous en remercie. 
-                        </p>
-                    </section>
-                    <section class = "itemBuying">
-                        <p class = "itemPrice"> 999.99€ </p>
-                        <button> Ajouter au panier </button>
-                    </section>
-                </il>
+            <ul class = "itemList">
+               <li class = "item">
+                  <img class = "itemPic" src="../static/images/greyTrashcan240L.jpg" alt = "Poubelle Grise">
+                  <section class = "itemInfo">
+                     <h2 class = "itemName"> Poubelle Grise - 240L </h2>
+                     <p class = "itemDesc"> Une poubelle grise de 240L pour vos ordures ménagères, 
+                        équipée de nombreux capteurs facilitant votre vie et celle de la commune qui vous en remercie. 
+                     </p>
+                  </section>
+                  <section class = "itemBuying">
+                     <p class = "itemPrice"> 999.99€ </p>
+                     <button onclick="addToCart({name: 'Poubelle Grise - 240L', price: '999.99€', img_src:'../static/images/greyTrashcan240L.jpg'})"> Ajouter au panier </button>
+                  </section>
+               </li>
             </ul>
-        </div>
-        <div class = "footer">
-            <div class="contact">
-                <!-- a voir ce qu'on met exactement ici-->
-                <h2 id ="contact_title">Nous contacter :</h2>
-                <ul id = "contact_list">
-                    <li>mail :</li>
-                    <li> telephone :</li>
-                </ul>
+         </section>
+         <div id="shoppingCart" class="shopping-cart">
+            <div class="shoppingHeader">
+               <img id="cart_logo" src="../static/images/shopping-cart.svg" alt="Logo of the shopping cart" width="100" height="100">
+               <h1 id="cart_title">Panier</h1>
             </div>
-        </div>
-    </body>
+            <div class="shoppingContent">
+               <p id="cart_text">Votre panier :</p>
+               <ul id="cart_list">
+                  <li id="emptyCart">Vide actuellement</li>
+               </ul>
+               <button id="cartConfirmButton">Valider le panier</button>
+            </div>
+         </div>
+      </div>
+      <div class = "footer">
+         <div class="contact">
+            <!-- a voir ce qu'on met exactement ici-->
+            <h2 id ="contact_title">Nous contacter :</h2>
+            <ul id = "contact_list">
+               <li>mail :</li>
+               <li> téléphone :</li>
+            </ul>
+         </div>
+      </div>
+      <script src="../static/js/shop.js"></script>
+   </body>
 </html>
