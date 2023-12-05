@@ -7,155 +7,248 @@
 		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 		<title> Admin Page </title>
 	</head>
-	<body>
-		<div class="map-container flex-row">
-			<div class="column map" id="map"> </div>
-			<div class="column locations-container flex-column">
-				<h1 class="text-center">  Localisations des poubelles </h1>
-				<div class="data-container flex-row">
-					{% if bins_data == [] %}
-					    {% block nobins %}
-					        <p> Aucune poubelle n'a été enregistrée.</p>
-					    {% endblock %}
-					{% else %}
-					    {% block content %}
-                            {% for bin in bins_data %}
-                                <div class="bin-entry" data-long="{{ bin.long }}" data-lat="{{ bin.lat}}">
-                                    <div class="bin-entry-infos">
-                                        <p> Volume utilisé : {{ bin.used }} </p>
-                                        <p> Volume maximum : {{ bin.volume}} </p>
-                                        <p> Dernier vidage : {{ bin.last_emptied }}</p>
-                                        <p> Dernier vidage par : {{ bin.numberplate if bin.numberplate else "Jamais vidé" }} </p>
-                                        <p> Type de déchet :  {{ bin.waste_type}}</p>
-                                    </div>
-                                    <div class="bin-entry-name">
-                                        <p> {{ bin.last_name }}  {{ bin.first_name }}</p>
-                                    </div>
-                                </div>
-                            {% endfor %}
-					    {% endblock %}
-					{% endif %}
-				</div>
+<body>
+	<div class="map-container flex-row">
+		<div class="column map" id="map"> </div>
+		<div class="column locations-container flex-column">
+			<h1 class="text-center">  Localisations des poubelles </h1>
+			<div class="data-container flex-row">
+				{% if bins_data == [] %}
+					{% block nobins %}
+						<p> Aucune poubelle n'a été enregistrée.</p>
+					{% endblock %}
+				{% else %}
+					{% block content %}
+						{% for bin in bins_data %}
+							<div class="bin-entry" data-long="{{ bin.long }}" data-lat="{{ bin.lat}}">
+								<div class="bin-entry-infos">
+									<p> Volume utilisé : {{ bin.used }} </p>
+									<p> Volume maximum : {{ bin.volume}} </p>
+									<p> Dernier vidage : {{ bin.last_emptied }}</p>
+									<p> Dernier vidage par : {{ bin.numberplate if bin.numberplate else "Jamais vidé" }} </p>
+									<p> Type de déchet :  {{ bin.waste_type}}</p>
+								</div>
+								<div class="bin-entry-name">
+									<p> {{ bin.last_name }}  {{ bin.first_name }}</p>
+								</div>
+							</div>
+						{% endfor %}
+					{% endblock %}
+				{% endif %}
 			</div>
 		</div>
-		<div class="grid-layout">
-			<div class="div1 products-management flex-row">
-				<div class="management-option selected-option" data-id="0">
-					<p> Ajouter </p>
-				</div>
-				<div class="management-option" data-id="1">
-					<p> Modifier </p>
-				</div>
+	</div>
+	<div class="grid-layout">
+		<div class="div1 products-management flex-row">
+			<div class="management-option selected-option" data-id="0">
+				<p> Ajouter </p>
 			</div>
-			<div class="div2">
-				<div class="form-wrapper">
-					<h1 class="text-center" id="option-title"> Ajouter un produit : </h1>
-					{% if error %}
-					<p class="error"> <strong> {{ error }} </strong></p>
-					{% endif %}
-					<form id="form-products" enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
-						<div class="field-group">
-							<label for="product-name" class="label"> Nom du produit : </label>
-							<input class="input" type="text" name="product-name">
-						</div>
-						<div class="field-group">
-							<label for="img" class="label">Sélectionnez une image : </label>
-							<input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" name="img">
-						</div>
-						<div class="field-group">
-							<label for="price" class="label"> Prix du produit : </label>
-							<input class="input" type="text" name="price">
-						</div>
-						<div class="field-group">
-							<label class="label" for="desc"> Description du produit : </label>
-							<input class="input" type="text" name="desc" />
-						</div>
-						<div class="field-group">
-							<label class="label" for="volume"> Volume de la poubelle : </label>
-							<input class="input" type="text" name="volume" />
-						</div>
-						<div class="field-group">
-							<label class="label" for="stock"> Stock : </label>
-							<input class="input" type="text" name="stock"/>
-						</div>
-						<div class="field-group">
-							<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
-						</div>
-					</form>
-				</div>
+			<div class="management-option" data-id="1">
+				<p> Modifier </p>
 			</div>
-			<div class="div3">
-				<div id="add-preview" class="product-entry flex-row">
-					<div class="product-entry-img">
-						<img class="product-entry-img" src="./../static/images/products/lagrossedaronnedetom.png" alt="product-img"/>
+		</div>
+		<div class="div2">
+			<div class="form-wrapper">
+				<h1 class="text-center" id="option-title"> Ajouter un produit : </h1>
+				{% if error %}
+				<p class="error"> <strong> {{ error }} </strong></p>
+				{% endif %}
+				<form id="form-products" enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
+					<div class="field-group">
+						<label for="product-name" class="label"> Nom du produit : </label>
+						<input class="input" type="text" name="product-name">
 					</div>
-					<section class="itemInfo">
-						<h2 class="itemName"> 
-							<span class="fields"> Titre </span>
-							- 
-							<span class="fields"> Volume </span>
-						</h2>
-						<p class="itemDesc fields"> 
-							Description
-						</p>
-					</section>
-					<section class="itemBuying">
-						<p class = "itemPrice fields"> Prix </p>
-						<p> En stock : <span class="fields"> stock</span> </p>
-						<button> Ajouter au panier </button>
-					</section>
-				</div>
-				<div class="hidden select-product flex-column">
-					{% if products == [] %}
-					    <p> Aucun produit n'a été enregistré. </p>
-					{% else %}
-                        {% block products %}
-                            {% for product in products %}
-                                <div class="product-entry-container">
-                                    <div class="product-entry flex-row" data-id="{{product.product_id}}">
-                                        <div class="product-entry-img">
-                                            <img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
-                                        </div>
-                                        <section class="itemInfo">
-                                            <h2 class="itemName"> 
-                                                <span class="fields"> {{ product.name}} </span>
-                                                - 
-                                                <span class="fields"> {{product.volume}}L </span>
-                                            </h2>
-                                            <p class="itemDesc fields"> 
-                                                {{ product.desc}} 
-                                            </p>
-                                        </section>
-                                        <section class="itemBuying">
-                                            <p class="itemPrice fields"> {{ product.price}}€ </p>
-                                            <p> En stock : <span class="fields">  {{product.stock}} </span> </p>
-                                            <button> Ajouter au panier </button>
-                                        </section>
-                                    </div>
-                                    <div class="option-buttons" style="display: none;">
-                                        <form method="post" action="/admin/delete/{{product.product_id}}">
-                                            <div class="button cancel-selection">
-                                                <img class="red-filter" src="./../static/images/cross.svg" class="cancel-selection" alt="button" style="width:20px;"></img>
-                                            </div>
-                                            <button class="button" name="delete-button" type="submit">
-                                            <img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        {% endblock %}
-					{% endif %}
-				</div>
+					<div class="field-group">
+						<label for="img" class="label">Sélectionnez une image : </label>
+						<input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" name="img">
+					</div>
+					<div class="field-group">
+						<label for="price" class="label"> Prix du produit : </label>
+						<input class="input" type="text" name="price">
+					</div>
+					<div class="field-group">
+						<label class="label" for="desc"> Description du produit : </label>
+						<input class="input" type="text" name="desc" />
+					</div>
+					<div class="field-group">
+						<label class="label" for="volume"> Volume de la poubelle : </label>
+						<input class="input" type="text" name="volume" />
+					</div>
+					<div class="field-group">
+						<label class="label" for="stock"> Stock : </label>
+						<input class="input" type="text" name="stock"/>
+					</div>
+					<div class="field-group">
+						<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
+					</div>
+				</form>
 			</div>
 		</div>
-		<script type="text/javascript" src="./../static/js/map.js"></script>
-		<script type="text/javascript" src="./../static/js/products_admin.js"></script>
-		<script>
-			{% for marker in bins_data %}
-			    L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
-			    .bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
-			{% endfor %}
-		</script>
-	</body>
+		<div class="div3">
+			<div id="add-preview" class="product-entry flex-row">
+				<div class="product-entry-img">
+					<img class="product-entry-img" src="./../static/images/products/lagrossedaronnedetom.png" alt="product-img"/>
+				</div>
+				<section class="itemInfo">
+					<h2 class="itemName"> 
+						<span class="fields"> Titre </span>
+						- 
+						<span class="fields"> Volume </span>
+					</h2>
+					<p class="itemDesc fields"> 
+						Description
+					</p>
+				</section>
+				<section class="itemBuying">
+					<p class = "itemPrice fields"> Prix </p>
+					<p> En stock : <span class="fields"> stock</span> </p>
+					<button> Ajouter au panier </button>
+				</section>
+			</div>
+			<div class="hidden select-product flex-column">
+				{% if products == [] %}
+					<p> Aucun produit n'a été enregistré. </p>
+				{% else %}
+					{% block products %}
+						{% for product in products %}
+							<div class="product-entry-container">
+								<div class="product-entry flex-row" data-id="{{product.product_id}}">
+									<div class="product-entry-img">
+										<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
+									</div>
+									<section class="itemInfo">
+										<h2 class="itemName"> 
+											<span class="fields"> {{ product.name}} </span>
+											- 
+											<span class="fields"> {{product.volume}}L </span>
+										</h2>
+										<p class="itemDesc fields"> 
+											{{ product.desc}} 
+										</p>
+									</section>
+									<section class="itemBuying">
+										<p class="itemPrice fields"> {{ product.price}}€ </p>
+										<p> En stock : <span class="fields">  {{product.stock}} </span> </p>
+										<button> Ajouter au panier </button>
+									</section>
+								</div>
+								<div class="option-buttons" style="display: none;">
+									<form method="post" action="/admin/delete/{{product.product_id}}">
+										<div class="button cancel-selection">
+											<img class="red-filter" src="./../static/images/cross.svg" class="cancel-selection" alt="button" style="width:20px;"></img>
+										</div>
+										<button class="button" name="delete-button" type="submit">
+										<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+										</button>
+									</form>
+								</div>
+							</div>
+						{% endfor %}
+					{% endblock %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="purchase-history-container flex-column">
+		<h1> Historique des achats </h1>
+		<div class="flex-row add-purchase-container">
+			<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
+			<input class="padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
+		</div>
+		<div id="purchase-history-options" class="flex-row">
+			<input type="search" name="searchbar" id="search-bar" placeholder="Search...">
+			<div class="flex-column">
+				<label for="filter" class="text-center"> Trier par : </label>
+				<select name="filter">
+					<optgroup label="Trier par..">
+						<option> Plus récent </option>
+						<option> Plus ancien </option>
+						<option> Prix croissant </option>
+						<option> Prix décroissant </option>
+					</optgroup>
+				</select>
+			</div>
+			<div class="flex-column">
+				<label for="table-options" class="text-center"> Gérer les colonnes : </label>
+				<select name="manage-columns">
+					<optgroup label="Afficher les colonnes.."> 
+						<option class="manage-colums-option"> Date </option>
+						<option class="manage-colums-option"> Client </option>
+						<option class="manage-colums-option"> Email </option>
+						<option class="manage-colums-option"> Prix </option>
+						<option class="manage-colums-option"> Actions </option>
+					</optgroup>
+				</select>
+			</div>
+			<div class="flex-column">
+				<label for="how-many-results" class="text-center"> Nombre de résultats : </label>
+				<select name="how-many-results">
+					<optgroup label="Afficher au plus..."> 
+						<option> 5 </option>
+						<option> 6 </option>
+						<option> 7 </option>
+						<option> 8 </option>
+						<option> 9 </option>
+						<option> 10 </option>
+					</optgroup>
+				</select>
+			</div>
+		</div>
+		<div id="table-container">
+			<table>
+				<thead>
+					<tr>
+						<th class="text-left border-top-bottom"> DATE </th>
+						<th class="text-left border-top-bottom"> CLIENT </th>
+						<th class="text-left border-top-bottom"> EMAIL </th>
+						<th class="text-left border-top-bottom"> PRIX </th>
+						<th class="text-left border-top-bottom"> ACTIONS </th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if purchases == [] %}
+						<tr>
+							<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
+						</tr>
+					{% else %}
+							{% for purchase in purchases %}
+								<tr>
+									<td> {{ purchase.date }} </td>
+									<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
+									<td> {{ purchase.email }} </td>
+									<td> {{ purchase.price }}€ </td>
+									<td> <a href="/admin/purchase/{{ purchase.purchase_id }}"> Voir </a> </td>
+								</tr>
+							{% endfor %}
+					{% endif %}
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> MANDJUKOWSKI Esteban </td>
+						<td> estebanmandjukowski@gmail.com </td>
+						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> MANDJUKOWSKI Esteban </td>
+						<td> estebanmandjukowski@gmail.com </td>
+						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+				</tbody>
+
+			</table>
+		</div>
+	</div>
+
+	
+	<script type="text/javascript" src="./../static/js/map.js"></script>
+	<script type="text/javascript" src="./../static/js/products_admin.js"></script>
+	<script>
+		{% for marker in bins_data %}
+			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
+			.bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
+		{% endfor %}
+	</script>
+</body>
 </html>

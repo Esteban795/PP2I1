@@ -77,7 +77,7 @@ def login():
         password = hash_object.hexdigest()
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
-        redirect_endpoint = 'home' if client.is_admin == 0 else 'admin'
+        redirect_endpoint = 'admin' if client.is_admin else 'home'
         login_user(client,remember=remember)
         return redirect(url_for(redirect_endpoint))
     else:
@@ -131,7 +131,7 @@ def admin():
     error = request.args.get('error',None)
     bins_data = getBinsInformation()
     products = getProducts()
-    return render_template('admin.html',bins_data=bins_data,products=products,error=error)
+    return render_template('admin.html',bins_data=bins_data,products=products,error=error,purchases=[])
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
 def add_product():
