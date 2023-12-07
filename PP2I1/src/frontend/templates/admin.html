@@ -161,10 +161,10 @@
 				<label for="filter" class="text-center"> Trier par : </label>
 				<select id="filter-options" name="filter">
 					<optgroup label="Trier par..">
-						<option> Plus récent </option>
-						<option> Plus ancien </option>
-						<option> Prix croissant </option>
-						<option> Prix décroissant </option>
+						<option selected> Plus récent </option>
+						<option>Plus ancien</option>
+						<option>Prix croissant</option>
+						<option>Prix décroissant</option>
 					</optgroup>
 				</select>
 			</div>
@@ -200,13 +200,13 @@
 				<label for="how-many-results" class="text-center"> Nombre de résultats : </label>
 				<select id="number-of-results-select" name="how-many-results" style="width: fit-content;">
 					<optgroup label="Afficher au plus..."> 
-						<option selected> Tous les résultats </option>
-						<option> 5 </option>
-						<option> 6 </option>
-						<option> 7 </option>
-						<option> 8 </option>
-						<option> 9 </option>
-						<option> 10 </option>
+						<option value="all" selected> Tous les résultats </option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
 					</optgroup>
 				</select>
 			</div>
@@ -239,6 +239,27 @@
 							{% endfor %}
 					{% endif %} -->
 					<tr>
+						<td>2023-12-05 15:37:17</td>
+						<td>MANDJUKOWSKI Esteban</td>
+						<td>estebanmandjukowski@gmail.com</td>
+						<td>130€</td>
+						<td>test</td>
+					</tr>
+					<tr>
+						<td>2023-11-04 15:37:17</td>
+						<td>MANDJUKOWSKI Esteban</td>
+						<td>estebanmandjukowski@gmail.com</td>
+						<td>150€</td>
+						<td>test</td>
+					</tr>
+					<!-- <tr>
+						<td> 13/10/2023 </td>
+						<td> COUDER Marie </td>
+						<td> marie.couder@telecomnancy.eu </td>
+						<td> 16€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
 						<td> 13/10/2023 </td>
 						<td> MANDJUKOWSKI Esteban </td>
 						<td> estebanmandjukowski@gmail.com </td>
@@ -259,8 +280,49 @@
 						<td> 16€ </td>
 						<td> test </td>
 					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> MANDJUKOWSKI Esteban </td>
+						<td> estebanmandjukowski@gmail.com </td>
+						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> MANDJUKOWSKI Esteban </td>
+						<td> estebanmandjukowski@gmail.com </td>
+						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> COUDER Marie </td>
+						<td> marie.couder@telecomnancy.eu </td>
+						<td> 16€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> MANDJUKOWSKI Esteban </td>
+						<td> estebanmandjukowski@gmail.com </td>
+						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> MANDJUKOWSKI Esteban </td>
+						<td> estebanmandjukowski@gmail.com </td>
+						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> COUDER Marie </td>
+						<td> marie.couder@telecomnancy.eu </td>
+						<td> 16€ </td>
+						<td> test </td>
+					</tr> -->
 				</tbody>
-
 			</table>
 		</div>
 	</div>
@@ -271,6 +333,11 @@
 	<script type="text/javascript" src="./../static/js/purchase_history.js"></script>
 	<script>
 
+		d1 = new Date('2023-12-05 15:37:17');
+		d2 = new Date('2023-11-04 15:37:17');
+		console.log(d2 - d1);
+
+		
 		{% for marker in bins_data %}
 			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
 			.bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")

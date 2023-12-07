@@ -1,20 +1,40 @@
-// const filterOptionsSelect = document.querySelector("#filter-options-select");
-// const manageColumnsSelect = document.querySelector("#manage-columns-select");
-// const numberOfResultsSelect = document.querySelector("#number-of-results-select");
+const filterOptionsSelect = document.getElementById("filter-options");
 
-// let filterOptionTDIndex = new Map([
-//     ['Plus récent',0],
-//     ['Plus ancien',-0],
-//     ['Prix croissant',1],
-//     ['Prix décroissant',-1],
-// ]);
+let filterOptionTDIndex = new Map([
+    ['Plus récent',0],
+    ['Plus ancien',-0],
+    ['Prix croissant',4],
+    ['Prix décroissant',-4],
+]);
 
 
-// filterOptionsSelect.addEventListener('change', (e) => {
-//     const filterOption = e.target.value;
+// 2023-12-05 15:37:17
+function parseDate(d) {
+  return new Date(d)
+}
 
-// });
+function parsePrice(p) {
+    return p.slice(0, -1);
+}
 
+filterOptionsSelect.addEventListener('change', (e) => {
+    const filterOption = e.target.value;
+    let filterIndex = filterOptionTDIndex.get(filterOption);
+    let absIndex = Math.abs(filterIndex);
+    let tbody = purchaseHistoryTable.querySelector('tbody');
+    let rows = [].slice.call(tbody.querySelectorAll('tr'));
+    parser_used = absIndex == 0 ? parseDate : parsePrice;
+    rows.sort(function(a,b) {
+      return parser_used(b.children[absIndex].innerHTML) - parser_used(a.children[absIndex].innerHTML);
+    });
+    if (filterIndex < 0) {
+        rows.reverse();
+    }
+    console.log(rows);
+    // rows.forEach(function(v) {
+    //   tbody.appendChild(v);
+    // });
+});
 
 const searchbar = document.getElementById('search-bar');
 const purchaseHistoryTable = document.getElementById('purchase-history-table');
@@ -29,6 +49,7 @@ searchbar.addEventListener('keyup', (e) => {
         let found = false;
         for (let i = 0; i < element.children.length; i++) {
             const cell = element.children[i];
+            if (cell.classList.contains('column-hidden')) continue;
             if (cell.innerHTML.toLowerCase().includes(searchString)) {
                 found = true;
                 break;
@@ -42,7 +63,6 @@ searchbar.addEventListener('keyup', (e) => {
 let expanded = false;
 const selectCheckboxes = document.querySelector("#checkboxes");
 const columnsCheckboxes = document.querySelectorAll(".columns-checkboxes");
-
 const columnsIndexes = new Map([
   ['date',0],
   ['client-name',1],
@@ -64,7 +84,6 @@ function showCheckboxes() {
 columnsCheckboxes.forEach((checkbox) => {
   checkbox.addEventListener("change", (event) => {
     let index = columnsIndexes.get(event.target.value);
-    console.log(index);
     if (!event.target.checked) {
         for (let i = 0; i < tableRows.length; i++){
             tableRows[i].children[index].classList.add('column-hidden');
@@ -76,3 +95,26 @@ columnsCheckboxes.forEach((checkbox) => {
     }
   });
 });
+
+
+const resultCountSelect = document.querySelector("#number-of-results-select");
+
+resultCountSelect.addEventListener('change', (e) => {
+    const resultCount = e.target.value;
+    let trs = purchaseHistoryTable.querySelectorAll('tr');
+    if (resultCount == 'all') {
+        for (let i = 1; i < trs.length; i++) {
+            trs[i].classList.remove('hidden');
+        }
+        return;
+    }
+    for (let i = 1; i < trs.length; i++) {
+        const element = trs[i];
+        if (i <= resultCount) {
+            element.classList.remove('hidden');
+        } else {
+            element.classList.add('hidden');
+        }
+    }
+  }
+);
