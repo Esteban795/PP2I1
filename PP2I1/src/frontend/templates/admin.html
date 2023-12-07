@@ -159,7 +159,7 @@
 			<input type="search" name="searchbar" id="search-bar" placeholder="Search...">
 			<div class="flex-column">
 				<label for="filter" class="text-center"> Trier par : </label>
-				<select name="filter">
+				<select id="filter-options" name="filter">
 					<optgroup label="Trier par..">
 						<option> Plus récent </option>
 						<option> Plus ancien </option>
@@ -170,20 +170,37 @@
 			</div>
 			<div class="flex-column">
 				<label for="table-options" class="text-center"> Gérer les colonnes : </label>
-				<select name="manage-columns">
-					<optgroup label="Afficher les colonnes.."> 
-						<option class="manage-colums-option"> Date </option>
-						<option class="manage-colums-option"> Client </option>
-						<option class="manage-colums-option"> Email </option>
-						<option class="manage-colums-option"> Prix </option>
-						<option class="manage-colums-option"> Actions </option>
-					</optgroup>
-				</select>
+				<div class="multiselect">
+					<div class="selectBox" onclick="showCheckboxes()">
+						<select>
+							<option> Sélectionnez les colonnes </option>
+						</select>
+						<div class="overSelect"> </div>
+					</div>
+					<div id="checkboxes">
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="date" checked/> Date
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value='client-name' checked/> Client
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="email" checked/> Email 
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="price" checked/> Prix
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="actions" checked/> Actions
+						</label>
+					</div>
+				</div>			
 			</div>
 			<div class="flex-column">
 				<label for="how-many-results" class="text-center"> Nombre de résultats : </label>
-				<select name="how-many-results">
+				<select id="number-of-results-select" name="how-many-results" style="width: fit-content;">
 					<optgroup label="Afficher au plus..."> 
+						<option selected> Tous les résultats </option>
 						<option> 5 </option>
 						<option> 6 </option>
 						<option> 7 </option>
@@ -195,7 +212,7 @@
 			</div>
 		</div>
 		<div id="table-container">
-			<table>
+			<table id="purchase-history-table">
 				<thead>
 					<tr>
 						<th class="text-left border-top-bottom"> DATE </th>
@@ -206,7 +223,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					{% if purchases == [] %}
+					<!-- {% if purchases == [] %}
 						<tr>
 							<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
 						</tr>
@@ -220,7 +237,7 @@
 									<td> <a href="/admin/purchase/{{ purchase.purchase_id }}"> Voir </a> </td>
 								</tr>
 							{% endfor %}
-					{% endif %}
+					{% endif %} -->
 					<tr>
 						<td> 13/10/2023 </td>
 						<td> MANDJUKOWSKI Esteban </td>
@@ -233,6 +250,13 @@
 						<td> MANDJUKOWSKI Esteban </td>
 						<td> estebanmandjukowski@gmail.com </td>
 						<td> 150€ </td>
+						<td> test </td>
+					</tr>
+					<tr>
+						<td> 13/10/2023 </td>
+						<td> COUDER Marie </td>
+						<td> marie.couder@telecomnancy.eu </td>
+						<td> 16€ </td>
 						<td> test </td>
 					</tr>
 				</tbody>
@@ -244,11 +268,14 @@
 	
 	<script type="text/javascript" src="./../static/js/map.js"></script>
 	<script type="text/javascript" src="./../static/js/products_admin.js"></script>
+	<script type="text/javascript" src="./../static/js/purchase_history.js"></script>
 	<script>
+
 		{% for marker in bins_data %}
 			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
 			.bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
 		{% endfor %}
+
 	</script>
 </body>
 </html>

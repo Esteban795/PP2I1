@@ -126,7 +126,7 @@ def getProducts():
     return products
 
 @app.route('/admin/')
-@utilities.admin_required
+# @utilities.admin_required
 def admin():
     error = request.args.get('error',None)
     bins_data = getBinsInformation()
