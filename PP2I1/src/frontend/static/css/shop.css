@@ -101,7 +101,7 @@ body{
 
 }
 
-.content button{
+.content button:not([class="removeButton"]){
   width:70%;
   border: none;
   outline: none;
@@ -117,6 +117,10 @@ body{
   background: #004c4a;
 }
 
+#cart_text{
+  text-align: center;
+  font-size: 1.5em;
+}
 #cartConfirmButton{
   width:30%;
 }
@@ -153,7 +157,6 @@ body{
 
 .shoppingHeader{
   display: flex;
-  
   flex-direction: row;
   align-items: center;
   justify-content: center;
@@ -163,8 +166,10 @@ body{
   text-align: right;
   width:80%;
   align-self: center;
-  height:100vh;
   font-size: 1.5em;
+  overflow-y: auto;
+  max-height: 80vh;
+  margin-bottom: 250px;
 }
 
 .shoppingContent li{
@@ -175,6 +180,10 @@ body{
   margin: 10px;
   padding: 10px;
   border-bottom: 1px solid #000000;
+}
+.shoppingContent ul{
+  padding:0;
+  margin: 0;
 }
 
 #emptyCart {
