@@ -451,10 +451,12 @@ tr:hover td {
 }
   
 #checkboxes {
-	background-color: whitesmoke;
+	background-color: white;
 	display: none;
 	position:absolute;
 	width:100%;
+	border-radius: 5px;
+	box-shadow: 5px 5px 19px 5px rgba(100,100,100,0.1);
 }
   
 #checkboxes label {
@@ -462,7 +464,7 @@ tr:hover td {
 }
   
 #checkboxes label:hover {
-	background-color: #1e90ff;
+	background-color: rgba(0,0,0,0.5);
 }
 
 .label-columns-checkboxes {
@@ -473,6 +475,15 @@ tr:hover td {
 	display: none;
 }
 
-#purchase-history-table{
-	overflow-y: scroll;
+#dialog-add-transaction {
+	position:relative;
+	width:75%;
+}
+
+#close-dialog-button {
+	width: 100%;
+}
+
+.flex-end {
+	justify-content: flex-end;
 }

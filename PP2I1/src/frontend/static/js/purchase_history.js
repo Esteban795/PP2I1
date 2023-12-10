@@ -1,20 +1,19 @@
 const filterOptionsSelect = document.getElementById("filter-options");
 
 let filterOptionTDIndex = new Map([
-    ['Plus récent',0],
-    ['Plus ancien',-0],
-    ['Prix croissant',4],
-    ['Prix décroissant',-4],
+    ['Plus récent',1],
+    ['Plus ancien',-1],
+    ['Prix croissant',-4],
+    ['Prix décroissant',4],
 ]);
 
-
-// 2023-12-05 15:37:17
 function parseDate(d) {
-  return new Date(d)
+  let temp = Date.parse(d);
+  return temp;
 }
 
 function parsePrice(p) {
-    return p.slice(0, -1);
+  return parseInt(p.slice(0, -1));
 }
 
 filterOptionsSelect.addEventListener('change', (e) => {
@@ -23,17 +22,18 @@ filterOptionsSelect.addEventListener('change', (e) => {
     let absIndex = Math.abs(filterIndex);
     let tbody = purchaseHistoryTable.querySelector('tbody');
     let rows = [].slice.call(tbody.querySelectorAll('tr'));
-    parser_used = absIndex == 0 ? parseDate : parsePrice;
+    parser_used = absIndex == 1 ? parseDate : parsePrice;
     rows.sort(function(a,b) {
-      return parser_used(b.children[absIndex].innerHTML) - parser_used(a.children[absIndex].innerHTML);
+      let res = parser_used(b.children[absIndex - 1].innerHTML) - parser_used(a.children[absIndex - 1].innerHTML);
+      return res;
     });
     if (filterIndex < 0) {
         rows.reverse();
     }
-    console.log(rows);
-    // rows.forEach(function(v) {
-    //   tbody.appendChild(v);
-    // });
+    tbody.replaceChildren()
+    for (let i = 0; i < rows.length;i++) {
+      tbody.appendChild(rows[i]);
+    }
 });
 
 const searchbar = document.getElementById('search-bar');
@@ -118,3 +118,17 @@ resultCountSelect.addEventListener('change', (e) => {
     }
   }
 );
+
+
+
+const dialogAddTransaction = document.getElementById('dialog-add-transaction');
+const dialogButton = document.getElementById('button-dialog');
+const closeDialogButton = document.getElementById('close-dialog-button');
+
+dialogButton.addEventListener('click', () => {
+  dialogAddTransaction.showModal();
+});
+
+closeDialogButton.addEventListener('click', () => {
+  dialogAddTransaction.close();
+});

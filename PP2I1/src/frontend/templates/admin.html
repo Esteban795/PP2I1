@@ -153,7 +153,80 @@
 		<h1> Historique des achats </h1>
 		<div class="flex-row add-purchase-container">
 			<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
-			<input class="padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
+			<dialog id="dialog-add-transaction">
+				<div class="flex-row" style="height:400px;width:100%;position: relative;">
+					<div class="flex-column flex-end" style="flex:1;">
+						<div id="close-dialog-button" class="flex-row">
+							<img class="red-filter" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+						</div>			
+						<form method="dialog" action="/admin/add-transaction">
+							<div class="field-group">
+								<label for="date-transac" class="label"> Date de la transaction : </label>
+								<input class="input" type="text" name="date-transac">
+							</div>
+							<div class="field-group">
+								<label for="client-name" class="label"> Client : </label>
+								<input class="input" type="input" name="client-name">
+							</div>
+							<div class="field-group">
+								<label for="email" class="label"> Email : </label>
+								<input class="input" type="text" name="email">
+							</div>
+							<div class="field-group">
+								<label class="label" for="price"> Prix : </label>
+								<input class="input" type="text" name="price"/>
+							</div>
+							<div class="field-group">
+								<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
+							</div>
+						</form>
+					</div>
+					<div class="flex-column" style="flex:2; height:400px; overflow-y: scroll;">
+						{% if products == [] %}
+							<p> Aucun produit n'a été enregistré. </p>
+						{% else %}
+							{% block products_dialog_box %}
+								{% for product in products %}
+									<div class="product-entry-container">
+										<div class="product-entry flex-row" data-id="{{product.product_id}}">
+											<div class="product-entry-img">
+												<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
+											</div>
+											<section class="itemInfo">
+												<h2 class="itemName"> 
+													<span class="fields"> {{ product.name}} </span>
+													- 
+													<span class="fields"> {{product.volume}}L </span>
+												</h2>
+												<p class="itemDesc fields"> 
+													{{ product.desc}} 
+												</p>
+											</section>
+											<section class="itemBuying">
+												<p class="itemPrice fields"> {{ product.price}}€ </p>
+												<p> En stock : <span class="fields">  {{product.stock}} </span> </p>
+												<button> Ajouter au panier </button>
+											</section>
+										</div>
+										<div class="option-buttons" style="display: none;">
+											<form method="post" action="/admin/delete/{{product.product_id}}">
+												<div class="button cancel-selection">
+													<img class="red-filter" src="./../static/images/cross.svg" class="cancel-selection" alt="button" style="width:20px;"></img>
+												</div>
+												<button class="button" name="delete-button" type="submit">
+												<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+												</button>
+											</form>
+										</div>
+									</div>
+								{% endfor %}
+							{% endblock %}
+						{% endif %}
+					</div>
+				</div>
+
+			</dialog>
+			<input id="button-dialog" class="padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
 		</div>
 		<div id="purchase-history-options" class="flex-row">
 			<input type="search" name="searchbar" id="search-bar" placeholder="Search...">
@@ -161,7 +234,7 @@
 				<label for="filter" class="text-center"> Trier par : </label>
 				<select id="filter-options" name="filter">
 					<optgroup label="Trier par..">
-						<option selected> Plus récent </option>
+						<option selected>Plus récent</option>
 						<option>Plus ancien</option>
 						<option>Prix croissant</option>
 						<option>Prix décroissant</option>
@@ -223,7 +296,7 @@
 					</tr>
 				</thead>
 				<tbody>
-					<!-- {% if purchases == [] %}
+					{% if purchases == [] %}
 						<tr>
 							<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
 						</tr>
@@ -237,91 +310,7 @@
 									<td> <a href="/admin/purchase/{{ purchase.purchase_id }}"> Voir </a> </td>
 								</tr>
 							{% endfor %}
-					{% endif %} -->
-					<tr>
-						<td>2023-12-05 15:37:17</td>
-						<td>MANDJUKOWSKI Esteban</td>
-						<td>estebanmandjukowski@gmail.com</td>
-						<td>130€</td>
-						<td>test</td>
-					</tr>
-					<tr>
-						<td>2023-11-04 15:37:17</td>
-						<td>MANDJUKOWSKI Esteban</td>
-						<td>estebanmandjukowski@gmail.com</td>
-						<td>150€</td>
-						<td>test</td>
-					</tr>
-					<!-- <tr>
-						<td> 13/10/2023 </td>
-						<td> COUDER Marie </td>
-						<td> marie.couder@telecomnancy.eu </td>
-						<td> 16€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> MANDJUKOWSKI Esteban </td>
-						<td> estebanmandjukowski@gmail.com </td>
-						<td> 150€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> MANDJUKOWSKI Esteban </td>
-						<td> estebanmandjukowski@gmail.com </td>
-						<td> 150€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> COUDER Marie </td>
-						<td> marie.couder@telecomnancy.eu </td>
-						<td> 16€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> MANDJUKOWSKI Esteban </td>
-						<td> estebanmandjukowski@gmail.com </td>
-						<td> 150€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> MANDJUKOWSKI Esteban </td>
-						<td> estebanmandjukowski@gmail.com </td>
-						<td> 150€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> COUDER Marie </td>
-						<td> marie.couder@telecomnancy.eu </td>
-						<td> 16€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> MANDJUKOWSKI Esteban </td>
-						<td> estebanmandjukowski@gmail.com </td>
-						<td> 150€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> MANDJUKOWSKI Esteban </td>
-						<td> estebanmandjukowski@gmail.com </td>
-						<td> 150€ </td>
-						<td> test </td>
-					</tr>
-					<tr>
-						<td> 13/10/2023 </td>
-						<td> COUDER Marie </td>
-						<td> marie.couder@telecomnancy.eu </td>
-						<td> 16€ </td>
-						<td> test </td>
-					</tr> -->
+					{% endif %}
 				</tbody>
 			</table>
 		</div>
@@ -331,18 +320,11 @@
 	<script type="text/javascript" src="./../static/js/map.js"></script>
 	<script type="text/javascript" src="./../static/js/products_admin.js"></script>
 	<script type="text/javascript" src="./../static/js/purchase_history.js"></script>
-	<script>
-
-		d1 = new Date('2023-12-05 15:37:17');
-		d2 = new Date('2023-11-04 15:37:17');
-		console.log(d2 - d1);
-
+	<script type="text/javascript">
 		
-		{% for marker in bins_data %}
-			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
-			.bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
-		{% endfor %}
-
+		{%for marker in bins_data%}
+			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map).bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
+		{%endfor%}
 	</script>
 </body>
 </html>

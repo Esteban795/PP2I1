@@ -202,5 +202,12 @@ def delete_product(product_id : int):
         conn.commit()
     return redirect(url_for('admin'))
 
+@app.route('/admin/add-transaction',methods=('GET','POST'))
+def add_transaction():
+    if request.method == 'POST':
+        pass
+    return redirect(url_for('admin'))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
