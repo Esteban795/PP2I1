@@ -1,12 +1,10 @@
-from flask import Flask, request
-app = Flask(__name__)
+from flask import Flask, request, render_template
+app = Flask(__name__,template_folder="../frontend/templates",static_folder="../frontend/static")
 
-@app.route('/', methods=['GET'])
+@app.route('/accueil', methods=['GET'])
 def index():
-    default_value = 'jean mich'
-    data = request.form.get('submitted-name', default_value)
-    print(data)
-    return f'Hello {data}!'
+    return render_template('homepage.html')
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
