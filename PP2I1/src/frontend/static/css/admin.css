@@ -478,12 +478,22 @@ tr:hover td {
 #dialog-add-transaction {
 	position:relative;
 	width:75%;
+	position: fixed;
+    height: auto !important;
 }
 
 #close-dialog-button {
 	width: 100%;
+	justify-self: flex-start;
 }
 
 .flex-end {
 	justify-content: flex-end;
 }
+
+#test {
+	height: 100%;
+	flex:1;
+	justify-content: center;
+}
+

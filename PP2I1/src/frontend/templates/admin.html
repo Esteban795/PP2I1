@@ -154,12 +154,13 @@
 		<div class="flex-row add-purchase-container">
 			<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
 			<dialog id="dialog-add-transaction">
-				<div class="flex-row" style="height:400px;width:100%;position: relative;">
-					<div class="flex-column flex-end" style="flex:1;">
-						<div id="close-dialog-button" class="flex-row">
-							<img class="red-filter" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
-						</div>			
-						<form method="dialog" action="/admin/add-transaction">
+				<div class="flex-row" style="height:100%;width:100%;position: relative;">
+					<div id="close-dialog-button">
+						<img class="red-filter" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+					</div>
+					<div id="test" class="flex-column">
+									
+						<form  method="dialog" action="/admin/add-transaction">
 							<div class="field-group">
 								<label for="date-transac" class="label"> Date de la transaction : </label>
 								<input class="input" type="text" name="date-transac">
@@ -181,7 +182,7 @@
 							</div>
 						</form>
 					</div>
-					<div class="flex-column" style="flex:2; height:400px; overflow-y: scroll;">
+					<div class="flex-column" style="flex:2;overflow-y: scroll;">
 						{% if products == [] %}
 							<p> Aucun produit n'a été enregistré. </p>
 						{% else %}
@@ -224,7 +225,6 @@
 						{% endif %}
 					</div>
 				</div>
-
 			</dialog>
 			<input id="button-dialog" class="padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
 		</div>

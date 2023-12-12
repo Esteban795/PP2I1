@@ -127,8 +127,10 @@ const closeDialogButton = document.getElementById('close-dialog-button');
 
 dialogButton.addEventListener('click', () => {
   dialogAddTransaction.showModal();
+  document.querySelector('body').style.overflow = 'hidden';
 });
 
 closeDialogButton.addEventListener('click', () => {
   dialogAddTransaction.close();
+  document.querySelector('body').style.overflow = 'auto';
 });
