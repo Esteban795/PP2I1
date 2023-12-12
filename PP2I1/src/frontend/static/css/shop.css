@@ -58,11 +58,28 @@ body{
   height: 100%;
   margin-top: 20px;
 }
+
+.content button:not([class="removeButton"]){
+  width:70%;
+  border: none;
+  outline: none;
+  background: #006570;
+  color: #ffffff;
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin: 0 auto auto auto;
+}
+.content button:hover {
+  background: #004c4a;
+}
+
 .middleZone{
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 70%;
   margin-top: 20px;
 }
 .itemList{
@@ -101,28 +118,14 @@ body{
 
 }
 
-.content button:not([class="removeButton"]){
-  width:70%;
-  border: none;
-  outline: none;
-  background: #006570;
-  color: #ffffff;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin: 0 auto auto auto;
-}
-.content button:hover {
-  background: #004c4a;
-}
+
 
 #cart_text{
   text-align: center;
   font-size: 1.5em;
 }
 #cartConfirmButton{
-  width:30%;
+  width:66%;
 }
 
 .itemInfo{
