@@ -92,12 +92,13 @@ def logout():
 
 def getBinsInformation():
     bins_data = []
-    DATA_FIELDS = ['first_name','last_name','lat','long','volume','used','last_emptied','created','waste_id','numberplate','waste_type']
+    DATA_FIELDS = ['first_name','last_name','lat','long','volume','used','last_emptied','bought_at','numberplate','waste_type_name','product_name']
     SQL = """
-        SELECT first_name,last_name,lat,long,volume,used,last_emptied,created,waste_id,numberplate, name FROM bins
+        SELECT first_name,last_name,lat,long,volume,used,last_emptied,bought_at,numberplate, waste_type_name,product_name FROM bins
         JOIN clients ON bins.owner_id = clients.client_id
-        LEFT JOIN trucks ON bins.last_emptied_by = trucks.truck_id
+        JOIN products ON bins.product_id = products.product_id
         JOIN waste_type ON bins.waste_id = waste_type.waste_type_id
+        LEFT JOIN trucks ON bins.last_emptied_by = trucks.truck_id
     """
     #LEFT JOIN because some bins might have never been emptied yet!
     cursor.execute(SQL)
@@ -125,13 +126,51 @@ def getProducts():
         products.append(infos)
     return products
 
+def getWasteTypes():
+    SQL = """
+        SELECT waste_id,waste_type_name FROM waste_type
+    """
+    waste_types = []
+    DATA_FIELDS = ['waste_id','waste_type_name']
+    SQL = """
+        SELECT * FROM waste_type
+    """
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for product in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = product[i]
+        waste_types.append(infos)
+    return waste_types
+
+def getPurchases():
+    purchases = []
+    DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
+    SQL = """
+        SELECT bin_id,first_name,last_name,email,bought_at,price FROM bins
+        JOIN clients ON bins.owner_id = clients.client_id
+        JOIN products ON bins.product_id = products.product_id
+    """
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for purchase in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = purchase[i]
+        purchases.append(infos)
+    return purchases
+
 @app.route('/admin/')
 # @utilities.admin_required
 def admin():
     error = request.args.get('error',None)
+    derror = request.args.get('derror',None)
     bins_data = getBinsInformation()
     products = getProducts()
-    return render_template('admin.html',bins_data=bins_data,products=products,error=error,purchases=[])
+    waste_types = getWasteTypes()
+    purchases = getPurchases()
+    return render_template('admin.html',bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
 def add_product():
@@ -148,7 +187,7 @@ def add_product():
         file_uuid = utilities.generateImgUUID(f.filename)
         filepath = os.path.join(UPLOAD_FOLDER,file_uuid)
         f.save(filepath)
-        cursor.execute("INSERT INTO products (name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,file_uuid))
+        cursor.execute("INSERT INTO products (product_name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,file_uuid))
         conn.commit()
         return redirect(url_for('admin'))
     return render_template('admin.html') #no get request here
@@ -178,7 +217,7 @@ def modify_product(product_id : int):
         SQL = """
             UPDATE products 
             SET 
-                name = coalesce(?,name),
+                product_name = coalesce(?,product_name),
                 price = coalesce(?,price),
                 volume = coalesce(?,volume),
                 desc = coalesce(?,desc),
@@ -202,10 +241,31 @@ def delete_product(product_id : int):
         conn.commit()
     return redirect(url_for('admin'))
 
-@app.route('/admin/add-transaction',methods=('GET','POST'))
-def add_transaction():
+@app.route('/admin/add-transaction/',methods=('GET','POST'))
+def add_transaction_not_selected():
+    return redirect(url_for('admin',derror="Veuillez sélectionner un produit."))
+
+@app.route('/admin/add-transaction/<int:product_id>',methods=('GET','POST'))
+def add_transaction(product_id : int):
     if request.method == 'POST':
-        pass
+        date = request.form['date-transac']
+        email = request.form['email']
+        lat = request.form['latitude']
+        long = request.form['longitude']
+        if not utilities.checkValidInput(date,email,lat,long):
+            return redirect(url_for('admin',derror="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
+        waste_type_id = request.form['waste-type']
+        cursor.execute("SELECT client_id FROM clients WHERE email = ?",(email,))
+        client_id = cursor.fetchone()[0]
+        cursor.execute("INSERT INTO bins (owner_id,product_id,lat,long,waste_id,bought_at) VALUES (?,?,?,?,?,?)",(client_id,product_id,lat,long,waste_type_id,date))
+        conn.commit()
+        return redirect(url_for('admin'))
+    return redirect(url_for('admin')) #get request redirected directly
+
+@app.route('/admin/delete-transaction/<int:bin_id>',methods=('GET','POST'))
+def delete_transaction(bin_id : int):
+    cursor.execute("DELETE FROM bins WHERE bin_id = ?",(bin_id,))
+    conn.commit()
     return redirect(url_for('admin'))
 
 

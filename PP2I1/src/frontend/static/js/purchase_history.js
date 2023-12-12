@@ -124,6 +124,8 @@ resultCountSelect.addEventListener('change', (e) => {
 const dialogAddTransaction = document.getElementById('dialog-add-transaction');
 const dialogButton = document.getElementById('button-dialog');
 const closeDialogButton = document.getElementById('close-dialog-button');
+const productEntriesContainers = dialogAddTransaction.querySelectorAll('.product-entry-container');
+const dialogForm = dialogAddTransaction.querySelector('#dialog-form');
 
 dialogButton.addEventListener('click', () => {
   dialogAddTransaction.showModal();
@@ -133,4 +135,21 @@ dialogButton.addEventListener('click', () => {
 closeDialogButton.addEventListener('click', () => {
   dialogAddTransaction.close();
   document.querySelector('body').style.overflow = 'auto';
+  productEntriesContainers.forEach((container) => {
+    container.style.display = '';
+    dialogForm.action = `admin/add-transaction/`;
+  });
 });
+
+productEntriesContainers.forEach((container) => {
+  container.addEventListener('click', () => {
+    productEntriesContainers.forEach((container) => {
+      container.style.display = 'none';
+    });
+    container.style.display = '';
+    let product_id = container.getAttribute('data-product-id');
+    dialogForm.action = `/admin/add-transaction/${product_id}`;
+  }
+  );
+}
+);
