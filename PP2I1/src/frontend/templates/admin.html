@@ -12,6 +12,15 @@
 		<div class="column map" id="map"> </div>
 		<div class="column locations-container flex-column">
 			<h1 class="text-center">  Localisations des poubelles </h1>
+			<div class="flex-row flex-end" style="width: 100%;">
+				{% if bins_data != [] %}
+				<div style="padding:10px">
+					<form action="/admin/start-pickup/" method="post">
+						<input class="btn-submit transition-duration-300" type="submit" value="Commencer la tournée" />
+					</form>
+				</div>
+				{% endif %}
+			</div>
 			<div class="data-container flex-row">
 				{% if bins_data == [] %}
 					{% block nobins %}
@@ -26,7 +35,7 @@
 									<p> Volume maximum : {{ bin.volume}} </p>
 									<p> Dernier vidage : {{ bin.last_emptied }}</p>
 									<p> Dernier vidage par : {{ bin.numberplate if bin.numberplate else "Jamais vidé" }} </p>
-									<p> Type de déchet :  {{ bin.waste_type_name}}</p>
+									<p> Type de déchet :  {{ bin.waste_type}}</p>
 								</div>
 								<div class="bin-entry-name">
 									<p> {{ bin.last_name }}  {{ bin.first_name }}</p>
@@ -158,54 +167,36 @@
 					<div id="close-dialog-button">
 						<img class="red-filter" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
 					</div>
-					<div id="test" class="flex-column">
-						{% if derror %}
-							<p class="error"> <strong> {{ derror }} </strong></p>
-						{% endif %}
-						<form id="dialog-form" method="post" action="/admin/add-transaction/">
+					<div id="dialog-form-container" class="flex-column">	
+						<form  method="dialog" action="/admin/add-transaction">
 							<div class="field-group">
-								<label for="date-transac" class="label"> 
-									Date de la transaction : 
-									<br>
-									Format : AAAA-MM-JJ HH:MM:SS
-								 </label>
+								<label for="date-transac" class="label"> Date de la transaction : </label>
 								<input class="input" type="text" name="date-transac">
+							</div>
+							<div class="field-group">
+								<label for="client-name" class="label"> Client : </label>
+								<input class="input" type="input" name="client-name">
 							</div>
 							<div class="field-group">
 								<label for="email" class="label"> Email : </label>
 								<input class="input" type="text" name="email">
 							</div>
 							<div class="field-group">
-								<label for="latitude" class="label"> Latitude : </label>
-								<input class="input" type="text" name="latitude">
-							</div>
-							<div class="field-group">
-								<label for="longitude" class="label"> Longitude : </label>
-								<input class="input" type="text" name="longitude">
-							</div>
-							<div class="field-group">
-								<label for="waste-type" class="label"> Type de déchet : </label>
-								<select name="waste-type">
-									{% block waste_types %}
-										{% for waste_type in waste_types %}
-											<option value="{{waste_type.waste_id}}"> {{ waste_type.waste_type_name }} </option>
-										{% endfor %}
-									{% endblock %}
-								</select>
+								<label class="label" for="price"> Prix : </label>
+								<input class="input" type="text" name="price"/>
 							</div>
 							<div class="field-group">
 								<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
 							</div>
 						</form>
 					</div>
-					<div class="flex-column" style="flex:2;overflow-y: scroll; justify-content: center; align-items: center;">
+					<div class="flex-column" style="flex:2;overflow-y: scroll;">
 						{% if products == [] %}
 							<p> Aucun produit n'a été enregistré. </p>
 						{% else %}
-							<p> Sélectionnez le produit acheté :</p>
 							{% block products_dialog_box %}
 								{% for product in products %}
-									<div class="product-entry-container" data-product-id="{{product.product_id}}">
+									<div class="product-entry-container">
 										<div class="product-entry flex-row" data-id="{{product.product_id}}">
 											<div class="product-entry-img">
 												<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
@@ -261,11 +252,11 @@
 			<div class="flex-column">
 				<label for="table-options" class="text-center"> Gérer les colonnes : </label>
 				<div class="multiselect">
-					<div class="selectBox" onclick="showCheckboxes()">
+					<div class="select-box" onclick="showCheckboxes()">
 						<select>
 							<option> Sélectionnez les colonnes </option>
 						</select>
-						<div class="overSelect"> </div>
+						<div class="over-select"> </div>
 					</div>
 					<div id="checkboxes">
 						<label class="label-columns-checkboxes">
@@ -320,15 +311,11 @@
 					{% else %}
 							{% for purchase in purchases %}
 								<tr>
-									<td> {{ purchase.bought_at }} </td>
+									<td> {{ purchase.date }} </td>
 									<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
 									<td> {{ purchase.email }} </td>
 									<td> {{ purchase.price }}€ </td>
-									<td>
-										<button>
-											<a href="/admin/delete-transaction/{{ purchase.bin_id }}"> Supprimer </a>
-										</button>
-									</td>
+									<td> <a href="/admin/purchase/{{ purchase.purchase_id }}"> Voir </a> </td>
 								</tr>
 							{% endfor %}
 					{% endif %}
@@ -343,10 +330,28 @@
 	<script type="text/javascript" src="./../static/js/purchase_history.js"></script>
 	<script type="text/javascript">
 		
-		{% for marker in bins_data%}
+		{%for marker in bins_data%}
 			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map).bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
-		{%endfor%}
+		{% endfor %}
 
+		{% if route %}
+			let pointsCoords = new Array();
+			let xsum = 0;
+			let ysum = 0;
+			let a = 0;
+			let b = 0;
+			{% for p in route %}
+				a = {{ p[0] }};
+				b = {{ p[1] }};
+				xsum += a;
+				ysum += b;
+				pointsCoords.push(L.latLng(a, b));
+			{% endfor %}
+			let polyline = L.polyline(pointsCoords, {color: 'red'}).addTo(map);
+			let mid_x = xsum / pointsCoords.length;
+			let mid_y = ysum / pointsCoords.length;
+			map.setView([mid_x, mid_y], 8);
+		{% endif %}
 	</script>
 </body>
 </html>

@@ -5,13 +5,6 @@ from flask_login import current_user
 from flask import abort
 import sqlite3
 
-
-def loadAdminIDs(cur : sqlite3.Cursor) -> set[int]:
-    """Load admin IDs from the DB"""
-    cur.execute("SELECT client_id FROM clients WHERE is_admin = 1")
-    admin_ids = cur.fetchall()
-    return {admin_id[0] for admin_id in admin_ids}
-
 def checkValidInput(*args : list[Any]):
     """Check if args are both non empty and no only whitespaces"""
     for arg in args:
@@ -33,3 +26,9 @@ def admin_required(func):
             return func(*args, **kwargs)
         abort(403)
     return wrapper
+
+def getEuclideanDistance(x1 : tuple[int,int],x2 : tuple[int,int]):
+    return ((x1[0] - x2[0])**2 + (x1[1] - x2[1])**2)**0.5
+
+def circularTranslationArray(arr : list[Any],start_index : int):
+    return [arr[(start_index + i) % len(arr)] for i in range(len(arr))] 

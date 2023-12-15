@@ -1,11 +1,15 @@
-from flask import Flask,render_template, url_for,redirect,request
+from flask import Flask,render_template, url_for,redirect,request,session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import sqlite3
 import hashlib
 import os
 
+from knapsack import knapsack
+from tsp_simulated_annealing import TSPSolver as saTSPSolver
+from tsp_genetic import TSPSolver as gTSPSolver
 from Client import Client
 import utilities
+
 
 app = Flask(__name__,template_folder="../frontend/templates",static_folder="../frontend/static")
 app.config["SECRET_KEY"] = os.urandom(24)
@@ -15,6 +19,8 @@ UPLOAD_FOLDER = './PP2I1/src/frontend/static/images/products/'
 
 conn = sqlite3.connect("./PP2I1/src/backend/db/main.db", check_same_thread=False)
 cursor = conn.cursor()
+
+BASE_COORDS = (49.133333,6.166667)
 
 @login_manager.user_loader
 def load_user(client_id : int):
@@ -162,15 +168,18 @@ def getPurchases():
     return purchases
 
 @app.route('/admin/')
-# @utilities.admin_required
+#@utilities.admin_required
 def admin():
+    route = session.get('route',None)
+    if route is not None:
+        route.append(BASE_COORDS)
     error = request.args.get('error',None)
     derror = request.args.get('derror',None)
     bins_data = getBinsInformation()
     products = getProducts()
     waste_types = getWasteTypes()
     purchases = getPurchases()
-    return render_template('admin.html',bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
+    return render_template('admin.html',route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
 def add_product():
@@ -268,6 +277,31 @@ def delete_transaction(bin_id : int):
     conn.commit()
     return redirect(url_for('admin'))
 
+@app.route('/admin/start-pickup/',methods=('GET','POST'))
+def start_pickup():
+    if request.method == 'POST':
+        SQL = """
+            SELECT lat,long,volume,used FROM bins
+            JOIN products ON products.product_id = bins.product_id
+            WHERE (used / volume) > 0.6
+        """
+        cursor.execute(SQL)
+        db_results = cursor.fetchall()
+        if not db_results: #db is empty
+            return redirect(url_for('admin')) 
+        bins_coords = [(x[0],x[1]) for x in db_results]
+        bins_volume = [x[2] for x in db_results]
+        bins_used_volume = [x[3] for x in db_results]
+        weight_used,chosen_bins = knapsack(1000,bins_volume,[100 * bins_used_volume[i] / bins_volume[i] for i in range(len(bins_used_volume))])
+        chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
+        chosen_bins.append(BASE_COORDS)
+        tsp_solver = saTSPSolver(chosen_bins,utilities.getEuclideanDistance)
+        tsp_res,best_route_length = tsp_solver.simulatedAnnealing()
+        base_coords_index = tsp_res.index(len(chosen_bins) - 1)
+        tsp_res = [chosen_bins[i] for i in tsp_res]
+        session['route'] = utilities.circularTranslationArray(tsp_res,base_coords_index)
+        return redirect(url_for('admin'))
+    return redirect(url_for('admin'))
 
 if __name__ == '__main__':
     app.run(debug=True)

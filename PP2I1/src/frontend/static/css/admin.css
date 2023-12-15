@@ -437,12 +437,12 @@ tr:hover td {
 	position: relative;
 }
   
-.selectBox select {
+.selec-box select {
 	width: 100%;
 	font-weight: bold;
 }
   
-.overSelect {
+.over-select {
 	position: absolute;
 	left: 0;
 	right: 0;
@@ -491,18 +491,8 @@ tr:hover td {
 	justify-content: flex-end;
 }
 
-#test {
+#dialog-form-container {
 	height: 100%;
 	flex:1;
 	justify-content: center;
-}
-
-button a {
-	color:black;
-	text-decoration: none;
-}
-
-button a:hover {
-	color:#139a76;
-	text-decoration: none;
 }
