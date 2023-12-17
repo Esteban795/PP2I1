@@ -43,6 +43,10 @@ a:hover {
 	flex-flow: row wrap;
 }
 
+.flex-space-evenly {
+	justify-content: space-evenly;
+}
+
 .hidden {
 	display: none;
 }
@@ -88,6 +92,10 @@ a:hover {
 	overflow: hidden;
 	border-radius: 5px;
 	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.bin-entry:hover {
+	cursor: pointer;
 }
 
 .bin-entry-name {
@@ -464,7 +472,7 @@ tr:hover td {
 }
   
 #checkboxes label:hover {
-	background-color: rgba(0,0,0,0.5);
+	background-color: #e4dfdf;
 }
 
 .label-columns-checkboxes {
@@ -475,24 +483,38 @@ tr:hover td {
 	display: none;
 }
 
-#dialog-add-transaction {
+.dialog-box {
 	position:relative;
 	width:75%;
 	position: fixed;
     height: auto !important;
-}
-
-#close-dialog-button {
-	width: 100%;
-	justify-self: flex-start;
+	box-sizing: border-box;
 }
 
 .flex-end {
 	justify-content: flex-end;
 }
 
+.flex-center {
+	justify-content: center;
+	align-items: center;
+}
+
 #dialog-form-container {
-	height: 100%;
 	flex:1;
 	justify-content: center;
+	max-height: 100vh;
+}
+
+#dialog-form{
+	width:100%;
+}
+.close-dialog-button{ 
+	width:fit-content;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  align-self: flex-start; /* <-- this is the fix */
 }

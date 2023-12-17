@@ -119,37 +119,48 @@ resultCountSelect.addEventListener('change', (e) => {
   }
 );
 
+const openDialogsButtons = document.querySelectorAll('.open-dialog-button');
+const closeDialogsButtons = document.querySelectorAll('.close-dialog-button');
 
-
-const dialogAddTransaction = document.getElementById('dialog-add-transaction');
-const dialogButton = document.getElementById('button-dialog');
-const closeDialogButton = document.getElementById('close-dialog-button');
-const productEntriesContainers = dialogAddTransaction.querySelectorAll('.product-entry-container');
-const dialogForm = dialogAddTransaction.querySelector('#dialog-form');
-
-dialogButton.addEventListener('click', () => {
-  dialogAddTransaction.showModal();
-  document.querySelector('body').style.overflow = 'hidden';
-});
-
-closeDialogButton.addEventListener('click', () => {
-  dialogAddTransaction.close();
-  document.querySelector('body').style.overflow = 'auto';
-  productEntriesContainers.forEach((container) => {
-    container.style.display = '';
-    dialogForm.action = `admin/add-transaction/`;
+openDialogsButtons.forEach((button) => {
+  button.addEventListener('click', (event) => {
+    event.target.previousElementSibling.showModal();
   });
-});
+}
+);
 
-productEntriesContainers.forEach((container) => {
-  container.addEventListener('click', () => {
-    productEntriesContainers.forEach((container) => {
-      container.style.display = 'none';
+closeDialogsButtons.forEach((button) => {
+  button.addEventListener('click', (event) => {
+    event.target.parentElement.close();
+  });
+}
+);
+
+const transactionProductEntries = document.querySelectorAll('.transaction-product-entry');
+const dialogForm = document.querySelector('#dialog-form');
+
+transactionProductEntries.forEach((entry) => {
+  entry.addEventListener('click', () => {
+    transactionProductEntries.forEach((entry) => {
+      entry.style.display = 'none';
     });
-    container.style.display = '';
-    let product_id = container.getAttribute('data-product-id');
+    entry.style.display = '';
+    entry.parentElement.lastElementChild.style.display = 'block';
+    let product_id = entry.getAttribute('data-product-id');
     dialogForm.action = `/admin/add-transaction/${product_id}`;
   }
   );
+}
+);
+
+const transactionCancelProductSelection = document.querySelectorAll('.transaction-cancel-product-selection');
+
+transactionCancelProductSelection.forEach((button) => {
+  button.addEventListener('click', (event) => {
+    event.target.parentElement.parentElement.style.display = 'none';
+    transactionProductEntries.forEach((entry) => {
+      entry.style.display = '';
+    });
+  });
 }
 );

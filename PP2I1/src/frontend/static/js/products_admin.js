@@ -34,10 +34,12 @@ productsOptions.forEach((option) => {
 	});
 });
 
+const selectProductDiv = document.querySelector('.select-product');
 const formInputs = document.querySelectorAll('.input');
-const productsEntriesContainers = document.querySelectorAll('.product-entry-container');
-const productsEntries = document.querySelectorAll('.product-entry');
-const cancelSelections = document.querySelectorAll('.cancel-selection');
+const productsEntriesContainers = selectProductDiv.querySelectorAll('.product-entry-container');
+const productsEntries = selectProductDiv.querySelectorAll('.product-entry');
+const cancelSelections = selectProductDiv.querySelectorAll('.cancel-selection');
+
 const findIndex = new Map([
 	['product-name', 0],
 	['price', 3],

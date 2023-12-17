@@ -3,6 +3,7 @@ from flask_login import LoginManager, login_user, login_required, logout_user, c
 import sqlite3
 import hashlib
 import os
+import datetime
 
 from knapsack import knapsack
 from tsp_simulated_annealing import TSPSolver as saTSPSolver
@@ -67,8 +68,8 @@ def login():
         return redirect(url_for('home'))
         
     if request.method == 'POST':
-        email : str = request.form['email']
-        password : str = request.form['password']
+        email = request.form['email']
+        password = request.form['password']
         remember = request.form.get('remember-checkbox',-1) != -1
         if not utilities.checkValidInput(email,password):
             return render_template('login.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
@@ -104,7 +105,7 @@ def getBinsInformation():
         JOIN clients ON bins.owner_id = clients.client_id
         JOIN products ON bins.product_id = products.product_id
         JOIN waste_type ON bins.waste_id = waste_type.waste_type_id
-        LEFT JOIN trucks ON bins.last_emptied_by = trucks.truck_id
+        LEFT JOIN trucks ON bins.last_emptied_by = trucks.numberplate
     """
     #LEFT JOIN because some bins might have never been emptied yet!
     cursor.execute(SQL)
@@ -171,17 +172,17 @@ def getPurchases():
 #@utilities.admin_required
 def admin():
     route = session.get('route',None)
-    if route is not None:
-        route.append(BASE_COORDS)
     error = request.args.get('error',None)
     derror = request.args.get('derror',None)
     bins_data = getBinsInformation()
     products = getProducts()
     waste_types = getWasteTypes()
     purchases = getPurchases()
-    return render_template('admin.html',route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
+    trucks = getTrucks()
+    return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
+#@utilities.admin_required
 def add_product():
     if request.method == 'POST':
         name = request.form['product-name']
@@ -202,10 +203,12 @@ def add_product():
     return render_template('admin.html') #no get request here
 
 @app.route('/admin/modify-product/',methods=('GET','POST'))
+#@utilities.admin_required
 def modify_product_not_selected():
     return redirect(url_for('admin',error="Veuillez sélectionner un produit à modifier."))
 
 @app.route('/admin/modify-product/<int:product_id>',methods=('GET','POST'))
+#@utilities.admin_required
 def modify_product(product_id : int):
     if request.method == 'POST':
         f = request.files['img']
@@ -240,6 +243,7 @@ def modify_product(product_id : int):
     return render_template('admin.html') #no get request here
 
 @app.route('/admin/delete/<int:product_id>',methods=('GET','POST'))
+#@utilities.admin_required
 def delete_product(product_id : int):
     if request.method == 'POST':
         cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
@@ -251,10 +255,12 @@ def delete_product(product_id : int):
     return redirect(url_for('admin'))
 
 @app.route('/admin/add-transaction/',methods=('GET','POST'))
+#@utilities.admin_required
 def add_transaction_not_selected():
     return redirect(url_for('admin',derror="Veuillez sélectionner un produit."))
 
 @app.route('/admin/add-transaction/<int:product_id>',methods=('GET','POST'))
+#@utilities.admin_required
 def add_transaction(product_id : int):
     if request.method == 'POST':
         date = request.form['date-transac']
@@ -271,35 +277,69 @@ def add_transaction(product_id : int):
         return redirect(url_for('admin'))
     return redirect(url_for('admin')) #get request redirected directly
 
-@app.route('/admin/delete-transaction/<int:bin_id>',methods=('GET','POST'))
-def delete_transaction(bin_id : int):
-    cursor.execute("DELETE FROM bins WHERE bin_id = ?",(bin_id,))
-    conn.commit()
+@app.route("/admin/purchases/delete-transaction/<int:bin_id>",methods=('GET','POST'))
+#@utilities.admin_required
+def delete_purchase(bin_id : int):
+    print("ok")
+    if request.method == 'POST':
+        cursor.execute("DELETE FROM pickup WHERE bin_id = ?",(bin_id,))
+        cursor.execute("DELETE FROM bins WHERE bin_id = ?",(bin_id,))
+        conn.commit()
+        return redirect(url_for('admin'))
     return redirect(url_for('admin'))
 
-@app.route('/admin/start-pickup/',methods=('GET','POST'))
+@app.route('/admin/purchases/modify-purchases/<int:bin_id>',methods=('GET','POST'))
+#@utilities.admin_required
+def modify_purchase(bin_id : int):
+    pass
+
+def getTrucks():
+    trucks = []
+    DATA_FIELDS = ['truck_id','numberplate','used_volume','capacity']
+    SQL = """
+        SELECT * FROM trucks
+    """
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for truck in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = truck[i]
+        trucks.append(infos)
+    return trucks
+
+@app.route("/admin/start-pickup/",methods=('GET','POST'))
+#@utilities.admin_required
 def start_pickup():
     if request.method == 'POST':
+        truck_numberplate = request.form['truck']
         SQL = """
-            SELECT lat,long,volume,used FROM bins
+            SELECT lat,long,volume,used,bin_id FROM bins
             JOIN products ON products.product_id = bins.product_id
             WHERE (used / volume) > 0.6
         """
         cursor.execute(SQL)
         db_results = cursor.fetchall()
         if not db_results: #db is empty
-            return redirect(url_for('admin')) 
+            return redirect(url_for('admin'))
+        bins_ids = [x[4] for x in db_results]
         bins_coords = [(x[0],x[1]) for x in db_results]
         bins_volume = [x[2] for x in db_results]
         bins_used_volume = [x[3] for x in db_results]
         weight_used,chosen_bins = knapsack(1000,bins_volume,[100 * bins_used_volume[i] / bins_volume[i] for i in range(len(bins_used_volume))])
         chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
+        chosen_bins_ids = [bins_ids[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins.append(BASE_COORDS)
-        tsp_solver = saTSPSolver(chosen_bins,utilities.getEuclideanDistance)
+        
+        tsp_solver = saTSPSolver(chosen_bins,utilities.getHaversineDistance)
         tsp_res,best_route_length = tsp_solver.simulatedAnnealing()
         base_coords_index = tsp_res.index(len(chosen_bins) - 1)
         tsp_res = [chosen_bins[i] for i in tsp_res]
         session['route'] = utilities.circularTranslationArray(tsp_res,base_coords_index)
+        for i in range(len(chosen_bins_ids)):
+            cursor.execute("UPDATE bins SET last_emptied_by = ?, last_emptied = ? WHERE bin_id = ?",(truck_numberplate,datetime.datetime.now().replace(microsecond=0),chosen_bins_ids[i]))
+            cursor.execute("INSERT INTO pickup(truck_id,bin_id) VALUES (?,?)",(truck_numberplate,chosen_bins_ids[i]))
+        conn.commit()
         return redirect(url_for('admin'))
     return redirect(url_for('admin'))
 

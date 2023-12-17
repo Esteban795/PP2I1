@@ -3,7 +3,7 @@ import uuid
 from functools import wraps
 from flask_login import current_user
 from flask import abort
-import sqlite3
+import math
 
 def checkValidInput(*args : list[Any]):
     """Check if args are both non empty and no only whitespaces"""
@@ -32,3 +32,13 @@ def getEuclideanDistance(x1 : tuple[int,int],x2 : tuple[int,int]):
 
 def circularTranslationArray(arr : list[Any],start_index : int):
     return [arr[(start_index + i) % len(arr)] for i in range(len(arr))] 
+
+def getHaversineDistance(x1 : tuple[float,float],x2 : tuple[float,float]):
+    """Return the distance between two points on Earth using the Haversine formula"""
+    R = 6371.0710 # Radius of the Earth in km
+    lat1,lon1 = x1
+    lat2,lon2 = x2
+    dlat = lat2 - lat1
+    dlon = lon2 - lon1
+    a = (dlat/2)**2 + (dlon/2)**2 * math.cos(lat1) * math.cos(lat2)
+    return 2 * R * math.asin(a**0.5)

@@ -5,7 +5,7 @@
 		<link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-		<title> Admin Page </title>
+		<title> Page administrateur </title>
 	</head>
 <body>
 	<div class="map-container flex-row">
@@ -14,14 +14,40 @@
 			<h1 class="text-center">  Localisations des poubelles </h1>
 			<div class="flex-row flex-end" style="width: 100%;">
 				{% if bins_data != [] %}
-				<div style="padding:10px">
-					<form action="/admin/start-pickup/" method="post">
-						<input class="btn-submit transition-duration-300" type="submit" value="Commencer la tournée" />
-					</form>
-				</div>
+					<dialog>
+						<img class="red-filter close-dialog-button" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+						<h1 class="text-center"> Lancer un ramassage </h1>
+						<div class="flex-column flex-center">
+							<form action="/admin/start-pickup/" method="post">
+								<div class="field-group flex-column flex-center">
+									<label for="truck" class="label"> Veuillez sélectionner le camion qui effectuera le ramassage : </label>
+									<select name="truck" style="width:fit-content;">
+										{% for truck in trucks %}
+											<option value="{{ truck.numberplate }}"> {{ truck.numberplate }} ( {{ truck.capacity }}kg)</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="field-group flex-column flex-center" style="overflow-y: scroll;">
+									<label for="priorities" class="label"> Y a-t-il des poubelles à vider en priorité ? </label>
+									<div style="max-height: 300px;overflow-y: scroll;">
+										{% for bin in bins_data %}
+											<label class="label">
+												<input type="checkbox" name="priorities" value="{{ bin.bin_id }}" />
+												{{ bin.last_name }} {{ bin.first_name }} {{ bin.lat, bin.long }}
+											</label>
+										{% endfor %}
+									</div>
+								</div>
+								<div>
+									<input class="btn-submit transition-duration-300" type="submit" value="Valider">
+								</div>
+							</form>
+						</div>
+					</dialog>
+					<input class="open-dialog-button padding-2em btn transition-duration-300" type="button" value="Lancer un ramassage"/>
 				{% endif %}
 			</div>
-			<div class="data-container flex-row">
+			<div class="data-container flex-row" style="margin-top: 20px;">
 				{% if bins_data == [] %}
 					{% block nobins %}
 						<p> Aucune poubelle n'a été enregistrée.</p>
@@ -34,8 +60,14 @@
 									<p> Volume utilisé : {{ bin.used }} </p>
 									<p> Volume maximum : {{ bin.volume}} </p>
 									<p> Dernier vidage : {{ bin.last_emptied }}</p>
-									<p> Dernier vidage par : {{ bin.numberplate if bin.numberplate else "Jamais vidé" }} </p>
-									<p> Type de déchet :  {{ bin.waste_type}}</p>
+									<p> Dernier vidage par : 
+										{% if bin.numberplate %}
+											{{ bin.numberplate }}
+										{% else %}
+											Jamais vidé.
+										{% endif %}
+									</p>
+									<p> Type de déchet :  {{ bin.waste_type_name}}</p>
 								</div>
 								<div class="bin-entry-name">
 									<p> {{ bin.last_name }}  {{ bin.first_name }}</p>
@@ -60,7 +92,7 @@
 			<div class="form-wrapper">
 				<h1 class="text-center" id="option-title"> Ajouter un produit : </h1>
 				{% if error %}
-				<p class="error"> <strong> {{ error }} </strong></p>
+					<p class="error"> <strong> {{ error }} </strong></p>
 				{% endif %}
 				<form id="form-products" enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
 					<div class="field-group">
@@ -144,10 +176,10 @@
 								<div class="option-buttons" style="display: none;">
 									<form method="post" action="/admin/delete/{{product.product_id}}">
 										<div class="button cancel-selection">
-											<img class="red-filter" src="./../static/images/cross.svg" class="cancel-selection" alt="button" style="width:20px;"></img>
+											<img class="red-filter" src="./../static/images/cross.svg" alt="button" style="width:20px;"></img>
 										</div>
 										<button class="button" name="delete-button" type="submit">
-										<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+											<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
 										</button>
 									</form>
 								</div>
@@ -162,79 +194,80 @@
 		<h1> Historique des achats </h1>
 		<div class="flex-row add-purchase-container">
 			<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
-			<dialog id="dialog-add-transaction">
-				<div class="flex-row" style="height:100%;width:100%;position: relative;">
-					<div id="close-dialog-button">
-						<img class="red-filter" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
-					</div>
-					<div id="dialog-form-container" class="flex-column">	
-						<form  method="dialog" action="/admin/add-transaction">
-							<div class="field-group">
-								<label for="date-transac" class="label"> Date de la transaction : </label>
-								<input class="input" type="text" name="date-transac">
-							</div>
-							<div class="field-group">
-								<label for="client-name" class="label"> Client : </label>
-								<input class="input" type="input" name="client-name">
-							</div>
-							<div class="field-group">
-								<label for="email" class="label"> Email : </label>
-								<input class="input" type="text" name="email">
-							</div>
-							<div class="field-group">
-								<label class="label" for="price"> Prix : </label>
-								<input class="input" type="text" name="price"/>
-							</div>
-							<div class="field-group">
-								<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
-							</div>
-						</form>
-					</div>
-					<div class="flex-column" style="flex:2;overflow-y: scroll;">
-						{% if products == [] %}
-							<p> Aucun produit n'a été enregistré. </p>
-						{% else %}
-							{% block products_dialog_box %}
-								{% for product in products %}
-									<div class="product-entry-container">
-										<div class="product-entry flex-row" data-id="{{product.product_id}}">
-											<div class="product-entry-img">
-												<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
-											</div>
-											<section class="itemInfo">
-												<h2 class="itemName"> 
-													<span class="fields"> {{ product.name}} </span>
-													- 
-													<span class="fields"> {{product.volume}}L </span>
-												</h2>
-												<p class="itemDesc fields"> 
-													{{ product.desc}} 
-												</p>
-											</section>
-											<section class="itemBuying">
-												<p class="itemPrice fields"> {{ product.price}}€ </p>
-												<p> En stock : <span class="fields">  {{product.stock}} </span> </p>
-												<button> Ajouter au panier </button>
-											</section>
-										</div>
-										<div class="option-buttons" style="display: none;">
-											<form method="post" action="/admin/delete/{{product.product_id}}">
-												<div class="button cancel-selection">
-													<img class="red-filter" src="./../static/images/cross.svg" class="cancel-selection" alt="button" style="width:20px;"></img>
+			<div>
+				<dialog class="dialog-box">
+					<img class="red-filter close-dialog-button sticky" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+					<div class="flex-row" style="min-height:100%;">
+						<div id="dialog-form-container" class="flex-column">
+							<h1> Ajouter une transaction </h1>	
+							<form id="dialog-form" method="dialog" action="/admin/add-transaction/">
+								<div class="field-group">
+									<label for="date-transac" class="label"> Date de la transaction : </label>
+									<input class="input" type="text" name="date-transac">
+								</div>
+								<div class="field-group">
+									<label for="client-name" class="label"> Client : </label>
+									<input class="input" type="input" name="client-name">
+								</div>
+								<div class="field-group">
+									<label for="email" class="label"> Email : </label>
+									<input class="input" type="text" name="email">
+								</div>
+								<div class="field-group">
+									<label class="label" for="price"> Prix : </label>
+									<input class="input" type="text" name="price"/>
+								</div>
+								<div class="field-group">
+									<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
+								</div>
+							</form>
+						</div>
+						<div class="flex-column" style="flex:2;overflow-y: scroll;">
+							{% if products == [] %}
+								<p> Aucun produit n'a été enregistré. </p>
+							{% else %}
+								{% block products_dialog_box %}
+									{% for product in products %}
+										<div class="product-entry-container">
+											<div class="transaction-product-entry flex-row" data-product-id="{{product.product_id}}">
+												<div class="product-entry-img">
+													<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
 												</div>
-												<button class="button" name="delete-button" type="submit">
-												<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
-												</button>
-											</form>
+												<section class="itemInfo">
+													<h2 class="itemName"> 
+														<span class="fields"> {{ product.name}} </span>
+														- 
+														<span class="fields"> {{product.volume}}L </span>
+													</h2>
+													<p class="itemDesc fields"> 
+														{{ product.desc}} 
+													</p>
+												</section>
+												<section class="itemBuying">
+													<p class="itemPrice fields"> {{ product.price}}€ </p>
+													<p> En stock : <span class="fields">  {{product.stock}} </span> </p>
+													<button> Ajouter au panier </button>
+												</section>
+											</div>
+											<div class="option-buttons" style="display: none;">
+												<form method="post" action="/admin/delete/{{product.product_id}}">
+													<div class="button transaction-cancel-product-selection">
+														<img class="red-filter" src="./../static/images/cross.svg" alt="button" style="width:20px;"></img>
+													</div>
+													<button class="button" name="delete-button" type="submit">
+														<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+													</button>
+												</form>
+											</div>
 										</div>
-									</div>
-								{% endfor %}
-							{% endblock %}
-						{% endif %}
+									{% endfor %}
+								{% endblock %}
+							{% endif %}
+						</div>
 					</div>
-				</div>
-			</dialog>
-			<input id="button-dialog" class="padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
+				</dialog>
+				<input class="open-dialog-button dialog-box-button padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
+			</div>
 		</div>
 		<div id="purchase-history-options" class="flex-row">
 			<input type="search" name="searchbar" id="search-bar" placeholder="Search...">
@@ -252,8 +285,8 @@
 			<div class="flex-column">
 				<label for="table-options" class="text-center"> Gérer les colonnes : </label>
 				<div class="multiselect">
-					<div class="select-box" onclick="showCheckboxes()">
-						<select>
+					<div class="select-box"  onclick="showCheckboxes()">
+						<select style="width:fit-content;">
 							<option> Sélectionnez les colonnes </option>
 						</select>
 						<div class="over-select"> </div>
@@ -311,11 +344,18 @@
 					{% else %}
 							{% for purchase in purchases %}
 								<tr>
-									<td> {{ purchase.date }} </td>
+									<td> {{ purchase.bought_at }} </td>
 									<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
 									<td> {{ purchase.email }} </td>
 									<td> {{ purchase.price }}€ </td>
-									<td> <a href="/admin/purchase/{{ purchase.purchase_id }}"> Voir </a> </td>
+									<td class="flex-row flex-space-evenly"> 
+										<form method="post" action="/admin/purchases/delete-transaction/{{purchase.bin_id}}">
+											<button class="btn-submit" type="submit"> Supprimer </button>
+										</form>
+										<a href="/admin/purchases/modify-purchases/{{ purchase.bin_id }}">
+											<button class="btn-submit" type="button"> Modifier </button>
+										</a>
+									</td>
 								</tr>
 							{% endfor %}
 					{% endif %}
@@ -352,6 +392,7 @@
 			let mid_y = ysum / pointsCoords.length;
 			map.setView([mid_x, mid_y], 8);
 		{% endif %}
+
 	</script>
 </body>
 </html>
