@@ -21,10 +21,9 @@
       <div class = "header-line"></div>
       <div class="content">
          <section class = "middleZone">
-            <h1 id="titre_shop">Boutique</h1>
-            <p> Phrase intro boutique ? </p>
+            <h1 id="titre_shop">Validation du panier</h1>
             <ul class = "itemList">
-               {% for product in products %}
+               {% for product in cart %}
                   <li class="item">
                      <img class = "itemPic" src="../static/images/{{ product.img_url}}" alt="Poubelle Grise">
                      <section class = "itemInfo">
@@ -35,27 +34,11 @@
                      </section>
                      <section class="itemBuying">
                         <p class = "itemPrice"> {{ product.price }}€ </p>
-                        <button onclick="addToCart({product_id: '{{product.product_id}}',name: '{{product.product_name}} - {{ product.volume}}L', price: '{{product.price}}€', img_src:'../static/images/{{product.img_url}}'})"> Ajouter au panier </button>
                      </section>
                   </li>
                {% endfor  %}
             </ul>
          </section>
-         <div id="shoppingCart" class="shopping-cart">
-            <div class="shoppingHeader">
-               <img id="cart_logo" src="../static/images/shopping-cart.svg" alt="Logo of the shopping cart" width="100" height="100">
-               <h1 id="cart_title">Panier</h1>
-            </div>
-            <div class="shoppingContent">
-               <p id="cart_text">Votre panier</p>
-               <ul id="cart_list">
-                  <li id="emptyCart">Vide actuellement</li>
-               </ul>
-               <form id="test" action="/shop/purchase-cart/" method="get">
-                  <button id="cartConfirmButton">Valider le panier</button>
-               </form>
-         </div>
-      </div>
       <div class="footer">
          <div class="contact">
             <!-- a voir ce qu'on met exactement ici-->

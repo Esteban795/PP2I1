@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for,redirect,request
+from flask import Flask, render_template, url_for,redirect,request,session
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import sqlite3
 import hashlib
@@ -89,7 +89,37 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+def getProductsList():
+    FIELDS = ["product_name","price","desc","img_url","volume"]
+    cursor.execute("SELECT {} FROM products".format(",".join(FIELDS)))
+    products = cursor.fetchall()
+    products = [dict(zip(FIELDS,product)) for product in products]
+    return products
 
+
+@app.route('/shop/', methods=['GET'])
+def shop():
+    print(session)
+    print(current_user)
+    #products = getProductsList()
+    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "corail.jpg","volume":10},
+                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "montagne.jpg","volume":10},
+                ]
+    return render_template('shop.html',products=products)
+
+@app.route("/shop/purchase-cart/<cart>",methods=['GET','POST'])
+@login_required
+def cart_validation(cart : str=None):
+    products_ids = cart.split(",")
+    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "corail.jpg","volume":10},
+                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "montagne.jpg","volume":10},
+                ]
+    products = filter(lambda x : str(x["product_id"]) in cart,products)
+    return render_template("cart_validation.html",cart=products)
+
+@app.route("/shop/purchase-cart/<cart>/success",methods=['GET','POST'])
+def cart_success(cart : str):
+    return render_template("cart_success.html")
 
 if __name__ == '__main__':
     app.run(debug=True)
