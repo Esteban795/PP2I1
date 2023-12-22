@@ -97,28 +97,38 @@ def getProductsList():
     return products
 
 
-@app.route('/shop/', methods=['GET'])
+@app.route('/shop/', methods=['GET','POST'])
 def shop():
-    print(session)
-    print(current_user)
+    if request.method == "POST":
+        cart = request.form["cart"]
+        products_ids = [int(i) for i in cart.split("-")]
+        session["products_ids"] = sorted(products_ids)
+        return redirect(url_for("cart_validation"))
     #products = getProductsList()
-    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "corail.jpg","volume":10},
-                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "montagne.jpg","volume":10},
+    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
+                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
                 ]
     return render_template('shop.html',products=products)
 
-@app.route("/shop/purchase-cart/<cart>",methods=['GET','POST'])
-@login_required
-def cart_validation(cart : str=None):
-    products_ids = cart.split(",")
-    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "corail.jpg","volume":10},
-                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test", "img_url" : "montagne.jpg","volume":10},
+@app.route("/purchase-cart/",methods=['GET','POST'])
+def cart_validation():
+    if request.method == "POST":
+        pass
+    #products = getProductsList()
+    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
+                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
                 ]
-    products = filter(lambda x : str(x["product_id"]) in cart,products)
-    return render_template("cart_validation.html",cart=products)
+    final_products = []
+    rled = utilities.runLengthEncoding(session["products_ids"])
+    for i in rled:
+        for j in products:
+            if i[0] == j["product_id"]:
+                for k in range(i[1]):
+                    final_products.append(j)
+    return render_template("cart_validation.html",cart=final_products)
 
-@app.route("/shop/purchase-cart/<cart>/success",methods=['GET','POST'])
-def cart_success(cart : str):
+@app.route("/shop/purchase-cart/success/",methods=['GET','POST'])
+def cart_success():
     return render_template("cart_success.html")
 
 if __name__ == '__main__':

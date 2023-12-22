@@ -1,12 +1,13 @@
 var cartItems = [];
 const cartDiv = document.getElementById("cart_list");
-const formValidation = document.getElementById("test");
+const formValidation = document.getElementById("validation-cart-form");
+const cartConfirmButton = document.getElementById("cartConfirmButton");
+const cartInput = document.getElementById("cart");
 let ids_list = [];
 
 function addToCart(item) {
     cartItems.push(item);
     ids_list.push(item.product_id);
-    formValidation.action = "/shop/purchase-cart/" + ids_list.join('-');
     updateCart();
 }
 
@@ -43,6 +44,35 @@ function removeFromCart(index) {
     var index = cartItems.indexOf(index);
     ids_list.splice(index, 1);
     cartItems.splice(index, 1);
-    formValidation.action = "/shop/purchase-cart/";
     updateCart();
 }
+
+const allSameAdressCheckbox = document.querySelector('#all-same-adress');
+const adressesInputs = document.querySelectorAll('.adress-input');
+
+allSameAdressCheckbox.addEventListener('change', () => {
+    if (allSameAdressCheckbox.checked) {
+        adressesInputs.forEach(input => {
+            input.disabled = true;
+        });
+        adressesInputs[0].disabled = false;
+    }
+    else {
+        adressesInputs.forEach(input => {
+            input.disabled = false;
+        });
+    }
+}
+);
+
+adressesInputs.forEach(input => {
+    input.addEventListener('input', () => {
+        if (allSameAdressCheckbox.checked) {
+            adressesInputs.forEach(a => {
+                a.value = input.value;
+        }
+        );
+    }
+    }
+        );
+    });

@@ -51,7 +51,8 @@
                <ul id="cart_list">
                   <li id="emptyCart">Vide actuellement</li>
                </ul>
-               <form id="test" action="/shop/purchase-cart/" method="get">
+               <form id="validation-cart-form" action="/shop/" method="post" onsubmit="submitCart()">
+                  <input type="hidden" id="cart" name="cart" value="">
                   <button id="cartConfirmButton">Valider le panier</button>
                </form>
          </div>
@@ -67,5 +68,17 @@
          </div>
       </div>
       <script src="../static/js/shop.js"></script>
+      <script>
+
+      function submitCart() {
+         if (ids_list.length === 0) {
+            event.preventDefault();
+            alert("Votre panier est vide");
+         }
+         else {
+            cartInput.value = ids_list.join('-');
+         }
+      }
+      </script>
    </body>
 </html>
