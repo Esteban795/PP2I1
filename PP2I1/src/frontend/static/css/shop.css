@@ -81,7 +81,9 @@ body{
   align-items: center;
   width: 70%;
   margin-top: 20px;
+  overflow-x:scroll;
 }
+
 .itemList{
   display: flex;
   flex-direction: column;
@@ -124,8 +126,24 @@ body{
   text-align: center;
   font-size: 1.5em;
 }
+
+#total_amount{
+  font-size: 1.5em;
+  margin-left:auto;
+  margin-right: 10px;
+  text-align: end;
+}
+#validation-cart-form {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 100px;
+}
+
 #cartConfirmButton{
-  width:66%;
+  width:33%;
+  align-self: flex-end;
+  margin-left: auto;
+  margin-right: 10px;
 }
 
 .itemInfo{
@@ -151,7 +169,9 @@ body{
   color:#000000;
   position: fixed;
   right:0;
-  height: 100%;
+  bottom:50px;
+  top:100px;
+  height:auto;
   background-color: #f8f8f8;
   overflow-y: auto;
   width: 25%;
@@ -171,8 +191,6 @@ body{
   align-self: center;
   font-size: 1.5em;
   overflow-y: auto;
-  max-height: 80vh;
-  margin-bottom: 250px;
 }
 
 .shoppingContent li{
@@ -193,7 +211,6 @@ body{
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100%;
 }
 
 .removeButton {

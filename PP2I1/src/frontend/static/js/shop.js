@@ -1,9 +1,26 @@
 var cartItems = [];
-const cartDiv = document.getElementById("cart_list");
+const cartListDiv = document.getElementById("cart_list");
+const cartAmountDiv = document.getElementById("total_amount");
 const formValidation = document.getElementById("validation-cart-form");
 const cartConfirmButton = document.getElementById("cartConfirmButton");
 const cartInput = document.getElementById("cart");
 let ids_list = [];
+let total = 0;
+
+function updateTotalAmount(){
+    total = 0;
+    cartAmountDiv.innerHTML ='';
+    if (cartItems.length==0){
+        total = 0;
+    }
+    else{
+        cartItems.forEach(item => {
+            let price = parseFloat(item.price.replace('€',''))
+            total += price;
+        });
+    }
+    cartAmountDiv.innerHTML = 'Total :' + total + ' €';
+}
 
 function addToCart(item) {
     cartItems.push(item);
@@ -13,9 +30,9 @@ function addToCart(item) {
 
 function updateCart() {
     console.log(ids_list);
-    cartDiv.innerHTML = '';
+    cartListDiv.innerHTML = '';
     if (cartItems.length == 0) {
-        cartDiv.innerHTML = '<li id="emptyCart">Vide actuellement</li>';
+        cartListDiv.innerHTML = '<li id="emptyCart">Vide actuellement</li>';
     }
     else {
         for (var i = 0; i < cartItems.length; i++) {
@@ -34,10 +51,11 @@ function updateCart() {
             removeButton.onclick = function() { removeFromCart(i); };
             itemLi.appendChild(removeButton);
             
-            cartDiv.appendChild(itemLi);
+            cartListDiv.appendChild(itemLi);
         }
 
     }
+    updateTotalAmount();
 }
 
 function removeFromCart(index) {

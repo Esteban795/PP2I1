@@ -170,4 +170,4 @@ def cart_success():
     return render_template("cart_success.html",products=final_products)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=8080)

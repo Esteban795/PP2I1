@@ -51,10 +51,13 @@
                <ul id="cart_list">
                   <li id="emptyCart">Vide actuellement</li>
                </ul>
-               <form id="validation-cart-form" action="/shop/" method="post" onsubmit="submitCart()">
-                  <input type="hidden" id="cart" name="cart" value="">
-                  <button id="cartConfirmButton">Valider le panier</button>
-               </form>
+         </div>
+         <div class = "shoppingFooter">
+            <p id="total_amount">Total : 0€</p>
+            <form id="validation-cart-form" action="/shop/" method="post" onsubmit="submitCart()">
+               <input type="hidden" id="cart" name="cart" value="">
+               <button id="cartConfirmButton">Valider le panier</button>
+            </form>
          </div>
       </div>
       <div class="footer">
