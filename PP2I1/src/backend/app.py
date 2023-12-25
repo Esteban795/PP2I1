@@ -78,7 +78,7 @@ def login():
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
         login_user(client)
-        return redirect(url_for('home'))
+        return redirect(request.args.get("next") or url_for('home')) #redirect to the previous page in case of successful login
     else:
         return render_template('login.html')
     
@@ -87,7 +87,7 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('home'))
+    return redirect(request.args.get("next") or url_for('home')) 
 
 def getProductsList():
     FIELDS = ["product_name","price","desc","img_url","volume"]
@@ -102,7 +102,7 @@ def shop():
     if request.method == "POST":
         cart = request.form["cart"]
         products_ids = [int(i) for i in cart.split("-")]
-        session["products_ids"] = sorted(products_ids)
+        session["products_ids"] = utilities.runLengthEncoding(sorted(products_ids)) # dict {product_id : quantity}
         return redirect(url_for("cart_validation"))
     #products = getProductsList()
     products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
@@ -110,20 +110,35 @@ def shop():
                 ]
     return render_template('shop.html',products=products)
 
-@app.route("/purchase-cart/",methods=['GET','POST'])
+@app.route("/cart-validation/",methods=['GET','POST'])
+@login_required
 def cart_validation():
+    session.modified = False
     if request.method == "POST":
-        pass
+        check_same_adress = request.form.get("use-same-adress",None)
+        adresses = request.form.getlist("adress").split("--")
+        if check_same_adress is None:
+            lats,longs = [],[]
+            for adress in adresses:
+                lat,long = utilities.getLatLongFromStreetAdress(adress)
+                lats.append(lat)
+                longs.append(long)
+            cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.id,product_id,lat,long,1) for product_id,lat,long in zip(session["products_ids"],lats,longs)])
+            conn.commit()
+        else:
+            lat,long = utilities.getLatLongFromStreetAdress(adresses[0])
+            cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.id,product_id,lat,long,1) for product_id in session["products_ids"]])
+            conn.commit()
+        return redirect(url_for("cart_success"))
     #products = getProductsList()
     products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
                 {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
                 ]
     final_products = []
-    rled = utilities.runLengthEncoding(session["products_ids"])
-    for i in rled:
+    for i in session["products_ids"]:
         for j in products:
-            if i[0] == j["product_id"]:
-                for k in range(i[1]):
+            if int(i) == j["product_id"]:
+                for k in range(session["products_ids"][i]):
                     final_products.append(j)
     return render_template("cart_validation.html",cart=final_products)
 

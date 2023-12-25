@@ -2,8 +2,8 @@
 <html lang="fr">
    <head>
       <meta charset="UTF-8">
-      <title>Boutique - ProjetPoubelle</title>
-      <link href="../static/css/shop.css" rel="stylesheet">
+      <title>Boutique - ProjetPoubelle </title>
+      <link href="../static/css/cart_validation.css" rel="stylesheet">
       <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
    </head>
    <body>
@@ -21,34 +21,35 @@
       <div class="content">
          <section class = "middleZone">
             <h1 id="titre_shop">Validation du panier</h1>
-            <label for="use-same-adress"> Utiliser la même adresse partout ?</label>
-            <input id="all-same-adress" type="checkbox" name="use-same-adress">
-            <ul class = "itemList">
-               {% for product in cart %}
-                  <li class="item">
-                     <img class = "itemPic" src="../static/images/{{ product.img_url}}" alt="Poubelle Grise">
-                     <section class = "itemInfo">
-                        <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
-                        <p class="itemDesc">
-                           {{ product.desc }}
-                        </p>
-                     </section>
-                     <section class="itemBuying">
-                        <p class = "itemPrice"> {{ product.price }}€ </p>
-                     </section>
-                     <form action="/admin/purchase-cart/remove-product/{{ product.product_id }}" method="post">
-                        <button type="button">
-                           <img src="../static/images/trash.svg" alt="Logo of the trash" width="50px" height="50px">
-                        </button>
-                        <label for="adress">Rentrez votre adresse :</label>
-                        <input type="text" class="adress-input" name="adress">
-                     </form>
-                  </li>
-               {% endfor  %}
-            </ul>
-            <form action="" method="post">
-               <input type="submit" value="Valider le panier" class="submit-button">
-            </form>
+            <form action="/cart-validation/" method="post">
+               <label for="use-same-adress"> Utiliser la même adresse partout ?</label>
+               <input id="all-same-adress" type="checkbox" name="use-same-adress">
+               <input type="hidden" name="adresses" id="adresses-register">
+               <input type="submit" value="Valider le panier">
+               <ul class = "itemList">
+                  {% if cart == [] %}
+                     <p> Votre panier est vide ! </p>
+                  {% else %}
+                     {% for product in cart %}
+                        <li class="item">
+                           <img class = "itemPic" src="../static/images/{{ product.img_url}}" alt="Poubelle Grise">
+                           <section class = "itemInfo">
+                              <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
+                              <p class="itemDesc">
+                                 {{ product.desc }}
+                              </p>
+                           </section>
+                           <section class="itemBuying">
+                              <p class = "itemPrice"> {{ product.price }}€ </p>
+                           </section>
+                              <label for="adress">Rentrez votre adresse :</label>
+                              <input data-item-index="{{loop.index}}" type="text" class="adress-input" name="adress{{product.product_id}}">
+                        </li>
+                     {% endfor  %}
+                  {% endif %}
+               </ul>
+
+         </form>
          </section>
       </div>
       <div class="footer">
@@ -61,6 +62,6 @@
             </ul>
          </div>
       </div>
-      <script src="../static/js/shop.js"></script>
+      <script src="../static/js/cart_validation.js"></script>
    </body>
 </html>
