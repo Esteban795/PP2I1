@@ -15,17 +15,18 @@
             </div>
 
             <h1 class="text-title"> Se connecter </h1>
-
             <div class="text-center">
                 Pas de compte ? 
                 <a href="#register" class="transition-duration-300"> Créez-en un ici! </a>
             </div>
-            <form action="" method="get">
+            {% if error %}
+            <p class="error"> {{error}} </p>
+            {% endif%}
+            <form method="post">
               <div class="field-group">
                 <label class="label" for="txt-email"> Adresse mail : </label>
                 <input class="input" type="email" id="txt-email" name="email"/>
               </div>
-              
               <div class="field-group">
                 <div class="label-wrapper">
                   <label class="label" for="txt-password"> Mot de passe : </label>
@@ -38,10 +39,12 @@
                 </div>
                 <input class="input" type="password" id="txt-password" name="password"/>
               </div>
+
+              <div class="field-group">
+                <input class="btn-submit transition-duration-300" type="submit" value="Log In" />
+              </div>
             </form>
-            <div class="field-group">
-              <input class="btn-submit transition-duration-300" type="submit" value="Log In" />
-            </div>
+
             <div class="field-group text-center">
               <a href="#forgot-password" class="transition-duration-300"> Mot de passe oublié ?</a>
             </div>
