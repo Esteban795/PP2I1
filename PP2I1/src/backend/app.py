@@ -25,6 +25,19 @@ def load_user(client_id : int):
         return client
     return None
 
+# Static files loader. Makes working with subroutes **much easier**
+@app.get("/static/css/<fichier>")
+def send_css(fichier : str):
+    return app.send_static_file(f"./css/{fichier}")
+
+@app.get("/static/js/<fichier>")
+def send_js(fichier : str):
+    return app.send_static_file(f"./js/{fichier}")
+
+@app.get("/static/images/<fichier>")
+def send_images(fichier : str):
+    return app.send_static_file(f"./images/{fichier}")
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -110,24 +123,25 @@ def shop():
                 ]
     return render_template('shop.html',products=products)
 
-@app.route("/cart-validation/",methods=['GET','POST'])
+@app.route("/shop/cart-validation/",methods=['GET','POST'])
 @login_required
 def cart_validation():
     session.modified = False
     if request.method == "POST":
         check_same_adress = request.form.get("use-same-adress",None)
-        adresses = request.form.getlist("adress").split("--")
-        if check_same_adress is None:
+        adresses = request.form.getlist("adress")
+        products_ids = utilities.runLengthDecoding(session["products_ids"])
+        if check_same_adress is None: #checkbox is unchecked
             lats,longs = [],[]
             for adress in adresses:
                 lat,long = utilities.getLatLongFromStreetAdress(adress)
                 lats.append(lat)
                 longs.append(long)
-            cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.id,product_id,lat,long,1) for product_id,lat,long in zip(session["products_ids"],lats,longs)])
+            cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id,lat,long in zip(products_ids,lats,longs)])
             conn.commit()
         else:
             lat,long = utilities.getLatLongFromStreetAdress(adresses[0])
-            cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.id,product_id,lat,long,1) for product_id in session["products_ids"]])
+            cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id in products_ids])
             conn.commit()
         return redirect(url_for("cart_success"))
     #products = getProductsList()
@@ -144,7 +158,16 @@ def cart_validation():
 
 @app.route("/shop/purchase-cart/success/",methods=['GET','POST'])
 def cart_success():
-    return render_template("cart_success.html")
+    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
+                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
+                ]
+    final_products = []
+    for i in session["products_ids"]:
+        for j in products:
+            if int(i) == j["product_id"]:
+                for k in range(session["products_ids"][i]):
+                    final_products.append(j)
+    return render_template("cart_success.html",products=final_products)
 
 if __name__ == '__main__':
     app.run(debug=True)

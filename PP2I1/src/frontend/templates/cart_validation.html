@@ -3,12 +3,12 @@
    <head>
       <meta charset="UTF-8">
       <title>Boutique - ProjetPoubelle </title>
-      <link href="../static/css/cart_validation.css" rel="stylesheet">
+      <link href="/static/css/cart_validation.css" rel="stylesheet">
       <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
    </head>
    <body>
       <div class="header">
-         <a href="homepage.html" id="logo"><img src="../static/images/trash.svg" id="logo" alt = "Logo of the project" width="100" height="100"></a>
+         <a href="homepage.html" id="logo"><img src="/static/images/trash.svg" id="logo" alt = "Logo of the project" width="100" height="100"></a>
          <!-- note : remplacer par le bon logo, si possible en svg-->
          <h1>ProjetPoubelle</h1>
          <div class="header-right">
@@ -21,10 +21,9 @@
       <div class="content">
          <section class = "middleZone">
             <h1 id="titre_shop">Validation du panier</h1>
-            <form action="/cart-validation/" method="post">
+            <form action="/shop/cart-validation/" method="post">
                <label for="use-same-adress"> Utiliser la même adresse partout ?</label>
                <input id="all-same-adress" type="checkbox" name="use-same-adress">
-               <input type="hidden" name="adresses" id="adresses-register">
                <input type="submit" value="Valider le panier">
                <ul class = "itemList">
                   {% if cart == [] %}
@@ -32,7 +31,7 @@
                   {% else %}
                      {% for product in cart %}
                         <li class="item">
-                           <img class = "itemPic" src="../static/images/{{ product.img_url}}" alt="Poubelle Grise">
+                           <img class = "itemPic" src="/static/images/{{ product.img_url}}" alt="Poubelle Grise">
                            <section class = "itemInfo">
                               <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
                               <p class="itemDesc">
@@ -43,7 +42,7 @@
                               <p class = "itemPrice"> {{ product.price }}€ </p>
                            </section>
                               <label for="adress">Rentrez votre adresse :</label>
-                              <input data-item-index="{{loop.index}}" type="text" class="adress-input" name="adress{{product.product_id}}">
+                              <input data-item-index="{{loop.index}}" type="text" class="adress-input" name="adress">
                         </li>
                      {% endfor  %}
                   {% endif %}
@@ -62,6 +61,6 @@
             </ul>
          </div>
       </div>
-      <script src="../static/js/cart_validation.js"></script>
+      <script src="/static/js/cart_validation.js"></script>
    </body>
 </html>

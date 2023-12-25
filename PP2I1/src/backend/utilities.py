@@ -16,6 +16,13 @@ def runLengthEncoding(lst : list[int]):
         d[i] += 1
     return d
 
+def runLengthDecoding(d : dict[int,int]):
+    lst = []
+    for i in d:
+        for j in range(d[i]):
+            lst.append(i)
+    return lst
+
 def getLatLongFromStreetAdress(address : str):
     url = 'https://nominatim.openstreetmap.org/search?q=' + urllib.parse.quote(address) +'&format=json'
     response = requests.get(url).json()
