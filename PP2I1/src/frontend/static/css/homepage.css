@@ -9,3 +9,26 @@
   text-align-last: center;
   margin:20px auto 50px auto; /*La margin bottom 50 permet que rien ne reste sous le footer */
 }
+
+.txt_img_box{
+  display: flex;
+  height: 150px;
+  border: 1px solid #000000; /* Add border */
+}
+
+.txt_inbox{
+  text-align: left;
+  text-align-last: left;
+
+}
+
+.img_inbox_right{
+  display: flex;
+  justify-self : right;
+  width: 100%;
+}
+
+.img_inbox_left{
+  display: flex;
+  width: 100%;
+}
