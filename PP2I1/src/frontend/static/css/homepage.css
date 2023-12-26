@@ -5,8 +5,8 @@
   align-items: center;
   align-self: center;
   width: 80%;
-  text-align: justify;
-  text-align-last: center;
+  /*text-align: justify;*/
+  /*text-align-last: center;*/
   margin:20px auto 50px auto; /*La margin bottom 50 permet que rien ne reste sous le footer */
 }
 
@@ -19,7 +19,7 @@
 .txt_inbox{
   text-align: left;
   text-align-last: left;
-
+  text-align: center;
 }
 
 .img_inbox_right{
@@ -31,4 +31,5 @@
 .img_inbox_left{
   display: flex;
   width: 100%;
+  justify-content: space-around
 }
