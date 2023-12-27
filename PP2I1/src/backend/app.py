@@ -103,7 +103,7 @@ def logout():
     return redirect(request.args.get("next") or url_for('home')) 
 
 def getProductsList():
-    FIELDS = ["product_name","price","desc","img_url","volume"]
+    FIELDS = ["product_id","product_name","price","img_url","desc","volume","stock"]
     cursor.execute("SELECT {} FROM products".format(",".join(FIELDS)))
     products = cursor.fetchall()
     products = [dict(zip(FIELDS,product)) for product in products]
@@ -117,10 +117,7 @@ def shop():
         products_ids = [int(i) for i in cart.split("-")]
         session["products_ids"] = utilities.runLengthEncoding(sorted(products_ids)) # dict {product_id : quantity}
         return redirect(url_for("cart_validation"))
-    #products = getProductsList()
-    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
-                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
-                ]
+    products = getProductsList()
     return render_template('shop.html',products=products)
 
 @app.route("/shop/cart-validation/",methods=['GET','POST'])
@@ -144,10 +141,7 @@ def cart_validation():
             cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id in products_ids])
             conn.commit()
         return redirect(url_for("cart_success"))
-    #products = getProductsList()
-    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
-                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
-                ]
+    products = getProductsList()
     final_products = []
     for i in session["products_ids"]:
         for j in products:
@@ -158,9 +152,7 @@ def cart_validation():
 
 @app.route("/shop/purchase-cart/success/",methods=['GET','POST'])
 def cart_success():
-    products = [{"product_id" : 1,"product_name" : "test", "price" : 10, "desc" : "test1", "img_url" : "corail.jpg","volume":10},
-                {"product_id" : 2,"product_name" : "test", "price" : 10, "desc" : "test2", "img_url" : "montagne.jpg","volume":10},
-                ]
+    products = getProductsList()
     final_products = []
     for i in session["products_ids"]:
         for j in products:
