@@ -26,15 +26,15 @@ def load_user(client_id : int):
     return None
 
 # Static files loader. Makes working with subroutes **much easier**
-@app.get("/static/css/<fichier>")
+@app.route("/static/css/<fichier>")
 def send_css(fichier : str):
     return app.send_static_file(f"./css/{fichier}")
 
-@app.get("/static/js/<fichier>")
+@app.route("/static/js/<fichier>")
 def send_js(fichier : str):
     return app.send_static_file(f"./js/{fichier}")
 
-@app.get("/static/images/<fichier>")
+@app.route("/static/images/<fichier>")
 def send_images(fichier : str):
     return app.send_static_file(f"./images/{fichier}")
 
@@ -129,6 +129,8 @@ def cart_validation():
         adresses = request.form.getlist("adress")
         products_ids = utilities.runLengthDecoding(session["products_ids"])
         if check_same_adress is None: #checkbox is unchecked
+            if any([adress == "" for adress in adresses]):
+                return redirect(url_for("cart_validation",error="Veuillez remplir tous les formulaires d'adresses."))
             lats,longs = [],[]
             for adress in adresses:
                 lat,long = utilities.getLatLongFromStreetAdress(adress)
@@ -137,6 +139,8 @@ def cart_validation():
             cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id,lat,long in zip(products_ids,lats,longs)])
             conn.commit()
         else:
+            if adresses[0] == "":
+                return redirect(url_for("cart_validation",error="Veuillez remplir l'adresse."))
             lat,long = utilities.getLatLongFromStreetAdress(adresses[0])
             cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id in products_ids])
             conn.commit()
@@ -148,7 +152,8 @@ def cart_validation():
             if int(i) == j["product_id"]:
                 for k in range(session["products_ids"][i]):
                     final_products.append(j)
-    return render_template("cart_validation.html",cart=final_products)
+    error = request.args.get('error',None)
+    return render_template("cart_validation.html",cart=final_products,error=error)
 
 @app.route("/shop/purchase-cart/success/",methods=['GET','POST'])
 def cart_success():

@@ -13,7 +13,6 @@ body{
   align-items: center;
 }
 
-
 .header{
   display: flex;
   justify-content: center;
@@ -79,9 +78,11 @@ body{
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 70%;
+  justify-content: center;
+  width: 100%;
   margin-top: 20px;
 }
+
 .itemList{
   display: flex;
   flex-direction: column;
@@ -97,9 +98,7 @@ body{
   justify-content: center;
   align-items: center;
   gap: 1px;
-  width: 80%;
   margin: 20px auto;
-  /* background-color: grey; */
 }
 
 .itemName {
@@ -107,6 +106,20 @@ body{
   font-weight: bold;
 }
 
+.btn {
+	background-color: #006570;
+	color: #fff;
+	padding: 0.7em;
+	border-radius: 5px;
+	outline: 0;
+	border: 0;
+	cursor: pointer;
+	height: fit-content;
+	transition: background-color 0.3s ease-in-out;
+	justify-self: flex-end;
+	align-self: center;
+	font-size: large;
+}
 
 .itemBuying{
   display: flex;
@@ -136,6 +149,7 @@ body{
 
 .itemPic{
   border-radius: 10px;
+  max-width: 150px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -222,3 +236,32 @@ body{
 #contact_title{
   font-size: small;
 }
+
+
+#validation-div {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.h1-color  {
+	color: #139a76;
+}
+
+.validation-product-entry {
+  display: flex; 
+  justify-content: space-between; 
+  width: 100%;
+}
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.error {
+	text-align: center;
+	color: rgb(133, 21, 21);
+  }
