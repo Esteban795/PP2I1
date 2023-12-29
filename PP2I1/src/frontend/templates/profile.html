@@ -22,5 +22,14 @@
         </div>
     </div>
 </div>
+<div class = "separation-line"></div>
+<div class = "profile-management">
+    <h1 id = "title-management">Mon profil : </h1>
+    <h2 class = "user-info">Mon nom : {{user.first_name}}</h2>
+    <form method="POST" action="/profile/reset_first_name/"">
+        <input type="text" name="new_first_name" required>
+        <input class = "submit-button" type="submit" value="Change First Name">
+    </form>
+</div>
 <script src="../static/js/profile.js"></script>
 {%endblock%}

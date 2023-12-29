@@ -83,20 +83,19 @@ def login():
         return render_template('login.html')
     
 
-@app.route('/profile/')
-def userpage():
-    # if not current_user.is_authenticated:
-    #     return redirect(url_for('login'))
-    # else:
-        return render_template('profile.html',user=current_user)
-
 @app.route('/logout/')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/profile/delete-user',methods=('GET','POST'))
+
+@app.route('/profile/')
+#@login_required
+def userpage():
+    return render_template('profile.html',user=current_user)
+
+@app.route('/profile/delete-user/',methods=('GET','POST'))
 @login_required
 def delete_user():
     current_user_id = current_user.client_id
@@ -106,7 +105,7 @@ def delete_user():
         redirect(url_for('profile'))
     return render_template('profile.html')
 
-@app.route('/profile/reset-first-name', methods=('GET', 'POST'))
+@app.route('/profile/reset-first-name/', methods=('GET', 'POST'))
 @login_required
 def reset_first_name():
     current_user_id = current_user.client_id
@@ -119,7 +118,7 @@ def reset_first_name():
         return redirect(url_for('profile'))
     return render_template('profile.html')
 
-@app.route('/profile/reset-last-name', methods=('GET', 'POST'))
+@app.route('/profile/reset-last-name/', methods=('GET', 'POST'))
 @login_required
 def reset_last_name():
     current_user_id = current_user.client_id
