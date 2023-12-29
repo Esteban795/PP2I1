@@ -343,5 +343,31 @@ def start_pickup():
         return redirect(url_for('admin'))
     return redirect(url_for('admin'))
 
+
+@app.route('/admin', methods=('GET','POST')) # chemin a revoir 
+def ban_user(client_id: int):
+    if request.method == 'POST':
+        cursor.execute('UPDATE clients SET status = ? WHERE clients_id = ? ',(-1, client_id))
+        conn.commit()
+        redirect(url_for('admin'))
+    return render_template('admin.html')
+
+@app.route('/admin', methods=('GET','POST')) # chemin a revoir
+def unban_user(client_id: int):
+    if request.method == 'POST':
+        cursor.execute('UPDATE clients SET status = ? WHERE clients_id = ? ',(0, client_id))
+        conn.commit()
+        return redirect(url_for('admin'))
+    return render_template('admin.html')
+
+@app.route('/admin', methods=('GET','POST')) # chemin a revoir
+def transform_to_admin(client_id: int):
+    if request.method == 'POST':
+        cursor.execute('UPDATE clients SET status = ? WHERE clients_id = ?', (1, client_id))
+        conn.commit()
+        return redirect(url_for('admin'))
+    return render_template('admin.html')
+
+
 if __name__ == '__main__':
     app.run(debug=True)
