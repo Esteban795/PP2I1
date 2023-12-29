@@ -105,6 +105,30 @@ def delete_user():
         redirect(url_for('userpage/profile'))
     return render_template('userpage.html')
 
+@app.route('/userpage/profile', methods=('GET', 'POST'))
+def reset_first_name():
+    current_user_id = current_user.id
+    if request.method == 'POST':
+        new_first_name = request.form['new_first_name']
+        if not utilities.checkValidInput(new_first_name):
+            return render_template('userpage/profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+        cursor.execute('UPDATE clients SET first_name = ? WHERE clients_id = ?', (new_first_name,current_user_id))
+        conn.commit()
+        return redirect('userpage/profile.html')
+    return render_template('userpage/profile.html')
+
+@app.route('/userpage/profile', methods=('GET', 'POST'))
+def reset_last_name():
+    current_user_id = current_user.id
+    if request.method == 'POST':
+        new_last_name = request.form['new_first_name']
+        if not utilities.checkValidInput(new_last_name):
+            return render_template('userpage/profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+        cursor.execute('UPDATE clients SET last_name = ? WHERE clients_id = ?', (new_last_name,current_user_id))
+        conn.commit()
+        return redirect('userpage/profile.html')
+    return render_template('userpage/profile.html')
+
 
 if __name__ == '__main__':
     app.run(debug=True, port = 8080)
