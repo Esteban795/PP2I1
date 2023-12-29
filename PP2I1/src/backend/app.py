@@ -96,38 +96,41 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-@app.route('/userpage/profile',methods=('GET','POST'))
+@app.route('/profile/delete-user',methods=('GET','POST'))
+@login_required
 def delete_user():
-    current_user_id = current_user.id
+    current_user_id = current_user.client_id
     if request.method == 'POST':
-        cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, creat_at = ?, pwd = ?, recycled_volume = ?, status = ?  , WHERE client_id = ?', (None, None, None, None,None, None, current_user_id,))
+        cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, creat_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None,None, None, current_user_id))
         conn.commit()
-        redirect(url_for('userpage/profile'))
-    return render_template('userpage.html')
+        redirect(url_for('profile'))
+    return render_template('profile.html')
 
-@app.route('/userpage/profile', methods=('GET', 'POST'))
+@app.route('/profile/reset-first-name', methods=('GET', 'POST'))
+@login_required
 def reset_first_name():
-    current_user_id = current_user.id
+    current_user_id = current_user.client_id
     if request.method == 'POST':
-        new_first_name = request.form['new_first_name']
+        new_first_name = request.form['new-first-name']
         if not utilities.checkValidInput(new_first_name):
-            return render_template('userpage/profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
-        cursor.execute('UPDATE clients SET first_name = ? WHERE clients_id = ?', (new_first_name,current_user_id))
+            return render_template('profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+        cursor.execute('UPDATE clients SET first_name = ? WHERE client_id = ?', (new_first_name,current_user_id))
         conn.commit()
-        return redirect('userpage/profile.html')
-    return render_template('userpage/profile.html')
+        return redirect(url_for('profile'))
+    return render_template('profile.html')
 
-@app.route('/userpage/profile', methods=('GET', 'POST'))
+@app.route('/profile/reset-last-name', methods=('GET', 'POST'))
+@login_required
 def reset_last_name():
-    current_user_id = current_user.id
+    current_user_id = current_user.client_id
     if request.method == 'POST':
-        new_last_name = request.form['new_first_name']
+        new_last_name = request.form['new-last-name']
         if not utilities.checkValidInput(new_last_name):
-            return render_template('userpage/profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
-        cursor.execute('UPDATE clients SET last_name = ? WHERE clients_id = ?', (new_last_name,current_user_id))
+            return render_template('profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+        cursor.execute('UPDATE clients SET last_name = ? WHERE client_id = ?', (new_last_name,current_user_id))
         conn.commit()
-        return redirect('userpage/profile.html')
-    return render_template('userpage/profile.html')
+        return redirect(url_for('profile'))
+    return render_template('profile.html')
 
 
 if __name__ == '__main__':
