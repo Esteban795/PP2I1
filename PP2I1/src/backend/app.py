@@ -96,6 +96,14 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
+@app.route('/userpage/profile',methods=('GET','POST'))
+def delete_user():
+    current_user_id = current_user.id
+    if request.method == 'POST':
+        cursor.execute('UPDATE FROM clients SET first_name = ?, last_name = ?, creat_at = ?, pwd = ?, recycled_volume = ?, status = ?  , WHERE client_id = ?', (None, None, None, None,None, None, current_user_id,))
+        conn.commit()
+        redirect(url_for('userpage/profile'))
+    return render_template('userpage.html')
 
 
 if __name__ == '__main__':
