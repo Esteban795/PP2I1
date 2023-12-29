@@ -83,6 +83,13 @@ def login():
         return render_template('login.html')
     
 
+@app.route('/userpage/')
+def userpage():
+    # if not current_user.is_authenticated:
+    #     return redirect(url_for('login'))
+    # else:
+        return render_template('userpage.html',user=current_user)
+
 @app.route('/logout/')
 @login_required
 def logout():
@@ -92,4 +99,4 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port = 8080)

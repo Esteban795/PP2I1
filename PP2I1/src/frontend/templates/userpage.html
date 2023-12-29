@@ -1,0 +1,15 @@
+{%extends "base.html"%}
+{%block title%}Accueil{%endblock%}
+{%block stylesheets%} <link href="../static/css/userpage.css" rel="stylesheet"> {%endblock%}
+{%block content%}
+<div class = "stats">
+    <h1 id = "stats-title">Mes Statistiques</h1>
+    <ul>
+        <li>Volume total de déchets ramassés :</li>
+        <li>Volume de déchets recyclés :</li>
+        <li>Dernier passage :</li>
+        <li>Taux de remplissage de la poubelle :</li>
+    </ul>
+</div>
+<a href = "/userpage/profile">Gérer mon profil</a>
+{%endblock%}
