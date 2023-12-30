@@ -7,6 +7,10 @@ body {
 	background-color: black;
 }
 
+.content{
+	margin-bottom: 50px;
+}
+
 .title {
 	font-weight: 800;
 	color: #444444;
@@ -188,6 +192,10 @@ body {
 
 .profile-management{
     background-color: #ffffff;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
 }
 
 .submit-button {
@@ -197,8 +205,12 @@ body {
     margin: 8px 0;
     border: none;
     cursor: pointer;
-    width: 10%;
+    width: 30%;
     opacity: 0.9;
+}
+
+#delete-user-button{
+	background-color: red;
 }
 
 .submit-button:hover {

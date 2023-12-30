@@ -92,7 +92,7 @@ def logout():
 
 @app.route('/profile/')
 #@login_required
-def userpage():
+def profile():
     return render_template('profile.html',user=current_user)
 
 @app.route('/profile/delete-user/',methods=('GET','POST'))

@@ -25,11 +25,37 @@
 <div class = "separation-line"></div>
 <div class = "profile-management">
     <h1 id = "title-management">Mon profil : </h1>
-    <h2 class = "user-info">Mon nom : {{user.first_name}}</h2>
-    <form method="POST" action="/profile/reset_first_name/"">
-        <input type="text" name="new_first_name" required>
-        <input class = "submit-button" type="submit" value="Change First Name">
+    <h2 class = "user-info">Mes infos :</h2>
+    <h3 id = "user-name">Mon nom : {{user.first_name}} {{user.last_name}}</h3>
+    <form method="POST" action="/profile/reset-first-name/"">
+        <input type="text" name="new-first-name" placeholder = "Entrez votre prénom" required>
+        <input class = "submit-button" type="submit" value="Valider">
     </form>
+    <form method="POST" action="/profile/reset-last-name/"">
+        <input type="text" name="new-last-name" placeholder="Entrez votre nom" required>
+        <input class = "submit-button" type="submit" value="Valider">
+    </form>
+    <h3 id = "user-mail">Mon email : {{user.email}}</h3>
+    <form method="POST" action="/profile/reset-email/"">
+        <input type="email" name="new-email" placeholder="Entrez votre nouvel email" required>
+        <input class = "submit-button" type="submit" value="Valider">
+    </form>
+
+    <h2 class = security>Sécurité</h2>
+    <h3 id = "reset-password">Réinitialiser mon mot de passe :</h3>
+    <form method="POST" action="/profile/reset-password/"">
+        <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+        <input class = "submit-button" type="submit" value="Valider">
+    </form>
+    <form method="POST" action="/profile/reset-password/"">
+        <input type="password" name="new-password" placeholder="Entrez votre nouveau mot de passe" required>
+        <input class = "submit-button" type="submit" value="Valider">
+    </form>
+    <h3 id="delete-user">Supprimer mon compte :</h3>
+    <form method="POST" action="/profile/delete-user/"">
+        <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+        <input class = "submit-button" id="delete-user-button" type="submit" value="Valider">
+   
 </div>
 <script src="../static/js/profile.js"></script>
 {%endblock%}
