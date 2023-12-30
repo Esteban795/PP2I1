@@ -16,8 +16,7 @@
   align-items: center; 
   grid-template-columns: auto 1fr;
   column-gap: 5px;
-  width:fit-content;
-
+  justify-content: center;
  }
 
 .image-container img{
