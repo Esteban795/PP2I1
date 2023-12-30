@@ -2,23 +2,55 @@
 {%block title%}Mon profil{%endblock%}
 {%block stylesheets%} <link href="./../static/css/profile.css" rel="stylesheet"> {%endblock%}
 {%block content%}
-<div class="flex-column">
-    <h1 class="title text-white text-end"> Quelques statistiques à propos de vous..</h1>
+<div class="stats flex-column">
+    <h1 class="title text-white text-center">
+        <span class="fadein-animation"> Quelques </span>
+        <span class="fadein-animation"> statistiques </span>
+        <span class="fadein-animation"> à </span>
+        <span class="fadein-animation"> propos </span>
+        <span class="fadein-animation"> de </span>
+        <span class="fadein-animation"> vous... </span>
+    </h1>
     <div class="flex-row" id="statistics-container">
-        <div class="fullheight-stat-container">
-            <div class="text-end stat-number">
-                <h4> 200kg </h4> <!-- Ici tu mets la stat (genre un pourcentage, des litres chepa fdp) -->
-            </div>
-            <div class="item flex-column" data-value="300" data-max-value="400"> <!-- Max value = valeur max que peut atteindre value -->
-                <span></span> <!-- Pas touche gros lardon, c'est pour les bordures -->
-                <span></span>
-                <span></span>
-                <span></span>
-                <div class="stat-card">
-                    <h3 class="stat-title"> test gros lardon </h3> <!-- ici tu me fous la stat du truc : exemple : le chiffre c'est 200kg, bah là tu mets "déchets dans cette poubelle cette année" -->
-                    <p class="stat-desc"> oui oui baguette </p> <!-- et là t'essaies d'être un peu humoristique -->
+        <div class="fullheight-stat-container flex-column">
+            <div>
+                <div class="text-end stat-number">
+                    <h4> 200kg </h4> <!-- Ici tu mets la stat (genre un pourcentage, des litres chepa fdp) -->
+                </div>
+                <div class="item flex-column" data-value="6000" data-max-value="400"> <!-- Max value = valeur max que peut atteindre value -->
+                    <span></span> <!-- Pas touche gros lardon, c'est pour les bordures -->
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <div class="stat-card flex-column">
+                        <h5 class="stat-title"> ...de déchets depuis que vous nous avez rejoints, en 2017. </h5> <!-- ici tu me fous la stat du truc : exemple : le chiffre c'est 200kg, bah là tu mets "déchets dans cette poubelle cette année" -->
+                        <div class="stat-desc-container flex-center">
+                            <p class="stat-desc"> Vous souhaitez réduire encore plus votre consommation ? C'est par <a class="visited-h1-color" href="/">ici</a> que ça se passe.</p> <!-- et là t'essaies d'être un peu humoristique -->
+                        </div>
+                    </div>
                 </div>
             </div>
+
+        </div>
+        <div class="fullheight-stat-container flex-column">
+            <div>
+                <div class="text-end stat-number">
+                    <h4> 200kg </h4> <!-- Ici tu mets la stat (genre un pourcentage, des litres chepa fdp) -->
+                </div>
+                <div class="item flex-column" data-value="200" data-max-value="400"> <!-- Max value = valeur max que peut atteindre value -->
+                    <span></span> <!-- Pas touche gros lardon, c'est pour les bordures -->
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <div class="stat-card flex-column">
+                        <h5 class="stat-title"> ...de déchets depuis que vous nous avez rejoints, en 2017. </h5> <!-- ici tu me fous la stat du truc : exemple : le chiffre c'est 200kg, bah là tu mets "déchets dans cette poubelle cette année" -->
+                        <div class="stat-desc-container flex-center">
+                            <p class="stat-desc"> Vous souhaitez réduire encore plus votre Vous souhaitez réduire encore plus votre Vous souhaitez réduire encore plus votre consommation ? C'est par <a class="visited-h1-color" href="/">ici</a> que ça se passe.</p> <!-- et là t'essaies d'être un peu humoristique -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>
