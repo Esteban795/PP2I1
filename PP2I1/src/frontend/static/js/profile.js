@@ -11,6 +11,7 @@ statsItems.forEach((item) => {
         let max = parseFloat(item.getAttribute('data-max-value'));
         let ratio = Math.min(1,value / max);
         let height = statDescContainerHeight + (availableRange * ratio);
+        height = Math.max(maxItemsHeight, height)
         item.style.height = height + "px";
         item.classList.add("item-active");
     });
@@ -29,3 +30,38 @@ window.onload = function(){
       h1FadeIn[i].style.animationDelay = (i + 1) * 0.1 + 's';   
     }
   }
+
+const slides = document.querySelectorAll(".slide");
+const nextSlideBtns = document.querySelectorAll(".btn-next");
+const prevSlideBtns = document.querySelectorAll(".btn-prev");
+let currSlide = 0;
+let maxSlide = slides.length - 1;
+  
+updateSlides();
+
+function updateSlides() {
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].style.display = "none";  
+    }
+    slides[currSlide].style.display = "block";  
+}
+
+
+nextSlideBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+        currSlide = (currSlide + 1) % (maxSlide + 1);
+        console.log("click next");
+        updateSlides();
+    });
+}
+);
+
+
+prevSlideBtns.forEach((btn) => {
+    btn.addEventListener("click", function () {
+        currSlide = (currSlide === 0) ? maxSlide : currSlide - 1;
+        console.log("click prev");
+        updateSlides();
+    });
+}
+);

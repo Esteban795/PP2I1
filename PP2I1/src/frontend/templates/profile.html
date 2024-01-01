@@ -9,48 +9,204 @@
         <span class="fadein-animation"> à </span>
         <span class="fadein-animation"> propos </span>
         <span class="fadein-animation"> de </span>
+        <br>
         <span class="fadein-animation"> vous... </span>
     </h1>
-    <div class="flex-row" id="statistics-container">
+    <div class="flex-row flex-split statistics-container">
         <div class="fullheight-stat-container flex-column">
             <div>
                 <div class="text-end stat-number">
-                    <h4> 200kg </h4> <!-- Ici tu mets la stat (genre un pourcentage, des litres chepa fdp) -->
+                    <h4> {{ nb_bins }} </h4>
                 </div>
-                <div class="item flex-column" data-value="6000" data-max-value="400"> <!-- Max value = valeur max que peut atteindre value -->
-                    <span></span> <!-- Pas touche gros lardon, c'est pour les bordures -->
+                <br>
+                <div class="item flex-column" data-value="50" data-max-value="150">
+                    <span></span>
                     <span></span>
                     <span></span>
                     <span></span>
                     <div class="stat-card flex-column">
-                        <h5 class="stat-title"> ...de déchets depuis que vous nous avez rejoints, en 2017. </h5> <!-- ici tu me fous la stat du truc : exemple : le chiffre c'est 200kg, bah là tu mets "déchets dans cette poubelle cette année" -->
+                        <h5 class="stat-title"> C'est le nombre de poubelles que vous possédez. </h5>
                         <div class="stat-desc-container flex-center">
-                            <p class="stat-desc"> Vous souhaitez réduire encore plus votre consommation ? C'est par <a class="visited-h1-color" href="/">ici</a> que ça se passe.</p> <!-- et là t'essaies d'être un peu humoristique -->
+                            <p class="stat-desc"> Enfin, de poubelles de chez <i> nous </i> que vous possédez. Vous êtes peut-être collectionneur de poubelles.</p>
                         </div>
                     </div>
                 </div>
             </div>
-
         </div>
         <div class="fullheight-stat-container flex-column">
-            <div>
-                <div class="text-end stat-number">
-                    <h4> 200kg </h4> <!-- Ici tu mets la stat (genre un pourcentage, des litres chepa fdp) -->
+            <!-- {% for bin_infos in bins %}
+                <div class="slide flex-center">
+                    <div class="text-end stat-number flex-row flex-split skewY--10">
+                        <div>
+                            <h4>
+                                {{ bins_infos.used / bins_infos.volume * 100}}%
+                            </h4>
+                        </div>
+                        <h4 class="flex-row flex-end">
+                            <img class="btn-prev svg-white slider-buttons" src="../static/images/chevron-left.svg" alt="chevron-left"> 
+                            Poubelle {{ loop.index }}
+                            <img class="btn-next svg-white slider-buttons" src="../static/images/chevron-right.svg" alt="chevron-right">
+                        </h4>
+                    </div>
+                    <div class="item flex-column" data-value="{{bin_infos.used}}" data-max-value="{{bin_infos.volume}}">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                        <div class="stat-card flex-column">
+                            <h5 class="stat-title"> Ca, c'est votre {{ poubelle.translate[index.loop] }} poubelle. </h5>
+                            <div class="stat-desc-container flex-center">
+                                <p class="stat-desc"> 
+                                    <ul>
+                                        <li>
+                                            Volume actuel : {{ bin_infos.used }}L
+                                        </li>
+                                        <li>
+                                            Volume maximum : {{ bin_infos.volume }}L
+                                        </li>
+                                        <li>
+                                            Vidé pour la dernière fois : {{ bin_infos.last_emptied }}, par {{ bin_infos.last_emptied_by }}
+                                        </li>
+                                    </ul>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="item flex-column" data-value="200" data-max-value="400"> <!-- Max value = valeur max que peut atteindre value -->
-                    <span></span> <!-- Pas touche gros lardon, c'est pour les bordures -->
+            {% endfor %} -->
+            <div class="slide flex-center">
+                <div class="text-end stat-number flex-row flex-split" style="transform: skewY(-10deg);">
+                    <div>
+                        <h4>
+                            67%
+                        </h4>
+                    </div>
+                    <h4 class="flex-row flex-end">
+                        <img class="btn-prev svg-white slider-buttons" src="../static/images/chevron-left.svg" alt="chevron-left"> 
+                        1
+                        <img class="btn-next svg-white slider-buttons" src="../static/images/chevron-right.svg" alt="chevron-right">
+                    </h4>
+                </div>
+                <div class="item flex-column" data-value="60" data-max-value="90">
+                    <span></span>
                     <span></span>
                     <span></span>
                     <span></span>
                     <div class="stat-card flex-column">
-                        <h5 class="stat-title"> ...de déchets depuis que vous nous avez rejoints, en 2017. </h5> <!-- ici tu me fous la stat du truc : exemple : le chiffre c'est 200kg, bah là tu mets "déchets dans cette poubelle cette année" -->
+                        <h5 class="stat-title"> Ca, c'est votre première poubelle. </h5>
                         <div class="stat-desc-container flex-center">
-                            <p class="stat-desc"> Vous souhaitez réduire encore plus votre Vous souhaitez réduire encore plus votre Vous souhaitez réduire encore plus votre consommation ? C'est par <a class="visited-h1-color" href="/">ici</a> que ça se passe.</p> <!-- et là t'essaies d'être un peu humoristique -->
+                            <p class="stat-desc"> 
+                                <ul class="no-list-style">
+                                    <li>
+                                        Volume actuel : 10L
+                                    </li>
+                                    <li>
+                                        Volume maximum : 65L
+                                    </li>
+                                    <li>
+                                        Vidé pour la dernière fois : 2023, par notre camion 79832H67
+                                    </li>
+                                </ul>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
-
+            <div class="slide flex-center">
+                <div class="text-end stat-number flex-row flex-split" style="transform: skewY(-10deg);">
+                    <div>
+                        <h4>
+                            67%
+                        </h4>
+                    </div>
+                    <h4 class="flex-row flex-end">
+                        <img class="btn-prev svg-white slider-buttons" src="../static/images/chevron-left.svg" alt="chevron-left"> 
+                        2
+                        <img class="btn-next svg-white slider-buttons" src="../static/images/chevron-right.svg" alt="chevron-right">
+                    </h4>
+                </div>
+                <div class="item flex-column" data-value="60" data-max-value="90">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <div class="stat-card flex-column">
+                        <h5 class="stat-title"> Ca, c'est votre deuxième poubelle. </h5>
+                        <div class="stat-desc-container flex-center">
+                            <p class="stat-desc">
+                                <ul class="no-list-style">
+                                    <li>
+                                        Volume actuel : 5L
+                                    </li>
+                                    <li>
+                                        Volume maximum :115L
+                                    </li>
+                                    <li>
+                                        Vidé pour la dernière fois : 2022, par notre camion BBBBB
+                                    </li>
+                                </ul>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-row statistics-container flex-space-evenly">
+        <div class="fullheight-stat-container flex-column">
+            <div>
+                <div class="text-end stat-number">
+                    <h4> 200kg </h4>
+                </div>
+                <div class="item flex-column" data-value="6000" data-max-value="400">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <div class="stat-card flex-column">
+                        <h5 class="stat-title"> ...de déchets depuis que vous nous avez rejoints, en 2017. </h5> 
+                        <div class="stat-desc-container flex-center">
+                            <p class="stat-desc"> Vous souhaitez réduire encore plus votre consommation ? C'est par <a class="visited-h1-color" href="/">ici</a> que ça se passe.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fullheight-stat-container flex-column">
+        <div>
+            <div class="text-end stat-number">
+                <h4> 200kg </h4>
+            </div>
+            <div class="item flex-column" data-value="200" data-max-value="400"> 
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <div class="stat-card flex-column">
+                    <h5 class="stat-title"> de déchets recyclés, parmi ceux ramassés. </h5>
+                    <div class="stat-desc-container flex-center">
+                        <p class="stat-desc flex-center">
+                                {% if recycled_percentage > 80 %}
+                                    Un vrai professionnel du tri. Bravo !
+                                {% elif recycled_percentage > 60 %}
+                                    Il vous reste encore des choses à apprendre, mais on est déjà épatés !
+                                {% else %} 
+                                    {% if recycled_percentage > 40 %}
+                                        Vous êtes sur la bonne voie ! Continuez à trier vos déchets, et à les déposer dans les bonnes poubelles.
+                                    {% elif recycled_percentage > 20 %}
+                                        Ne vous découragez pas ! Trier, ce n'est pas aussi difficile que ça en a l'air.
+                                    {% elif recycled_percentage > 0 %}
+                                        C'est un bon début, mais on est sûr que vous pouvez faire mieux !
+                                    {% else %}
+                                        Vous n'avez pas encore recyclé de déchets. Il est temps de vous y mettre !
+                                    {% endif %}
+                                    Tenez, voici <a href="/articles/"> une ressource</a> qui contient plein d'informations!
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
