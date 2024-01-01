@@ -100,14 +100,24 @@ body {
 .stats {
 	background-color: black;
 	overflow: hidden;
+	background: radial-gradient(circle at 90% 5%, rgba(123,123,123,1) 0%, rgba(50,50,50,1) 40%, rgba(0,0,0,1) 90%);
+	transition: background-position 2s;
 }
 
 .statistics-container {
-	height: 500px;
+	height: 400px;
 	position: relative;
 	padding: 50px;
 	flex-wrap: wrap;
 }
+
+/* .statistics-container:first-of-type {
+	background: radial-gradient(circle at 90% 5%, rgba(123,123,123,1) 0%, rgba(50,50,50,1) 26%, rgba(0,0,0,1) 67%);
+}
+
+.statistics-container:last-of-type {
+	background: radial-gradient(circle at 5% 90%, rgba(123,123,123,1) 0%, rgba(50,50,50,1) 26%, rgba(0,0,0,1) 67%);
+} */
 
 .fullheight-stat-container {
 	color: white;
@@ -175,7 +185,7 @@ body {
 }
 
 .item-active {
-	box-shadow: 0 0 10px whitesmoke, 0 0 40px whitesmoke, 0 0 80px whitesmoke;
+	box-shadow: 0 0 10px rgb(144, 135, 135), 0 0 40px rgb(144, 135, 135), 0 0 80px rgb(144, 135, 135);
 	transition-delay: 0.5s;
 	transition-duration: 0.5s;
 }

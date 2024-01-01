@@ -34,7 +34,7 @@
             </div>
         </div>
         <div class="fullheight-stat-container flex-column">
-            <!-- {% for bin_infos in bins %}
+            {% for bin_infos in bins %}
                 <div class="slide flex-center">
                     <div class="text-end stat-number flex-row flex-split skewY--10">
                         <div>
@@ -73,8 +73,8 @@
                         </div>
                     </div>
                 </div>
-            {% endfor %} -->
-            <div class="slide flex-center">
+            {% endfor %}
+            <!-- <div class="slide flex-center">
                 <div class="text-end stat-number flex-row flex-split" style="transform: skewY(-10deg);">
                     <div>
                         <h4>
@@ -149,16 +149,16 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <div class="flex-row statistics-container flex-space-evenly">
         <div class="fullheight-stat-container flex-column">
             <div>
                 <div class="text-end stat-number">
-                    <h4> 200kg </h4>
+                    <h4> {{total_volume}}kg </h4>
                 </div>
-                <div class="item flex-column" data-value="6000" data-max-value="400">
+                <div class="item flex-column" data-value="{{total_volume}}" data-max-value="1000">
                     <span></span>
                     <span></span>
                     <span></span>
@@ -175,9 +175,9 @@
     <div class="fullheight-stat-container flex-column">
         <div>
             <div class="text-end stat-number">
-                <h4> 200kg </h4>
+                <h4> {{ recycled_volume }} </h4>
             </div>
-            <div class="item flex-column" data-value="200" data-max-value="400"> 
+            <div class="item flex-column" data-value="{{recycled_volume}}" data-max-value="1000"> 
                 <span></span>
                 <span></span>
                 <span></span>
@@ -186,6 +186,7 @@
                     <h5 class="stat-title"> de déchets recyclés, parmi ceux ramassés. </h5>
                     <div class="stat-desc-container flex-center">
                         <p class="stat-desc flex-center">
+                            Vous avez recyclé  {{ recycled_volume * 100 / total_volume }}% de vos déchets.
                                 {% if recycled_percentage > 80 %}
                                     Un vrai professionnel du tri. Bravo !
                                 {% elif recycled_percentage > 60 %}
