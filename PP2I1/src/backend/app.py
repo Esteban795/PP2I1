@@ -91,9 +91,9 @@ def logout():
 
 
 @app.route('/profile/')
-#@login_required
+@login_required
 def profile():
-    return render_template('profile.html',user=current_user)
+    return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 @app.route('/profile/delete-user/',methods=('GET','POST'))
 @login_required
@@ -129,7 +129,21 @@ def reset_last_name():
         cursor.execute('UPDATE clients SET last_name = ? WHERE client_id = ?', (new_last_name,current_user_id))
         conn.commit()
         return redirect(url_for('profile'))
-    return render_template('profile.html')
+    return render_template('profile.html', recycled_volume=10, total_volume=20, recycled_percentage=50)
+
+
+@app.route('/profile/reset-email/', methods=('GET','POST'))
+@login_required
+def reset_email():
+    current_user_id = current_user.client_id
+    if request.method == 'POST':
+        new_email = request.form['new-email']
+        if not utilities.checkValidInput(new_email):
+            return render_template('profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+        cursor.execute('UPDATE clients SET email = ? WHERE client_id = ?',(new_email, current_user_id))
+        conn.commit()
+        return redirect(url_for('profile'))
+    return render_template('profile.html', recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 
 if __name__ == '__main__':
