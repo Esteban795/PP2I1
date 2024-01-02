@@ -9,7 +9,8 @@ class Client(UserMixin):
                  email: str,
                  password: str,
                  created_at : float = dt.timestamp(dt.now()),
-                 recycled_volume : int = 0):
+                 recycled_volume : int = 0,
+                 status: int = 0):
         self.client_id = client_id
         self.first_name = first_name
         self.last_name = last_name
@@ -17,6 +18,7 @@ class Client(UserMixin):
         self.password = password
         self.created_at = created_at
         self.recycled_volume = recycled_volume
+        self.status = status
 
     def __str__(self):
         return "{0} {1}".format(self.first_name, self.last_name)
@@ -29,7 +31,8 @@ class Client(UserMixin):
                 self.email,
                 self.created_at,
                 self.password,
-                self.recycled_volume)
+                self.recycled_volume,
+                self.status)
     
     def get_id(self): #necessary for flask_login
         return self.client_id
