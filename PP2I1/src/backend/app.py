@@ -71,7 +71,7 @@ def login():
         user = cursor.fetchone()
         if user is None:
             return render_template('login.html',error="Cette adresse email n'est liée à aucun compte.")
-        
+        print(user)
         client = Client(*user)
         hash_object = hashlib.sha256(password.encode('utf-8'))
         password = hash_object.hexdigest()
@@ -100,10 +100,10 @@ def profile():
 def delete_user():
     current_user_id = current_user.client_id
     if request.method == 'POST':
-        cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, creat_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None,None, None, current_user_id))
+        cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, email = ?, created_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None, None,None, None, current_user_id))
         conn.commit()
-        redirect(url_for('profile'))
-    return render_template('profile.html')
+        redirect(url_for('login'))
+    return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 @app.route('/profile/reset-first-name/', methods=('GET', 'POST'))
 @login_required
@@ -116,7 +116,7 @@ def reset_first_name():
         cursor.execute('UPDATE clients SET first_name = ? WHERE client_id = ?', (new_first_name,current_user_id))
         conn.commit()
         return redirect(url_for('profile'))
-    return render_template('profile.html')
+    return render_template('profile.html', recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 @app.route('/profile/reset-last-name/', methods=('GET', 'POST'))
 @login_required
