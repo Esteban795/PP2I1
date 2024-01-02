@@ -240,10 +240,18 @@
         <input type="password" name="new-password" placeholder="Entrez votre nouveau mot de passe" required>
         <input class = "submit-button" type="submit" value="Valider">
     </form>
+    
     <h3 id="delete-user">Supprimer mon compte :</h3>
     <form method="POST" action="/profile/delete-user/"">
         <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
-        <input class = "submit-button" id="delete-user-button" type="submit" value="Valider">
+        <input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="confirmationDialog.showModal(); return false;">
+    </form>
+     
+    <dialog id="confirmationDialog">
+        <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
+        <button id="confirmButton" onclick="document.getElementById('confirmationDialog').close(); document.getElementById('delete-user-form').submit();">Confirmer</button>
+        <button id="cancelButton" onclick="document.getElementById('confirmationDialog').close();">Annuler</button>
+    </dialog>
    
 </div>
 <script src="../static/js/profile.js"></script>
