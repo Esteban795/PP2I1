@@ -1,6 +1,6 @@
 {%extends "base.html"%}
 {%block title%}Accueil{%endblock%}
-{%block stylesheets%} <link href="../static/css/shop.css" rel="stylesheet"> {%endblock%}
+{%block stylesheets%} <link href="/static/css/shop.css" rel="stylesheet"> {%endblock%}
 {%block content%}
 <section class = "middleZone">
    <h1 id="titre_shop">Boutique</h1>
@@ -41,7 +41,6 @@
       <button id="cartConfirmButton">Valider le panier</button>
    </form>
 </div>
-{%endblock%}
 <script src="/static/js/shop.js"></script>
 <script>
 
@@ -55,3 +54,4 @@ function submitCart() {
    }
 }
 </script>
+{%endblock%}
