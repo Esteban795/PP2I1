@@ -25,6 +25,19 @@ def load_user(client_id : int):
         return client
     return None
 
+# Static files loader. Makes working with subroutes **much easier**
+@app.route("/static/css/<fichier>")
+def send_css(fichier : str):
+    return app.send_static_file(f"./css/{fichier}")
+
+@app.route("/static/js/<fichier>")
+def send_js(fichier : str):
+    return app.send_static_file(f"./js/{fichier}")
+
+@app.route("/static/images/<fichier>")
+def send_images(fichier : str):
+    return app.send_static_file(f"./images/{fichier}")
+
 @app.route('/')
 def home():
     return render_template('home.html')
