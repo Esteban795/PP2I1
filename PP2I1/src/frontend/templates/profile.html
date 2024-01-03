@@ -1,6 +1,6 @@
 {%extends "base.html"%}
 {%block title%}Mon profil{%endblock%}
-{%block stylesheets%} <link href="./../static/css/profile.css" rel="stylesheet"> {%endblock%}
+{%block stylesheets%} <link href="/static/css/profile.css" rel="stylesheet"> {%endblock%}
 {%block content%}
 <div class="stats flex-column">
     <h1 class="title text-white text-center">
@@ -43,9 +43,9 @@
                             </h4>
                         </div>
                         <h4 class="flex-row flex-end">
-                            <img class="btn-prev svg-white slider-buttons" src="../static/images/chevron-left.svg" alt="chevron-left"> 
+                            <img class="btn-prev svg-white slider-buttons" src="/static/images/chevron-left.svg" alt="chevron-left"> 
                             Poubelle {{ loop.index }}
-                            <img class="btn-next svg-white slider-buttons" src="../static/images/chevron-right.svg" alt="chevron-right">
+                            <img class="btn-next svg-white slider-buttons" src="/static/images/chevron-right.svg" alt="chevron-right">
                         </h4>
                     </div>
                     <div class="item flex-column" data-value="{{bin_infos.used}}" data-max-value="{{bin_infos.volume}}">
@@ -256,5 +256,5 @@
     
    
 </div>
-<script src="../static/js/profile.js"></script>
+<script src="/static/js/profile.js"></script>
 {%endblock%}
