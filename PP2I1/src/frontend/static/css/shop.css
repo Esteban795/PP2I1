@@ -20,6 +20,7 @@
   transition: background 0.3s ease;
   margin: 0 auto auto auto;
 }
+
 .content button:hover {
   background: #004c4a;
 }
@@ -39,6 +40,7 @@
   align-items: center;
   width: 100%;
   margin-top: 20px;
+  padding:0;
 
 }
 .item{
