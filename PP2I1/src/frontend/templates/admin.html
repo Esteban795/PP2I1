@@ -2,7 +2,7 @@
 <html lang="fr">
 	<head>
 		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="../static/css/admin.css"/>
+		<link rel="stylesheet" type="text/css" href="/static/css/admin.css"/>
 		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
 		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 		<title> Page administrateur </title>
@@ -15,7 +15,7 @@
 			<div class="flex-row flex-end" style="width: 100%;">
 				{% if bins_data != [] %}
 					<dialog>
-						<img class="red-filter close-dialog-button" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+						<img class="red-filter close-dialog-button" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
 						<h1 class="text-center"> Lancer un ramassage </h1>
 						<div class="flex-column flex-center">
 							<form action="/admin/start-pickup/" method="post">
@@ -128,7 +128,7 @@
 		<div class="div3">
 			<div id="add-preview" class="product-entry flex-row">
 				<div class="product-entry-img">
-					<img class="product-entry-img" src="./../static/images/products/lagrossedaronnedetom.png" alt="product-img"/>
+					<img class="product-entry-img" src="/static/images/products/lagrossedaronnedetom.png" alt="product-img"/>
 				</div>
 				<section class="itemInfo">
 					<h2 class="itemName"> 
@@ -155,7 +155,7 @@
 							<div class="product-entry-container">
 								<div class="product-entry flex-row" data-id="{{product.product_id}}">
 									<div class="product-entry-img">
-										<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
+										<img src="/static/images/products/{{ product.img_url }}" alt="product-img"/>
 									</div>
 									<section class="itemInfo">
 										<h2 class="itemName"> 
@@ -176,10 +176,10 @@
 								<div class="option-buttons" style="display: none;">
 									<form method="post" action="/admin/delete/{{product.product_id}}">
 										<div class="button cancel-selection">
-											<img class="red-filter" src="./../static/images/cross.svg" alt="button" style="width:20px;"></img>
+											<img class="red-filter" src="/static/images/cross.svg" alt="button" style="width:20px;"></img>
 										</div>
 										<button class="button" name="delete-button" type="submit">
-											<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+											<img class="red-filter" src="/static/images/delete.svg" alt="delete button" style="width:20px;">
 										</button>
 									</form>
 								</div>
@@ -196,7 +196,7 @@
 			<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
 			<div>
 				<dialog class="dialog-box">
-					<img class="red-filter close-dialog-button sticky" src="../static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+					<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
 					<div class="flex-row" style="min-height:100%;">
 						<div id="dialog-form-container" class="flex-column">
 							<h1> Ajouter une transaction </h1>	
@@ -231,7 +231,7 @@
 										<div class="product-entry-container">
 											<div class="transaction-product-entry flex-row" data-product-id="{{product.product_id}}">
 												<div class="product-entry-img">
-													<img src="./../static/images/products/{{ product.img_url }}" alt="product-img"/>
+													<img src="/static/images/products/{{ product.img_url }}" alt="product-img"/>
 												</div>
 												<section class="itemInfo">
 													<h2 class="itemName"> 
@@ -252,10 +252,10 @@
 											<div class="option-buttons" style="display: none;">
 												<form method="post" action="/admin/delete/{{product.product_id}}">
 													<div class="button transaction-cancel-product-selection">
-														<img class="red-filter" src="./../static/images/cross.svg" alt="button" style="width:20px;"></img>
+														<img class="red-filter" src="/static/images/cross.svg" alt="button" style="width:20px;"></img>
 													</div>
 													<button class="button" name="delete-button" type="submit">
-														<img class="red-filter" src="./../static/images/delete.svg" alt="delete button" style="width:20px;">
+														<img class="red-filter" src="/static/images/delete.svg" alt="delete button" style="width:20px;">
 													</button>
 												</form>
 											</div>
@@ -365,9 +365,9 @@
 	</div>
 
 	
-	<script type="text/javascript" src="./../static/js/map.js"></script>
-	<script type="text/javascript" src="./../static/js/products_admin.js"></script>
-	<script type="text/javascript" src="./../static/js/purchase_history.js"></script>
+	<script type="text/javascript" src="/static/js/map.js"></script>
+	<script type="text/javascript" src="/static/js/products_admin.js"></script>
+	<script type="text/javascript" src="/static/js/purchase_history.js"></script>
 	<script type="text/javascript">
 		
 		{%for marker in bins_data%}
