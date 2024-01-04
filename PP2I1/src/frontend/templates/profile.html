@@ -224,28 +224,35 @@
         <input type="text" name="new-last-name" placeholder="Entrez votre nom" required>
         <input class = "submit-button" type="submit" value="Valider">
     </form>
+    {% if error_name %}
+            <p class="error"> {{error_name}} </p>
+    {% endif%}
     <h3 id = "user-mail">Mon email : {{user.email}}</h3>
     <form method="POST" action="/profile/reset-email/">
         <input type="email" name="new-email" placeholder="Entrez votre nouvel email" required>
         <input class = "submit-button" type="submit" value="Valider">
     </form>
-
+    {% if error_mail %}
+            <p class="error"> {{error_mail}} </p>
+    {% endif%}
     <h2 class = security>Sécurité</h2>
     <h3 id = "reset-password">Réinitialiser mon mot de passe :</h3>
-    <form method="POST" action="/profile/reset-password/">
-        <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
-        <input class = "submit-button" type="submit" value="Valider">
-    </form>
-    <form method="POST" action="/profile/reset-password/"">
+    <form id="password-form" method="POST" action="/profile/reset-password/">
+        <input type="password" name="confirm-password" placeholder="Entrez votre mot de passe" required>
         <input type="password" name="new-password" placeholder="Entrez votre nouveau mot de passe" required>
-        <input class = "submit-button" type="submit" value="Valider">
+        <input class = "submit-button" id="password-submit" type="submit" value="Valider">
     </form>
-    
+    {% if error_passwordreset %}
+            <p class="error"> {{error_passwordreset}} </p>
+    {% endif%}
     <h3 id="delete-user">Supprimer mon compte :</h3>
     <form method="POST" action="/profile/delete-user/">
         <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
         <input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="confirmationDialog.showModal(); return false;">
     </form>
+    {% if error_deleteuser %}
+            <p class="error"> {{error_deleteuser}} </p>
+    {% endif%}
 
     <dialog id="confirmationDialog">
         <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>

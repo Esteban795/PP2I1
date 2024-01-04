@@ -118,6 +118,24 @@ def delete_user():
         redirect(url_for('login'))
     return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
 
+@app.route('/profile/reset-password/',methods=('GET','POST'))
+@login_required
+def reset_password():
+    current_user_id = current_user.client_id
+    if request.method == 'POST':
+        new_password = request.form['new-password']
+        confirm_password = request.form['confirm-password']
+        if not utilities.checkValidInput(new_password, confirm_password):
+            return render_template('profile.html',user = current_user,error_passwordreset="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
+        if new_password != confirm_password:
+            return render_template('profile.html',user = current_user,error_passwordreset="Les mots de passe ne correspondent pas.",recycled_volume=10, total_volume=20, recycled_percentage=50)
+        hash_object = hashlib.sha256(new_password.encode('utf-8'))
+        hashed_pass = hash_object.hexdigest()
+        cursor.execute('UPDATE clients SET pwd = ? WHERE client_id = ?', (hashed_pass,current_user_id))
+        conn.commit()
+        return redirect(url_for('profile'))
+    return render_template('profile.html',user = current_user,recycled_volume=10, total_volume=20, recycled_percentage=50)
+
 @app.route('/profile/reset-first-name/', methods=('GET', 'POST'))
 @login_required
 def reset_first_name():
@@ -125,11 +143,11 @@ def reset_first_name():
     if request.method == 'POST':
         new_first_name = request.form['new-first-name']
         if not utilities.checkValidInput(new_first_name):
-            return render_template('profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+            return render_template('profile.html',user=current_user,error_name="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
         cursor.execute('UPDATE clients SET first_name = ? WHERE client_id = ?', (new_first_name,current_user_id))
         conn.commit()
         return redirect(url_for('profile'))
-    return render_template('profile.html', recycled_volume=10, total_volume=20, recycled_percentage=50)
+    return render_template('profile.html', user = current_user,recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 @app.route('/profile/reset-last-name/', methods=('GET', 'POST'))
 @login_required
@@ -138,11 +156,11 @@ def reset_last_name():
     if request.method == 'POST':
         new_last_name = request.form['new-last-name']
         if not utilities.checkValidInput(new_last_name):
-            return render_template('profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+            return render_template('profile.html',user=current_user,error_name="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
         cursor.execute('UPDATE clients SET last_name = ? WHERE client_id = ?', (new_last_name,current_user_id))
         conn.commit()
         return redirect(url_for('profile'))
-    return render_template('profile.html', recycled_volume=10, total_volume=20, recycled_percentage=50)
+    return render_template('profile.html', user = current_user,recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 
 @app.route('/profile/reset-email/', methods=('GET','POST'))
@@ -152,11 +170,11 @@ def reset_email():
     if request.method == 'POST':
         new_email = request.form['new-email']
         if not utilities.checkValidInput(new_email):
-            return render_template('profile.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
+            return render_template('profile.html',user=current_user,error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
         cursor.execute('UPDATE clients SET email = ? WHERE client_id = ?',(new_email, current_user_id))
         conn.commit()
         return redirect(url_for('profile'))
-    return render_template('profile.html', recycled_volume=10, total_volume=20, recycled_percentage=50)
+    return render_template('profile.html', user = current_user,recycled_volume=10, total_volume=20, recycled_percentage=50)
 
 
 if __name__ == '__main__':

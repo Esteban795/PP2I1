@@ -277,6 +277,18 @@ body {
 	align-items: center;
 }
 
+#password-form{
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	gap: 10px;
+}
+
+#password-submit{
+	width:auto;
+}
+
 .submit-button {
     background-color: #4CAF50; /* for example, green */
     color: white;
