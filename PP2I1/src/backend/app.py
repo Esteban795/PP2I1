@@ -119,8 +119,8 @@ def getUserProducts(client_id):
 def getPurchases(client_id):
     purchases = []
     DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
-    SQL = f"SELECT bin_id,first_name,last_name,email,created,price FROM bins JOIN clients ON bins.owner_id = clients.client_id JOIN products ON bins.product_id = products.product_id WHERE owner_id = {client_id}"
-    cursor.execute(SQL)
+    SQL = "SELECT bin_id,first_name,last_name,email,created,price FROM bins JOIN clients ON bins.owner_id = clients.client_id JOIN products ON bins.product_id = products.product_id WHERE owner_id = ?"
+    cursor.execute(SQL,(client_id,))
     temp = cursor.fetchall()
     for purchase in temp:
         infos = {}
