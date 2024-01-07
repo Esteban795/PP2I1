@@ -91,7 +91,7 @@ def login():
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
         login_user(client)
-        return redirect(url_for('home'))
+        return redirect(url_for('profile'))
     else:
         return render_template('login.html')
     
@@ -103,10 +103,39 @@ def logout():
     return redirect(url_for('home'))
 
 
+def getUserProducts(client_id):
+    products = []
+    DATA_FIELDS = ['client_id','bin_id','price', 'date']
+    SQL = f"SELECT * FROM purchases WHERE client_id = {client_id}"
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for product in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = product[i]
+        products.append(infos)
+    return products
+
+def getPurchases(client_id):
+    purchases = []
+    DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
+    SQL = f"SELECT bin_id,first_name,last_name,email,created,price FROM bins JOIN clients ON bins.owner_id = clients.client_id JOIN products ON bins.product_id = products.product_id WHERE owner_id = {client_id}"
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for purchase in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = purchase[i]
+        purchases.append(infos)
+    return purchases
+
 @app.route('/profile/')
 @login_required
 def profile():
-    return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
+    current_user_id = current_user.client_id
+    purchases = getPurchases(current_user_id)
+    products = products = getUserProducts(current_user_id)
+    return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50, products=products, purchases=purchases)
 
 @app.route('/profile/delete-user/',methods=('GET','POST'))
 @login_required
