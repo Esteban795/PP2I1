@@ -142,22 +142,31 @@ def profile():
 def delete_user():
     current_user_id = current_user.client_id
     if request.method == 'POST':
+        confirm_password = request.form['password']
+        if not utilities.checkValidInput(confirm_password):
+            return render_template('profile.html',user = current_user,error_deleteuser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
+        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
+        confirm_password = hash_object.hexdigest()
+        if current_user.password != confirm_password:
+            return render_template('profile.html',error_deleteuser="Le mot de passe est incorrect.",user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
         cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, email = ?, created_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None, None,None, None, current_user_id))
         conn.commit()
         redirect(url_for('login'))
-    return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
+    return render_template('homepage.html',user=current_user)
 
 @app.route('/profile/reset-password/',methods=('GET','POST'))
 @login_required
 def reset_password():
     current_user_id = current_user.client_id
     if request.method == 'POST':
-        new_password = request.form['new-password']
         confirm_password = request.form['confirm-password']
+        new_password = request.form['new-password']
         if not utilities.checkValidInput(new_password, confirm_password):
             return render_template('profile.html',user = current_user,error_passwordreset="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
-        if new_password != confirm_password:
-            return render_template('profile.html',user = current_user,error_passwordreset="Les mots de passe ne correspondent pas.",recycled_volume=10, total_volume=20, recycled_percentage=50)
+        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
+        confirm_password = hash_object.hexdigest()
+        if current_user.password != confirm_password:
+            return render_template('profile.html',error_passwordreset='Le mot de passe est incorrect',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
         hash_object = hashlib.sha256(new_password.encode('utf-8'))
         hashed_pass = hash_object.hexdigest()
         cursor.execute('UPDATE clients SET pwd = ? WHERE client_id = ?', (hashed_pass,current_user_id))

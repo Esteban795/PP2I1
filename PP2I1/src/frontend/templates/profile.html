@@ -420,7 +420,7 @@
             <p class="error"> {{error_passwordreset}} </p>
     {% endif%}
     <h3 id="delete-user">Supprimer mon compte :</h3>
-    <form method="POST" action="/profile/delete-user/">
+    <form method="POST" id="delete-user-form" action="/profile/delete-user/">
         <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
         <input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="confirmationDialog.showModal(); return false;">
     </form>
