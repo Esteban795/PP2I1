@@ -10,6 +10,24 @@
   margin:20px auto 50px auto; /*La margin bottom 50 permet que rien ne reste sous le footer */
 }
 
+.article-container{
+	margin-top: 50px;
+	box-shadow: 0px 0px 50px -14px #6f6594;
+	border-radius: 15px;
+	overflow: hidden;
+	height: auto;
+}
+
+.project-container{
+	margin-top: 50px;
+  margin-bottom: 50px;
+  margin-left: -100px;
+  margin-right: -100px;
+	box-shadow: 0px 0px 50px -14px #6f6594;
+	border-radius: 15px;
+	overflow: hidden;
+	height: auto;
+}
 
 .container-info {
   display: flex;
@@ -46,8 +64,9 @@ hr {
   width: 100%;
 }
 
-.justified-text {
-  text-align: justify;
-
+.centered-text {
+  text-align: center;
+  font-size: larger;
 }
+
 
