@@ -300,7 +300,23 @@ body {
     opacity: 0.9;
 }
 
+.dial-flex-row{
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-evenly;
+}
+
+#logout-button{
+	background-color: red;
+	width:auto;
+}
+
 #delete-user-button{
+	background-color: red;
+}
+
+#cancelButton{
 	background-color: red;
 }
 

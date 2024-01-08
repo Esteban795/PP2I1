@@ -419,20 +419,36 @@
     {% if error_passwordreset %}
             <p class="error"> {{error_passwordreset}} </p>
     {% endif%}
+    <form method="GET" id="logout-form" action="/logout/">
+        <button class = "submit-button" id="logout-button" type="submit" value="Se déconnecter" onclick="logoutConfirmationDialog.showModal(); return false;">Se déconnecter</button>
+    </form>
     <h3 id="delete-user">Supprimer mon compte :</h3>
     <form method="POST" id="delete-user-form" action="/profile/delete-user/">
         <input type="password" name="password" placeholder="Entrez votre mot de passe" required>
-        <input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="confirmationDialog.showModal(); return false;">
+        <input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
     </form>
     {% if error_deleteuser %}
             <p class="error"> {{error_deleteuser}} </p>
     {% endif%}
+    
 
-    <dialog id="confirmationDialog">
-        <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
-        <button id="confirmButton" onclick="document.getElementById('confirmationDialog').close(); document.getElementById('delete-user-form').submit();">Confirmer</button>
-        <button id="cancelButton" onclick="document.getElementById('confirmationDialog').close();">Annuler</button>
+    <dialog id="logoutConfirmationDialog">
+        <p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+        <div class="dial-flex-row">
+            <button class="submit-button" id="confirmButton" onclick="document.getElementById('logoutConfirmationDialog').close(); document.getElementById('logout-form').submit();">Confirmer</button>
+            <button class="submit-button" id="cancelButton" onclick="document.getElementById('logoutConfirmationDialog').close();">Annuler</button>
+        </div>
     </dialog>
+
+    <dialog id="deleteConfirmationDialog">
+        <p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
+        <div class="dial-flex-row">
+            <button class="submit-button" id="confirmButton" onclick="document.getElementById('deleteConfirmationDialog').close(); document.getElementById('delete-user-form').submit();">Confirmer</button>
+            <button class="submit-button" id="cancelButton" onclick="document.getElementById('deleteConfirmationDialog').close();">Annuler</button>
+        </div>
+    </dialog>
+
+    
      
     
    
