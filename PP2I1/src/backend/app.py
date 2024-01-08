@@ -40,7 +40,7 @@ def send_images(fichier : str):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('base.html')
 
 @app.route('/signup/', methods=('GET', 'POST'))
 def signup():
@@ -91,7 +91,8 @@ def login():
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
         login_user(client)
-        return redirect(url_for('profile'))
+        next_page = request.args.get('next')
+        return redirect(next_page or url_for('home'))
     else:
         return render_template('login.html')
     
