@@ -127,7 +127,10 @@ def cart_validation():
     if request.method == "POST":
         check_same_adress = request.form.get("use-same-adress",None)
         adresses = request.form.getlist("adress")
-        products_ids = utilities.runLengthDecoding(session["products_ids"])
+        products_ids = session.get("products_ids",None)
+        if products_ids is None:
+            return redirect(url_for("shop"))
+        products_ids = utilities.runLengthDecoding(products_ids)
         if check_same_adress is None: #checkbox is unchecked
             if any([adress == "" for adress in adresses]):
                 return redirect(url_for("cart_validation",error="Veuillez remplir tous les formulaires d'adresses."))
@@ -147,7 +150,8 @@ def cart_validation():
         return redirect(url_for("cart_success"))
     products = getProductsList()
     final_products = []
-    for i in session["products_ids"]:
+    products_ids = session.get("products_ids",[])
+    for i in products_ids:
         for j in products:
             if int(i) == j["product_id"]:
                 for k in range(session["products_ids"][i]):
