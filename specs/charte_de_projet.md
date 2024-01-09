@@ -88,16 +88,16 @@ Les comptes-rendus seront disponibles sur GitHub, dans le dossier `specs/comptes
 ### Risques
 
 * Difficultés de l'équipe à se motiver.
-* Incompétences des membres.
+* Manque de compétences des membres.
 * Mauvaise gestion des ressources.
 * Mauvaise communication.
 * Mauvais choix technologiques.
 * Difficultés liées à des facteurs externes :
-__ex: Module WEB tardif, et au final peu utile..__
+__ex: Module WEB tardif.__
 * Le choix de Flask.
-* Utilisation difficile de git, de respect de formats (messages de commits, merge requests etc).
+* Utilisation difficile de git, de respect des formats (messages de commits, merge requests etc).
 
 ### Opportunités
 
-* Apprentissage pour presque tous les membres.
+* Apprentissage pour tous les membres.
 * Découverte du travail en équipe en projet informatique pour presque tous les membres.
