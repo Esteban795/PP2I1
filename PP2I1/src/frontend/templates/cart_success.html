@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+   <head>
+      <meta charset="UTF-8">
+      <title>Boutique - ProjetPoubelle </title>
+      <link href="/static/css/cart_success.css" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+   </head>
+   <body>
+    <div class="header">
+        <a href="/" id="logo"><img src="/static/images/trash.svg" id="logo" alt = "Logo of the project" width="100" height="100"></a>
+        <!-- note : remplacer par le bon logo, si possible en svg-->
+        <h1>ProjetPoubelle</h1>
+        <div class="header-right">
+           <a href="/">Accueil</a>
+           <a class="active" href="/shop/">Boutique</a>
+           <a href="/profile/">Mon compte</a>
+        </div>
+     </div>
+     <div class="header-line"></div>
+
+    <h1 class="h1-color"> Merci de vos achats ! </h1>
+    <div class="flex-column flex-center">
+      <div class="text-center">
+         <h3> Votre commande a bien été prise en compte. </h3>
+         <h3> Vous recevrez un mail de confirmation dans les prochaines minutes. </h3>
+      </div>
+      <div class="text-center">
+         <h3 class="h1-color"> Voici un récapitulatif de votre commande : </h3>
+         <ul class="itemList">
+            {% for product in products %}
+               <li class="item fadein-animation">
+                  <img class = "itemPic" src="/static/images/{{ product.img_url}}" alt="Poubelle Grise" style="max-width: 300px;">
+                  <section class="itemInfo">
+                     <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
+                     <p class="itemDesc">
+                        {{ product.desc }}
+                     </p>
+                  </section>
+                  <section class="itemBuying">
+                     <p class = "itemPrice"> {{ product.price }}€ </p>
+                  </section>
+               </li>
+            {% endfor  %}
+         </ul>
+      </div>
+    </div>
+    <div class="footer">
+        <div class="contact">
+           <!-- a voir ce qu'on met exactement ici-->
+           <h2 id ="contact_title">Nous contacter :</h2>
+           <ul id = "contact_list">
+              <li> mail :</li>
+              <li> téléphone :</li>
+           </ul>
+        </div>
+     </div>
+   </body>
+</html>
