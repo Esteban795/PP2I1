@@ -10,7 +10,7 @@ class Client(UserMixin):
                  password: str,
                  created_at : float = dt.timestamp(dt.now()),
                  recycled_volume : int = 0,
-                 is_admin : int = 0):
+                 is_admin : bool = False):
         self.client_id = client_id
         self.first_name = first_name
         self.last_name = last_name
