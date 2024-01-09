@@ -9,13 +9,13 @@
 ### Buts et objectifs 
 
 - Mise en place d'une plateforme web permettant au plus grand nombre de participer dans une moindre mesure à la lutte contre le réchauffement climatique.
-- Encourager à réduire la consommation de déchets.
+- Encourager à réduire la production de déchets.
 
 ### Cadrage
 
 ###  Contexte
 
-La crise écologique est une crise qui touche tout le monde, et nous avons tous un rôle à jouer. Par an, la production de déchets mondiale est d'environ 2.01 milliards de tonnes. Pour cela, les différents Etats ont opté pour une solution globalement similaire : des camions de ramassage de poubelles. Pour autant, les besoins ne sont pas les mêmes : on ne génère pas tous autant de déchets, à la même vitesse, ou parfois, on en produit même pas : c'est le cas lorsqu'on est en vacances par exemple. Or, les camions de ramasssage, eux, vont quand même effectuer un trajet et vider la poubelle. Une poubelle qui sera, de fait, déjà vide.
+La crise écologique est une crise qui touche tout le monde, et nous avons tous un rôle à jouer. Par an, la production de déchets mondiale est d'environ 2.01 milliards de tonnes. Pour cela, les différents Etats ont opté pour une solution globalement similaire : des camions de ramassage de poubelles. Pour autant, les besoins ne sont pas les mêmes : on ne génère pas tous autant de déchets, à la même vitesse, ou parfois, on n'en produit même pas : c'est le cas lorsqu'on est en vacances par exemple. Or, les camions de ramasssage, eux, vont quand même effectuer un trajet et vider la poubelle. Une poubelle qui sera, de fait, déjà vide.
 
 Notre solution numérique permet donc plusieurs choses : 
 - organiser un ramassage des poubelles qui en ont *vraiment* besoin. Toutes les poubelles n'ayant pas la même taille, elles n'ont pas toutes besoin d'être vidées toutes les semaines.
@@ -25,15 +25,15 @@ Notre solution numérique permet donc plusieurs choses :
 ### Finalité
 
 - Accompagner chacun dans la gestion des déchets qu'il produit.
-- Permettre à tous de se rendre compte combien nous produisons, afin d'inciter encore plus à réduire notre production.
+- Permettre à tous de se rendre compte combien de nous produisons, afin d'inciter encore plus à réduire notre production de déchets.
 
 ### Business Case
 
-- Offrir une solution certes plus cher que celle proposée par la Mairie, mais aussi plus écologique : les gens sont prêts à payer plus pour se battre pour des idéaux qui leur tiennent à coeur.
+- Offrir une solution certes plus chère que celle proposée par la mairie, mais aussi plus écologique : les gens sont prêts à payer plus pour se battre pour des idéaux qui leur tiennent à coeur.
 
 ### Livrables attendus
 
-- Un site internet complet , avec un système de connexion pour chaque utilisateur, un magasin, une page de profil propre aux utilisateurs, et une page administrateur afin de gérer la plateforme.
+- Un site internet complet, avec un système de connexion pour chaque utilisateur, un magasin, une page de profil propre aux utilisateurs, et une page administrateur afin de gérer la plateforme.
 
 ### Livrables
 
@@ -53,7 +53,7 @@ Les critères de validation sont les suivants :
     - L'application web est fonctionnelle : système de comptes utilisateurs, boutique en ligne, gestion côté administrateur (ajout de produits, lancer un ramassage, historique des achats)
     - Utilisable sur ordinateur, pas forcément sur téléphone portable (dépendant des pages)
     - Les trajets proposés par les algorithmes de recherches sont *corrects*, sans pour autant être exacts.
-  - 
+
 - De façon convenable :
     - Des articles concernant la gestion des déchets, la réduction de la production de déchets etc.
     - Affichage des poubelles côté utilisateur et administrateur sur une carte dynamique.
@@ -72,7 +72,7 @@ Les critères de validation sont les suivants :
 __Toutes les personnes n'ont pas forcément d'expérience dans la création d'application
 web -> Risques et difficultés__
 
-* **Deadline** fixée au #2024-01-07#.
+* **Deadline** fixée au 15/01/2024 à 00h.
 
 ### Organisation
 
