@@ -40,7 +40,7 @@ def send_images(fichier : str):
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    return render_template('base.html')
 
 @app.route('/signup/', methods=('GET', 'POST'))
 def signup():
