@@ -1,13 +1,11 @@
-<!DOCTYPE html>
-<html lang="fr">
-	<head>
-		<meta charset="UTF-8">
-		<link rel="stylesheet" type="text/css" href="/static/css/admin.css"/>
-		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
-		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
-		<title> Page administrateur </title>
-	</head>
-<body>
+{%extends "base.html"%}
+{%block title%} Page administrateur {%endblock%}
+{%block stylesheets%} 
+	<link href="/static/css/admin.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+{%endblock%}
+{%block content%}
 	<div class="map-container flex-row">
 		<div class="column map" id="map"> </div>
 		<div class="column locations-container flex-column">
@@ -53,7 +51,6 @@
 						<p> Aucune poubelle n'a été enregistrée.</p>
 					{% endblock %}
 				{% else %}
-					{% block content %}
 						{% for bin in bins_data %}
 							<div class="bin-entry" data-long="{{ bin.long }}" data-lat="{{ bin.lat}}">
 								<div class="bin-entry-infos">
@@ -74,7 +71,6 @@
 								</div>
 							</div>
 						{% endfor %}
-					{% endblock %}
 				{% endif %}
 			</div>
 		</div>
@@ -394,5 +390,4 @@
 		{% endif %}
 
 	</script>
-</body>
-</html>
+{% endblock %}
