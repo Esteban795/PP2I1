@@ -18,7 +18,6 @@ class TSPSolver:
             fitness : float representing the fitness of the solution
         """
         distance = 0
-        print(route)
         for i in range(len(route)):
             distance += self.dist_func(self.coords[route[i]], self.coords[route[(i + 1) % len(route)]])
         fitness = 1 / distance

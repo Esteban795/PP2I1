@@ -178,7 +178,7 @@ def cart_success():
 
 def getTrucks():
     trucks = []
-    DATA_FIELDS = ['truck_id','numberplate','used_volume','capacity']
+    DATA_FIELDS = ['truck_id','numberplate','capacity']
     SQL = """
         SELECT * FROM trucks
     """
@@ -373,8 +373,14 @@ def start_pickup():
     if request.method == 'POST':
         truck_numberplate = request.form['truck']
         SQL = """
+            SELECT capacity FROM trucks WHERE numberplate = ?
+        """
+        cursor.execute(SQL,(truck_numberplate,))
+        maxcapacity = cursor.fetchone()[0]
+        SQL = """
             SELECT lat,long,volume,used,bin_id FROM bins
             JOIN products ON products.product_id = bins.product_id
+            GROUP BY lat,long
         """
         cursor.execute(SQL)
         db_results = cursor.fetchall()
@@ -384,13 +390,14 @@ def start_pickup():
         bins_coords = [(x[0],x[1]) for x in db_results]
         bins_volume = [x[2] for x in db_results]
         bins_used_volume = [x[3] for x in db_results]
-        # weight_used,chosen_bins = knapsack(100,bins_volume,bins_used_volume)
-        chosen_bins = [True for i in range(len(db_results))]
+        print(bins_volume,bins_used_volume)
+        print("\n\n\n")
+        weight_used,chosen_bins = knapsack(maxcapacity,bins_used_volume,[100 * bins_used_volume[i] / bins_volume[i] for i in range(len(bins_volume)) ])
         print(chosen_bins)
+        chosen_bins = [True for i in range(len(db_results))]
         chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins_ids = [bins_ids[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins.append(BASE_COORDS)
-        
         tsp_solver = saTSPSolver(chosen_bins,utilities.getHaversineDistance)
         tsp_res,best_route_length = tsp_solver.simulatedAnnealing()
         base_coords_index = tsp_res.index(len(chosen_bins) - 1)
