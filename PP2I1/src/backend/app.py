@@ -7,7 +7,6 @@ import datetime
 
 from knapsack import knapsack
 from tsp_simulated_annealing import TSPSolver as saTSPSolver
-from tsp_genetic import TSPSolver as gTSPSolver
 from Client import Client
 import utilities
 
@@ -25,7 +24,7 @@ BASE_COORDS = (49.133333,6.166667)
 
 @login_manager.user_loader
 def load_user(client_id : int):
-    cursor.execute("SELECT client_id,first_name,last_name,email,pwd,created_at,recycled_volume,is_admin FROM clients WHERE client_id = ?", (client_id,))
+    cursor.execute("SELECT client_id,first_name,last_name,email,pwd,created_at,recycled_volume,status FROM clients WHERE client_id = ?", (client_id,))
     db_data = cursor.fetchone()
     if db_data is not None:
         client = Client(*db_data)
@@ -97,7 +96,7 @@ def login():
         password = hash_object.hexdigest()
         if client.password != password:
             return render_template('login.html',error="Le mot de passe est incorrect.")
-        login_user(client)
+        login_user(client,remember=remember)
         return redirect(request.args.get("next") or url_for('home')) #redirect to the previous page in case of successful login
     else:
         return render_template('login.html')
@@ -176,7 +175,21 @@ def cart_success():
                 for k in range(session["products_ids"][i]):
                     final_products.append(j)
     return render_template("cart_success.html",products=final_products)
-    return redirect(url_for('home'))
+
+def getTrucks():
+    trucks = []
+    DATA_FIELDS = ['truck_id','numberplate','used_volume','capacity']
+    SQL = """
+        SELECT * FROM trucks
+    """
+    cursor.execute(SQL)
+    temp = cursor.fetchall()
+    for truck in temp:
+        infos = {}
+        for i in range(len(DATA_FIELDS)):
+            infos[DATA_FIELDS[i]] = truck[i]
+        trucks.append(infos)
+    return trucks
 
 def getBinsInformation():
     bins_data = []
@@ -185,7 +198,7 @@ def getBinsInformation():
         SELECT first_name,last_name,lat,long,volume,used,last_emptied,bought_at,numberplate, waste_type_name,product_name FROM bins
         JOIN clients ON bins.owner_id = clients.client_id
         JOIN products ON bins.product_id = products.product_id
-        JOIN waste_type ON bins.waste_id = waste_type.waste_type_id
+        LEFT JOIN waste_type ON bins.waste_id = waste_type.waste_type_id
         LEFT JOIN trucks ON bins.last_emptied_by = trucks.numberplate
     """
     #LEFT JOIN because some bins might have never been emptied yet!
@@ -198,26 +211,7 @@ def getBinsInformation():
         bins_data.append(infos)
     return bins_data
 
-
-def getProducts():
-    products = []
-    DATA_FIELDS = ['product_id','name','price','img_url','desc','volume','stock']
-    SQL = """
-        SELECT * FROM products
-    """
-    cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for product in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = product[i]
-        products.append(infos)
-    return products
-
 def getWasteTypes():
-    SQL = """
-        SELECT waste_id,waste_type_name FROM waste_type
-    """
     waste_types = []
     DATA_FIELDS = ['waste_id','waste_type_name']
     SQL = """
@@ -256,7 +250,7 @@ def admin():
     error = request.args.get('error',None)
     derror = request.args.get('derror',None)
     bins_data = getBinsInformation()
-    products = getProducts()
+    products = getProductsList()
     waste_types = getWasteTypes()
     purchases = getPurchases()
     trucks = getTrucks()
@@ -361,7 +355,6 @@ def add_transaction(product_id : int):
 @app.route("/admin/purchases/delete-transaction/<int:bin_id>",methods=('GET','POST'))
 #@utilities.admin_required
 def delete_purchase(bin_id : int):
-    print("ok")
     if request.method == 'POST':
         cursor.execute("DELETE FROM pickup WHERE bin_id = ?",(bin_id,))
         cursor.execute("DELETE FROM bins WHERE bin_id = ?",(bin_id,))
@@ -374,21 +367,6 @@ def delete_purchase(bin_id : int):
 def modify_purchase(bin_id : int):
     pass
 
-def getTrucks():
-    trucks = []
-    DATA_FIELDS = ['truck_id','numberplate','used_volume','capacity']
-    SQL = """
-        SELECT * FROM trucks
-    """
-    cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for truck in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = truck[i]
-        trucks.append(infos)
-    return trucks
-
 @app.route("/admin/start-pickup/",methods=('GET','POST'))
 #@utilities.admin_required
 def start_pickup():
@@ -397,7 +375,6 @@ def start_pickup():
         SQL = """
             SELECT lat,long,volume,used,bin_id FROM bins
             JOIN products ON products.product_id = bins.product_id
-            WHERE (used / volume) > 0.6
         """
         cursor.execute(SQL)
         db_results = cursor.fetchall()
@@ -407,7 +384,9 @@ def start_pickup():
         bins_coords = [(x[0],x[1]) for x in db_results]
         bins_volume = [x[2] for x in db_results]
         bins_used_volume = [x[3] for x in db_results]
-        weight_used,chosen_bins = knapsack(1000,bins_volume,[100 * bins_used_volume[i] / bins_volume[i] for i in range(len(bins_used_volume))])
+        # weight_used,chosen_bins = knapsack(100,bins_volume,bins_used_volume)
+        chosen_bins = [True for i in range(len(db_results))]
+        print(chosen_bins)
         chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins_ids = [bins_ids[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins.append(BASE_COORDS)

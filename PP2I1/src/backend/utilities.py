@@ -43,7 +43,7 @@ def generateImgUUID(filename : str):
 def admin_required(func):
     @wraps(func)
     def wrapper(*args,**kwargs):
-        if current_user.is_authenticated and current_user.is_admin == 1:
+        if current_user.is_authenticated and current_user.status == 1:
             return func(*args, **kwargs)
         abort(403)
     return wrapper
