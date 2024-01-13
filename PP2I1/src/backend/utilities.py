@@ -7,7 +7,7 @@ from flask_login import current_user
 from flask import abort
 import math
 
-def checkValidInput(*args : list[Any]):
+def checkValidInput(*args : list[Any]) -> bool:
     """Check if args are both non empty and no only whitespaces"""
     for arg in args:
         if arg == '' or arg.isspace():
@@ -15,30 +15,44 @@ def checkValidInput(*args : list[Any]):
     return True
 
 
-def runLengthEncoding(lst : list[int]):
+def runLengthEncoding(lst : list[int]) -> dict[int,int]:
     d = dict.fromkeys(lst, 0)
     for i in lst:
         d[i] += 1
     return d
 
-def runLengthDecoding(d : dict[int,int]):
+def runLengthDecoding(d : dict[int,int]) -> list[int]:
     lst = []
     for i in d:
         for j in range(d[i]):
             lst.append(i)
     return lst
 
-def getLatLongFromStreetAdress(address : str):
-    url = 'https://nominatim.openstreetmap.org/search?q=' + urllib.parse.quote(address) +'&format=json'
+def getLatLongFromStreetAdress(address : str) -> tuple[float,float] or tuple[None,None]:
+    url = f'https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(address)}&format=json'
     response = requests.get(url).json()
+    if len(response) == 0:
+        return None,None #avoid unpack error
     return response[0]["lat"],response[0]["lon"]
 
-def generateImgUUID(filename : str):
+def checkValidAdresses(addresses : list[str]) -> bool:
+    """Check if all adresses are valid.If yes, returns the list of latitudes and longitudes, else returns False"""
+    lats,longs = [],[]
+    for adress in addresses:
+        if not checkValidInput(adress):
+            return (False,False)
+        temp = getLatLongFromStreetAdress(adress)
+        if temp == (None,None):
+            return (False,False)
+        lats.append(temp[0])
+        longs.append(temp[1])
+    return lats,longs
+    
+def generateImgUUID(filename : str) -> str:
     """Generate a UUID from a filename"""
     file_ext = filename.split('.')[-1]
     uuid_ = str(uuid.uuid5(uuid.NAMESPACE_DNS, filename))
     return ".".join([uuid_,file_ext])
-
 
 def admin_required(func):
     @wraps(func)
@@ -54,7 +68,7 @@ def getEuclideanDistance(x1 : tuple[int,int],x2 : tuple[int,int]):
 def circularTranslationArray(arr : list[Any],start_index : int):
     return [arr[(start_index + i) % len(arr)] for i in range(len(arr))] 
 
-def getHaversineDistance(x1 : tuple[float,float],x2 : tuple[float,float]):
+def getHaversineDistance(x1 : tuple[float,float],x2 : tuple[float,float]) -> float:
     """Return the distance between two points on Earth using the Haversine formula"""
     R = 6371.0710 # Radius of the Earth in km
     lat1,lon1 = x1
