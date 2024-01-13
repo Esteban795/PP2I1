@@ -59,7 +59,8 @@ def getHaversineDistance(x1 : tuple[float,float],x2 : tuple[float,float]):
     R = 6371.0710 # Radius of the Earth in km
     lat1,lon1 = x1
     lat2,lon2 = x2
+    lat1,lon1,lat2,lon2 = map(math.radians,[lat1,lon1,lat2,lon2])
     dlat = lat2 - lat1
     dlon = lon2 - lon1
-    a = (dlat/2)**2 + (dlon/2)**2 * math.cos(lat1) * math.cos(lat2)
+    a = math.sin(dlat/2)**2 + (dlon/2)**2 * math.cos(lat1) * math.cos(lat2)
     return 2 * R * math.asin(a**0.5)
