@@ -18,8 +18,8 @@ class Client(UserMixin):
         self.email = email
         self.password = password
         self.created_at = created_at
+        self.pick_up_volume = picked_up_volume
         self.recycled_volume = recycled_volume
-        self.picked_up_volume = picked_up_volume
         self.status = status
 
     def __str__(self):
@@ -27,13 +27,17 @@ class Client(UserMixin):
 
     def serialize(self):
         '''Méthode de formatage pour ajouter les données dans la DB'''
-        return (self.client_id,
-                self.first_name,
-                self.last_name,
-                self.email,
-                self.created_at,
-                self.password,
-                self.recycled_volume)
+        return (
+            self.client_id,
+            self.first_name,
+            self.last_name,
+            self.email,
+            self.password,
+            self.created_at,
+            self.pick_up_volume,
+            self.recycled_volume,
+            self.status
+        )
     
     def get_id(self): #necessary for flask_login
         return self.client_id
