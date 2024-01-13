@@ -138,19 +138,16 @@ def cart_validation():
             return redirect(url_for("shop"))
         products_ids = utilities.runLengthDecoding(products_ids)
         if check_same_adress is None: #checkbox is unchecked
-            if any([adress == "" for adress in adresses]):
-                return redirect(url_for("cart_validation",error="Veuillez remplir tous les formulaires d'adresses."))
-            lats,longs = [],[]
-            for adress in adresses:
-                lat,long = utilities.getLatLongFromStreetAdress(adress)
-                lats.append(lat)
-                longs.append(long)
+            lats,longs = utilities.checkValidAdresses(adresses)
+            if not lats:
+                return redirect(url_for("cart_validation",error="Une des adresses est invalide."))
             cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id,lat,long in zip(products_ids,lats,longs)])
             conn.commit()
         else:
-            if adresses[0] == "":
-                return redirect(url_for("cart_validation",error="Veuillez remplir l'adresse."))
-            lat,long = utilities.getLatLongFromStreetAdress(adresses[0])
+            lat,long = utilities.checkValidAdresses([adresses[0]])
+            if not lat:
+                return redirect(url_for("cart_validation",error="L'adresse est invalide."))
+            lat,long = lat[0],long[0]
             cursor.executemany("INSERT INTO bins(owner_id,product_id,lat,long,waste_id) VALUES (?,?,?,?,?)",[(current_user.client_id,product_id,lat,long,1) for product_id in products_ids])
             conn.commit()
         return redirect(url_for("cart_success"))
@@ -390,10 +387,7 @@ def start_pickup():
         bins_coords = [(x[0],x[1]) for x in db_results]
         bins_volume = [x[2] for x in db_results]
         bins_used_volume = [x[3] for x in db_results]
-        print(bins_volume,bins_used_volume)
-        print("\n\n\n")
         weight_used,chosen_bins = knapsack(maxcapacity,bins_used_volume,[100 * bins_used_volume[i] / bins_volume[i] for i in range(len(bins_volume)) ])
-        print(chosen_bins)
         chosen_bins = [True for i in range(len(db_results))]
         chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins_ids = [bins_ids[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
