@@ -16,12 +16,8 @@
 	}
 
 	100% {
-		transform: attr();
+		transform: rotate(var(--end-degrees));
 	}
-}
-
-:root {
-	--end-degrees: 170deg;
 }
 
 html {
@@ -299,7 +295,6 @@ body {
 
 .submit-button {
 	background-color: #4CAF50;
-	/* for example, green */
 	color: white;
 	padding: 14px 20px;
 	margin: 8px 0;
@@ -621,7 +616,7 @@ tr:hover td {
 
 
 .circle-wrap {
-	transform: scale(0.5);
+	transform: scale(0.75);
 	width: 150px;
 	height: 150px;
 	background: #e6e2e7;

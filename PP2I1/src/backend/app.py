@@ -9,7 +9,7 @@ from knapsack import knapsack
 from tsp_simulated_annealing import TSPSolver as saTSPSolver
 from Client import Client
 import utilities
-
+import datetime as dt
 
 app = Flask(__name__,template_folder="../frontend/templates",static_folder="../frontend/static")
 app.config["SECRET_KEY"] = os.urandom(24)
@@ -21,6 +21,7 @@ conn = sqlite3.connect("./PP2I1/src/backend/db/main.db", check_same_thread=False
 cursor = conn.cursor()
 
 BASE_COORDS = (49.133333,6.166667)
+CREATION_DATE = dt.datetime(2015,11,1)
 
 @login_manager.user_loader
 def load_user(client_id : int):
@@ -459,11 +460,50 @@ def getPurchases(client_id):
         purchases.append(infos)
     return purchases
 
+def getBinsCount(client_id):
+    SQL = "SELECT COUNT(*) FROM bins WHERE owner_id = ?"
+    cursor.execute(SQL,(client_id,))
+    return cursor.fetchone()[0]
+
+def getVolumeInfos(client_id):
+    FIELDS = ["picked_up_volume","recycled_volume"]
+    SQL = f"SELECT {','.join(FIELDS)} FROM clients WHERE client_id = ?"
+    cursor.execute(SQL,(client_id,))
+    res = cursor.fetchone()
+    return dict(zip(FIELDS,res))
+
+def getBinsStats(client_id : int,time_since_creation) -> dict:
+    FIELDS = ["used","bought_at","volume","img_url",'lat','long']
+    bins_infos = []
+    SQL = """
+        SELECT used,bought_at,volume,img_url,lat,long FROM bins
+        JOIN products ON bins.product_id = products.product_id
+        WHERE owner_id = ?
+    """
+    cursor.execute(SQL,(client_id,))
+    bins = cursor.fetchall()
+    for bin in bins:
+        infos = {}
+        for i in range(len(FIELDS)):
+            infos[FIELDS[i]] = bin[i]
+        dtime = dt.datetime.strptime(infos["bought_at"],"%Y-%m-%d %H:%M:%S")
+        nb_days_since_bought = (dt.datetime.now() - dtime).days
+        infos["existence_time_percentage"] = nb_days_since_bought / time_since_creation
+        infos["bought_at"] = dt.datetime.now().year - dtime.year
+        bins_infos.append(infos)
+    return bins_infos
+
+
 @app.route('/profile/')
 #@login_required
 def profile():
     current_user_id = current_user.client_id
-    return render_template('profile.html',user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
+    bins_count = getBinsCount(current_user_id)
+    volume_infos = getVolumeInfos(current_user_id)
+    recycled_percentage = 100 * volume_infos["recycled_volume"] / volume_infos["picked_up_volume"] if volume_infos["picked_up_volume"] != 0 else 0
+    time_since_creation = (dt.datetime.now() - CREATION_DATE).days
+    bins_infos = getBinsStats(current_user_id,time_since_creation)
+    return render_template('profile.html',user=current_user,bins_count=bins_count,volume_infos=volume_infos,joined_at=current_user.created_at.year,recycled_percentage=recycled_percentage,bins_infos=bins_infos,time_since_creation=time_since_creation)
 
 @app.route('/profile/delete-user/',methods=('GET','POST'))
 @login_required
