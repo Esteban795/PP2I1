@@ -246,6 +246,7 @@ def getUsers():
     SQL = """
         SELECT last_name, first_name, email, client_id, status
         FROM clients
+        WHERE status != 1
     """
     cursor.execute(SQL)
     temp = cursor.fetchall()
@@ -270,24 +271,10 @@ def admin():
     purchases = getPurchases()
     trucks = getTrucks()
     user_list = getUsers()
-    return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror,user_list=user_list)
+    error_deleteUser = request.args.get('error_deleteUser',None)
+    return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror,user_list=user_list,error_deleteUser=error_deleteUser)
 
-@app.route('/admin/delete-user/<client_id>', methods=('GET','POST'))
-#@utilities.admin_required
-def delete_user_from_admin(client_id):
-    #current_user_id = current_user.client_id
-    if request.method == 'POST':
-        """confirm_password = request.form['password']
-        if not utilities.checkValidInput(confirm_password):
-            return render_template('admin.html',user=current_user, error_deleteuser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
-        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
-        confirm_password = hash_object.hexdigest()
-        if current_user.password != confirm_password:
-            return render_template('admin.html',error_deleteuser="Le mot de passe est incorrect.",user=current_user)"""
-        cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (-1, client_id))
-        conn.commit()
-        redirect(url_for('admin'))
-    return render_template('admin.html',user=current_user)
+
 
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
@@ -451,14 +438,40 @@ def ban_user(client_id: int):
         redirect(url_for('admin'))
     return render_template('admin.html')
 
-@app.route('/admin/unban-user', methods=('GET','POST')) 
+@app.route('/admin/ban-user/<client_id>', methods=('GET','POST'))
 #@utilities.admin_required
-def unban_user(client_id: int):
+def banUser(client_id):
+    #current_user_id = current_user.client_id
     if request.method == 'POST':
+        confirm_password = request.form['password']
+        if not utilities.checkValidInput(confirm_password):
+            return redirect(url_for(admin,user=current_user,error_deleteUser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
+        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
+        confirm_password = hash_object.hexdigest()
+        if current_user.password != confirm_password:
+            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
+        cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (-1, client_id))
+        conn.commit()
+        redirect(url_for('admin'))
+    return redirect(url_for('admin',user=current_user))
+
+@app.route('/admin/unban-user/<client_id>', methods=('GET','POST')) 
+#@utilities.admin_required
+def unbanUser(client_id: int):
+    if request.method == 'POST':
+        confirm_password = request.form['password']
+        if not utilities.checkValidInput(confirm_password):
+            return redirect(url_for(admin,user=current_user,error_deleteUser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
+        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
+        confirm_password = hash_object.hexdigest()
+        if current_user.password != confirm_password:
+            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(0, client_id))
         conn.commit()
-        return redirect(url_for('admin'))
-    return render_template('admin.html')
+        redirect(url_for('admin'))
+    return redirect(url_for('admin',user=current_user))
+
+
 
 @app.route('/admin/user-to-admin', methods=('GET','POST')) 
 #@utilities.admin_required
