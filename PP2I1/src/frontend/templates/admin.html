@@ -391,9 +391,22 @@
 											<td> {{ usr.email }} </td>
 											<td> {{ "Ban" if usr.status==-1 else "Actif" }} </td>
 											<td class="flex-row flex-space-evenly"> 
-												<form method="POST" action="/admin/delete-user/{{ usr.client_id }}">
-													<button class="btn-submit" type="submit"> Bannir </button>
-												</form>
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Bannir {{ usr.first_name }} {{ usr.last_name }} ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/delete-user/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Bannir"/>
 											</td>
 										</tr>
 									{% endfor %}
