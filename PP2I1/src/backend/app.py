@@ -433,32 +433,17 @@ def user_to_admin(client_id: int):
         return redirect(url_for('admin'))
     return render_template('admin.html')
 
-
-def getUserProducts(client_id):
-    products = []
-    DATA_FIELDS = ['client_id','bin_id','price', 'date']
-    SQL = f"SELECT * FROM purchases WHERE client_id = {client_id}"
-    cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for product in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = product[i]
-        products.append(infos)
-    return products
-
 def getPurchases(client_id):
-    purchases = []
     DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
-    SQL = "SELECT bin_id,first_name,last_name,email,bought_at,price FROM bins JOIN clients ON bins.owner_id = clients.client_id JOIN products ON bins.product_id = products.product_id WHERE owner_id = ?"
+    SQL = """
+        SELECT bin_id,first_name,last_name,email,bought_at,price FROM bins 
+        JOIN clients ON bins.owner_id = clients.client_id 
+        JOIN products ON bins.product_id = products.product_id 
+        WHERE owner_id = ?
+    """
     cursor.execute(SQL,(client_id,))
     temp = cursor.fetchall()
-    for purchase in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = purchase[i]
-        purchases.append(infos)
-    return purchases
+    return [dict(zip(DATA_FIELDS,purchase)) for purchase in temp]
 
 def getBinsCount(client_id):
     SQL = "SELECT COUNT(*) FROM bins WHERE owner_id = ?"
@@ -503,7 +488,8 @@ def profile():
     recycled_percentage = 100 * volume_infos["recycled_volume"] / volume_infos["picked_up_volume"] if volume_infos["picked_up_volume"] != 0 else 0
     time_since_creation = (dt.datetime.now() - CREATION_DATE).days
     bins_infos = getBinsStats(current_user_id,time_since_creation)
-    return render_template('profile.html',user=current_user,bins_count=bins_count,volume_infos=volume_infos,joined_at=current_user.created_at.year,recycled_percentage=recycled_percentage,bins_infos=bins_infos,time_since_creation=time_since_creation)
+    purchases = getPurchases(current_user_id)
+    return render_template('profile.html',user=current_user,bins_count=bins_count,volume_infos=volume_infos,joined_at=current_user.created_at.year,recycled_percentage=recycled_percentage,bins_infos=bins_infos,time_since_creation=time_since_creation,purchases=purchases)
 
 @app.route('/profile/delete-user/',methods=('GET','POST'))
 @login_required
