@@ -224,7 +224,7 @@ def getWasteTypes():
         waste_types.append(infos)
     return waste_types
 
-def getPurchases():
+def getAllPurchases():
     purchases = []
     DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
     SQL = """
@@ -250,7 +250,7 @@ def admin():
     bins_data = getBinsInformation()
     products = getProductsList()
     waste_types = getWasteTypes()
-    purchases = getPurchases()
+    purchases = getAllPurchases()
     trucks = getTrucks()
     return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
 
@@ -503,10 +503,12 @@ def delete_user():
         confirm_password = hash_object.hexdigest()
         if current_user.password != confirm_password:
             return render_template('profile.html',error_deleteuser="Le mot de passe est incorrect.",user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
-        cursor.execute('DELETE FROM clients WHERE client_id = ?', (current_user_id,))
-        cursor.execute('DELETE pickup FROM pickup JOIN bins ON pickup.bin_id = bins.bin_id WHERE  bin.owner_id = ?',(current_user_id,))
-        cursor.execute('DELETE  FROM bins WHERE owner_id = ?', (current_user_id,))
-
+        
+        cursor.execute("SELECT bin_id FROM bins WHERE owner_id = ?",(current_user_id,))
+        bins_ids = cursor.fetchall()
+        cursor.executemany("DELETE FROM pickup WHERE bin_id = ?",bins_ids)
+        cursor.execute("DELETE FROM bins WHERE owner_id = ?",(current_user_id,))
+        cursor.execute("DELETE FROM clients WHERE client_id = ?",(current_user_id,))
         conn.commit()
         return redirect(url_for('login'))
     return redirect(url_for('profile'))
@@ -573,4 +575,4 @@ def reset_email():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8081)
+    app.run(debug=True, port=8080)
