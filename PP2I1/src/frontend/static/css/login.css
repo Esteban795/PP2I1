@@ -131,6 +131,16 @@ a:hover {
   background-color: #139a76;
 }
 
+.checkbox-div {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+}
+
+.checkbox-color {
+  accent-color: #006570;
+}
+
 .transition-duration-300 {
   transition-duration: 300ms;
 }

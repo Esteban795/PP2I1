@@ -1,79 +1,3 @@
-
-* {
-    font-family: 'Inter', sans-serif;
-    list-style-type: none;  
-  }
-  
-body{
-  display: flex;
-  background-color: rgb(255, 255, 255);
-  margin : 0;
-  padding:0;
-  flex-direction: column;
-  align-items: center;
-}
-
-.header{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  color: #000000;
-  height: 100px;
-  width: 100%;
-  gap:50px;
-  position: sticky; /*sticky ou fixed ?*/
-  top: 0;
-  left: 0;
-  z-index: 100;
-}
-
-.header a:not([id = "logo"]){
-  text-decoration: none;
-  padding: 10px;
-  color: #000000;
-  margin: 10px;
-  border: 1px solid #000000;
-  border-radius: 5px;
-}
-
-.header a:not([id = "logo"]):hover{
-  background-color: #006570;
-  color: #ffffff;
-}
-
-.header-line{
-  width: 10%;
-  height: 2px;
-  background-color: #000;
-  margin: 0 auto;
-}
-
-.content{
-  display: flex;
-  flex-direction: row;
-  /* align-items: center; */
-  width: 100%;
-  height: 100%;
-  margin-top: 20px;
-}
-
-.content button:not([class="removeButton"]){
-  width:70%;
-  border: none;
-  outline: none;
-  background: #006570;
-  color: #ffffff;
-  padding: 10px;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  margin: 0 auto auto auto;
-}
-.content button:hover {
-  background: #004c4a;
-}
-
 .middleZone{
   display: flex;
   flex-direction: column;
@@ -89,16 +13,11 @@ body{
   align-items: center;
   width: 100%;
   margin-top: 20px;
-
+  box-sizing: border-box;
 }
 .item{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: center;
-  align-items: center;
   gap: 1px;
-  margin: 20px auto;
+  width:50%;
 }
 
 .itemName {
@@ -131,12 +50,16 @@ body{
 
 }
 
-
+.flex-space-evenly {
+  display: flex;
+  justify-content: space-evenly;
+}
 
 #cart_text{
   text-align: center;
   font-size: 1.5em;
 }
+
 #cartConfirmButton{
   width:66%;
 }
@@ -240,8 +163,6 @@ body{
 
 #validation-div {
   width: 100%;
-  display: flex;
-  justify-content: space-between;
 }
 
 .h1-color  {
@@ -249,19 +170,36 @@ body{
 }
 
 .validation-product-entry {
-  display: flex; 
-  justify-content: space-between; 
   width: 100%;
 }
 
 .flex-column {
   display: flex;
   flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+.flex-center {
+  display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.flex-split {
+  display: flex;
+  justify-content: space-between;
 }
 
 .error {
 	text-align: center;
 	color: rgb(133, 21, 21);
   }
+
+form {
+  width:100%;
+  box-sizing: border-box;
+}

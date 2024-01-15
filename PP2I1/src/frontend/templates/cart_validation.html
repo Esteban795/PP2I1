@@ -1,79 +1,49 @@
-<!DOCTYPE html>
-<html lang="fr">
-   <head>
-      <meta charset="UTF-8">
-      <title>Boutique - ProjetPoubelle </title>
-      <link href="/static/css/cart_validation.css" rel="stylesheet">
-      <link rel="preconnect" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
-   </head>
-   <body>
-      <div class="header">
-         <a href="homepage.html" id="logo"><img src="/static/images/trash.svg" id="logo" alt = "Logo of the project" width="100" height="100"></a>
-         <!-- note : remplacer par le bon logo, si possible en svg-->
-         <h1>ProjetPoubelle</h1>
-         <div class="header-right">
-            <a href="homepage.html">Accueil</a>
-            <a class="active" href="shop.html">Boutique</a>
-            <a href="myaccount.html">Mon compte</a>
+{%extends "base.html"%}
+{%block title%}Shop {%endblock%}
+{%block stylesheets%} <link href="/static/css/cart_validation.css" rel="stylesheet"> {%endblock%}
+{%block content%}
+<section class="middleZone">
+   <h1 class="h1-color">Validation du panier</h1>
+   {% if error %}
+      <p class="error">{{ error }}</p>
+   {% endif %}
+   <form class="flex-column" action="/shop/cart-validation/" method="post">
+      <div id="validation-div" class="flex-row flex-space-evenly">
+         <div class="flex-row flex-center">
+            <label for="use-same-adress text-center"> Utiliser la même adresse partout ?</label>
+            <input id="all-same-adress" type="checkbox" name="use-same-adress">
+         </div>
+         <div>
+            <input class="btn" type="submit" value="Valider le panier">
          </div>
       </div>
-      <div class = "header-line"></div>
-      <div class="content">
-         <section class = "middleZone">
-            <h1 class="h1-color">Validation du panier</h1>
-            {% if error %}
-            <p class="error">{{ error }}</p>
-            {% endif %}
-            <form action="/shop/cart-validation/" method="post">
-               <div id="validation-div">
-                  <div>
-                     <label for="use-same-adress text-center"> Utiliser la même adresse partout ?</label>
-                     <input id="all-same-adress" type="checkbox" name="use-same-adress">
+      <ul class="itemList">
+         {% if cart == [] %}
+            <p> Votre panier est vide ! </p>
+         {% else %}
+            {% for product in cart %}
+               <div class="validation-product-entry flex-row flex-center">
+                  <div class="item flex-row">
+                     <img class = "itemPic" src="/static/images/products/{{ product.img_url}}" alt="Poubelle Grise">
+                     <section class = "itemInfo">
+                        <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
+                        <p class="itemDesc">
+                           {{ product.desc }}
+                        </p>
+                     </section>
+                     <section class="itemBuying">
+                        <p class = "itemPrice"> {{ product.price }}€ </p>
+                     </section>
                   </div>
-                  <div>
-                     <input class="btn" type="submit" value="Valider le panier">
+                  <div class="flex-column flex-center">
+                     <label for="adress">Rentrez votre adresse :</label>
+                     <input data-item-index="{{loop.index}}" type="text" class="adress-input" name="adress">
                   </div>
                </div>
-               <ul class = "itemList">
-                  {% if cart == [] %}
-                     <p> Votre panier est vide ! </p>
-                  {% else %}
-                     {% for product in cart %}
-                     <div class="validation-product-entry">
-                        <li class="item">
-                           <img class = "itemPic" src="/static/images/{{ product.img_url}}" alt="Poubelle Grise">
-                           <section class = "itemInfo">
-                              <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
-                              <p class="itemDesc">
-                                 {{ product.desc }}
-                              </p>
-                           </section>
-                           <section class="itemBuying">
-                              <p class = "itemPrice"> {{ product.price }}€ </p>
-                           </section>
-                        </li>
-                        <div class="flex-column">
-                           <label for="adress">Rentrez votre adresse :</label>
-                           <input data-item-index="{{loop.index}}" type="text" class="adress-input" name="adress">
-                        </div>
-                        
-                     </div>
-                     {% endfor  %}
-                  {% endif %}
-               </ul>
-         </form>
-         </section>
-      </div>
-      <div class="footer">
-         <div class="contact">
-            <!-- a voir ce qu'on met exactement ici-->
-            <h2 id ="contact_title">Nous contacter :</h2>
-            <ul id = "contact_list">
-               <li> mail :</li>
-               <li> téléphone :</li>
-            </ul>
-         </div>
-      </div>
-      <script src="/static/js/cart_validation.js"></script>
-   </body>
-</html>
+            {% endfor  %}
+         {% endif %}
+      </ul>
+   </form>
+</section>
+<script src="/static/js/cart_validation.js"></script>
+{%endblock%}

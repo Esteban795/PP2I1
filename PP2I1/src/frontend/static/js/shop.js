@@ -4,6 +4,8 @@ const cartAmountDiv = document.getElementById("total_amount");
 const formValidation = document.getElementById("validation-cart-form");
 const cartConfirmButton = document.getElementById("cartConfirmButton");
 const cartInput = document.getElementById("cart");
+
+const PRODUCT_BASE_URL = "/static/images/products/";
 let ids_list = [];
 let total = 0;
 
@@ -29,7 +31,6 @@ function addToCart(item) {
 }
 
 function updateCart() {
-    console.log(ids_list);
     cartListDiv.innerHTML = '';
     if (cartItems.length == 0) {
         cartListDiv.innerHTML = '<li id="emptyCart">Vide actuellement</li>';
@@ -38,7 +39,8 @@ function updateCart() {
         for (var i = 0; i < cartItems.length; i++) {
             var itemLi = document.createElement('li');
             var img = document.createElement('img');
-            img.src = cartItems[i].img_src;
+            let img_filename = cartItems[i].img_src.split('/').pop();
+            img.src = PRODUCT_BASE_URL + img_filename;
             img.style.width = '50px';
             img.style.height = '50px';
             itemLi.appendChild(img);
