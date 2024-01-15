@@ -86,12 +86,16 @@ def login():
         if not utilities.checkValidInput(email,password):
             return render_template('login.html',error="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.")
         
-        cursor.execute("SELECT * FROM clients WHERE email = ?", (email,))
+        FIELDS = ["client_id","first_name","last_name","email","pwd","created_at","picked_up_volume","recycled_volume","status"]
+        cursor.execute(f"SELECT {','.join(FIELDS)} FROM clients WHERE email = ?", (email,))
         user = cursor.fetchone()
         if user is None:
             return render_template('login.html',error="Cette adresse email n'est liée à aucun compte.")
-        
+
         client = Client(*user)
+        if client.status == -1:
+            return render_template('login.html',error="Votre compte a été banni.")
+        
         hash_object = hashlib.sha256(password.encode('utf-8'))
         password = hash_object.hexdigest()
         if client.password != password:
