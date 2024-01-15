@@ -503,7 +503,9 @@ def delete_user():
         confirm_password = hash_object.hexdigest()
         if current_user.password != confirm_password:
             return render_template('profile.html',error_deleteuser="Le mot de passe est incorrect.",user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
-        cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, email = ?, created_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None, None,None, None, current_user_id))
+        cursor.execute('DELETE clients WHERE client_id = ?', (current_user_id,))
+        cursor.execute('DELETE bins WHERE owner_id = ?', (current_user_id,))
+        #cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, email = ?, created_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None, None,None, None, current_user_id))
         conn.commit()
         return redirect(url_for('login'))
     return redirect(url_for('profile'))
