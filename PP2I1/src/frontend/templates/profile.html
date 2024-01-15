@@ -261,13 +261,23 @@
 	{% endif%}
 	<h2 class = security>Sécurité</h2>
 	<h3 id = "reset-password">Réinitialiser mon mot de passe :</h3>
-	<form method="POST" action="/profile/reset-password/">
-		<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
-		<input class = "submit-button" type="submit" value="Valider">
-	</form>
-	<form method="POST" action="/profile/reset-password/">
-		<input type="password" name="new-password" placeholder="Entrez votre nouveau mot de passe" required>
-		<input class = "submit-button" id="password-submit" type="submit" value="Valider">
+	<form method="POST" action="/profile/reset-password/"></form>
+		<div class="flex-row">
+			<div class="flex-column flex-center">
+				<div class="flex-row margin-20">
+					<label for="password"> Ancien mot de passe :</label>
+					<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+				</div>
+				<div class="flex-row margin-20">
+					<label for="new-password"> Nouveau mot de passe :</label>
+					<input type="password" name="new-password" placeholder="Entrez votre nouveau mot de passe" required>
+				</div>
+			</div>
+			<div class="flex-center">
+				<input class="submit-button" id="password-submit" type="submit" value="Valider">
+			</div>
+			
+		</div>	
 	</form>
 	{% if error_passwordreset %}
 	<p class="error"> {{error_passwordreset}} </p>

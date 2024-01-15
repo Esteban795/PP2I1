@@ -625,3 +625,7 @@ tr:hover td {
 	justify-content: center;
 	align-items: stretch;
 }
+
+.margin-20 {
+	margin: 20px;
+}
