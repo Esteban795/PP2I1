@@ -392,6 +392,7 @@ def start_pickup():
         chosen_bins = [True for i in range(len(db_results))]
         chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins_ids = [bins_ids[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
+        chosen_bins_used = [bins_used_volume[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
         chosen_bins.append(BASE_COORDS)
         tsp_solver = saTSPSolver(chosen_bins,utilities.getHaversineDistance)
         tsp_res,best_route_length = tsp_solver.simulatedAnnealing()
@@ -400,7 +401,7 @@ def start_pickup():
         session['route'] = utilities.circularTranslationArray(tsp_res,base_coords_index)
         for i in range(len(chosen_bins_ids)):
             cursor.execute("UPDATE bins SET last_emptied_by = ?, last_emptied = ? WHERE bin_id = ?",(truck_numberplate,datetime.datetime.now().replace(microsecond=0),chosen_bins_ids[i]))
-            cursor.execute("INSERT INTO pickup(truck_id,bin_id) VALUES (?,?)",(truck_numberplate,chosen_bins_ids[i]))
+            cursor.execute("INSERT INTO pickup(truck_id,bin_id,picked_up) VALUES (?,?,?)",(truck_numberplate,chosen_bins_ids[i],chosen_bins_used[i]))
         conn.commit()
         return redirect(url_for('admin'))
     return redirect(url_for('admin'))
