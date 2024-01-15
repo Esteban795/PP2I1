@@ -504,7 +504,7 @@ def delete_user():
         if current_user.password != confirm_password:
             return render_template('profile.html',error_deleteuser="Le mot de passe est incorrect.",user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
         cursor.execute('DELETE FROM clients WHERE client_id = ?', (current_user_id,))
-        
+        cursor.execute('DELETE pickup FROM pickup JOIN bins ON pickup.bin_id = bins.bin_id WHERE  bin.owner_id = ?',(current_user_id,))
         cursor.execute('DELETE  FROM bins WHERE owner_id = ?', (current_user_id,))
 
         conn.commit()
