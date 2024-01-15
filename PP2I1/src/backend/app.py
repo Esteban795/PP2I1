@@ -250,7 +250,6 @@ def getUsers():
     SQL = """
         SELECT last_name, first_name, email, client_id, status
         FROM clients
-        WHERE status != 1
     """
     cursor.execute(SQL)
     temp = cursor.fetchall()
@@ -456,7 +455,7 @@ def banUser(client_id):
             return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (-1, client_id))
         conn.commit()
-        redirect(url_for('admin'))
+        return redirect(url_for('admin'))
     return redirect(url_for('admin',user=current_user))
 
 @app.route('/admin/unban-user/<client_id>', methods=('GET','POST')) 
@@ -472,19 +471,42 @@ def unbanUser(client_id: int):
             return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(0, client_id))
         conn.commit()
-        redirect(url_for('admin'))
+        return redirect(url_for('admin'))
     return redirect(url_for('admin',user=current_user))
 
 
 
-@app.route('/admin/user-to-admin', methods=('GET','POST')) 
+@app.route('/admin/make_admin/<client_id>', methods=('GET','POST')) 
 #@utilities.admin_required
-def user_to_admin(client_id: int):
+def make_admin(client_id: int):
     if request.method == 'POST':
+        confirm_password = request.form['password']
+        if not utilities.checkValidInput(confirm_password):
+            return redirect(url_for(admin,user=current_user,error_deleteUser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
+        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
+        confirm_password = hash_object.hexdigest()
+        if current_user.password != confirm_password:
+            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (1, client_id))
         conn.commit()
         return redirect(url_for('admin'))
-    return render_template('admin.html')
+    return redirect(url_for('admin',user=current_user))
+
+@app.route('/admin/unrank_admin/<client_id>', methods=('GET','POST')) 
+#@utilities.admin_required
+def unrank_admin(client_id: int):
+    if request.method == 'POST':
+        confirm_password = request.form['password']
+        if not utilities.checkValidInput(confirm_password):
+            return redirect(url_for(admin,user=current_user,error_deleteUser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
+        hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
+        confirm_password = hash_object.hexdigest()
+        if current_user.password != confirm_password:
+            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
+        cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (0, client_id))
+        conn.commit()
+        return redirect(url_for('admin'))
+    return redirect(url_for('admin',user=current_user))
 
 
 if __name__ == '__main__':

@@ -374,6 +374,7 @@
 								<th class="text-left border-top-bottom"> NOM </th>
 								<th class="text-left border-top-bottom"> PRENOM </th>
 								<th class="text-left border-top-bottom"> EMAIL </th>
+								<th class="text-left border-top-bottom"> QUALITE </th>
 								<th class="text-left border-top-bottom"> STATUS </th>
 								<th class="text-left border-top-bottom"> ACTIONS </th>
 							</tr>
@@ -389,6 +390,7 @@
 											<td> {{ usr.last_name }} </td>
 											<td> {{ usr.first_name }}  </td>
 											<td> {{ usr.email }} </td>
+											<td> {{ "Admin" if usr.status==1 else "Client" }} </td>
 											<td> {{ "Ban" if usr.status==-1 else "Actif" }} </td>
 											<td class="flex-row flex-space-evenly"> 
 												{% if usr.status==0 %}
@@ -425,6 +427,65 @@
 													</div>
 												</dialog>
 												<input class="open-dialog-button btn-submit" type="button" value="Débannir"/>
+												{% else %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Impossible de bannir {{ usr.first_name }} {{ usr.last_name }}.</h1> 
+															<p class='text-center'> L'utilisateur est administrateur. </p>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Impossible de bannir"/>
+												{% endif %}
+											</td>
+											<td class="flex-row flex-space-evenly"> 
+												{% if usr.status==0 %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Rendre admin {{ usr.first_name }} {{ usr.last_name }} ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/make_admin/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Rendre Admin"/>
+												{% elif usr.status==1 %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Supprimer droit admin à {{ usr.first_name }} {{ usr.last_name }} ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/unrank_admin/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Enlever admin"/>
+												{% else %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Impossible de rendre admin {{ usr.first_name }} {{ usr.last_name }}. </h1> 
+															<p class="text-center"> L'utilisateur est banni. </p>
+														</div>	
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Impossible de rendre admin"/>
 												{% endif %}
 											</td>
 										</tr>
