@@ -8,8 +8,10 @@
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
 <div class="flex-row">
 	<div class="column" style="position:relative;">
-		<img class="btn-prev slider-buttons svg-white" src="/static/images/chevron-left.svg" alt="chevron-left">
-		<img class="btn-next slider-buttons svg-white" src="/static/images/chevron-right.svg" alt="chevron-right">
+		{% if bins_count > 0 %}
+			<img class="btn-prev slider-buttons svg-white" src="/static/images/chevron-left.svg" alt="chevron-left">
+			<img class="btn-next slider-buttons svg-white" src="/static/images/chevron-right.svg" alt="chevron-right">
+		{% endif %}
 		<div class="slide stats flex-column">
 			<h1 class="title text-white text-center">
 				<span class="fadein-animation"> Quelques </span>
