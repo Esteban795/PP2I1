@@ -240,28 +240,28 @@
 	<h1 id = "title-management">Mon profil : </h1>
 	<h2 class = "user-info">Mes infos :</h2>
 	<h3 id = "user-name">Mon nom : {{user.first_name}} {{user.last_name}}</h3>
-	<form method="POST" action="/profile/reset-first-name/">
+	<form method="POST" id="firstname-change-form" action="/profile/reset-first-name/">
 		<input type="text" name="new-first-name" placeholder = "Entrez votre prénom" required>
-		<input class = "submit-button" type="submit" value="Valider">
+		<input class = "submit-button" type="submit" value="Valider" onclick="FirstnameChangeConfirmationDialog.showModal(); return false;"">
 	</form>
-	<form method="POST" action="/profile/reset-last-name/">
+	<form method="POST" id="lastname-change-form" action="/profile/reset-last-name/">
 		<input type="text" name="new-last-name" placeholder="Entrez votre nom" required>
-		<input class = "submit-button" type="submit" value="Valider">
+		<input class = "submit-button" type="submit" value="Valider" onclick="LastnameChangeConfirmationDialog.showModal(); return false;"">
 	</form>
 	{% if error_name %}
 	<p class="error"> {{error_name}} </p>
 	{% endif%}
 	<h3 id = "user-mail">Mon email : {{user.email}}</h3>
-	<form method="POST" action="/profile/reset-email/">
+	<form method="POST" id="email-change-form" action="/profile/reset-email/">
 		<input type="email" name="new-email" placeholder="Entrez votre nouvel email" required>
-		<input class = "submit-button" type="submit" value="Valider">
+		<input class = "submit-button" type="submit" value="Valider" onclick="EmailChangeConfirmationDialog.showModal(); return false;"">
 	</form>
 	{% if error_mail %}
 	<p class="error"> {{error_mail}} </p>
 	{% endif%}
 	<h2 class = security>Sécurité</h2>
 	<h3 id = "reset-password">Réinitialiser mon mot de passe :</h3>
-	<form method="POST" action="/profile/reset-password/"></form>
+	<form method="POST" id="password-change-form" action="/profile/reset-password/">
 		<div class="flex-row">
 			<div class="flex-column flex-center">
 				<div class="flex-row margin-20">
@@ -274,7 +274,7 @@
 				</div>
 			</div>
 			<div class="flex-center">
-				<input class="submit-button" id="password-submit" type="submit" value="Valider">
+				<input class="submit-button" id="password-submit" type="submit" value="Valider" onclick="PasswordChangeConfirmationDialog.showModal(); return false;">
 			</div>
 			
 		</div>	
@@ -293,6 +293,34 @@
 	{% if error_deleteuser %}
 	<p class="error"> {{error_deleteuser}} </p>
 	{% endif%}
+	<dialog id="FirstnameChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre prénom ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('FirstnameChangeConfirmationDialog').close(); document.getElementById('firstname-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('FirstnameChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="LastnameChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre nom ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('LastnameChangeConfirmationDialog').close(); document.getElementById('lastname-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('LastnameChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="EmailChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre email ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('EmailChangeConfirmationDialog').close(); document.getElementById('email-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('EmailChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="PasswordChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre mot de passe ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('PasswordChangeConfirmationDialog').close(); document.getElementById('password-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('PasswordChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
 	<dialog id="logoutConfirmationDialog">
 		<p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
 		<div class="dial-flex-row">

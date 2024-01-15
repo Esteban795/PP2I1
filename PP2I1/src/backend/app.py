@@ -480,7 +480,7 @@ def getBinsStats(client_id : int,time_since_creation) -> dict:
 
 
 @app.route('/profile/')
-#@login_required
+@login_required
 def profile():
     current_user_id = current_user.client_id
     bins_count = getBinsCount(current_user_id)
@@ -505,15 +505,15 @@ def delete_user():
             return render_template('profile.html',error_deleteuser="Le mot de passe est incorrect.",user=current_user, recycled_volume=10, total_volume=20, recycled_percentage=50)
         cursor.execute('UPDATE clients SET first_name = ?, last_name = ?, email = ?, created_at = ?, pwd = ?, recycled_volume = ?, status = ? WHERE client_id = ?', (None, None, None, None, None,None, None, current_user_id))
         conn.commit()
-        redirect(url_for('login'))
-    return render_template('homepage.html',user=current_user)
+        return redirect(url_for('login'))
+    return redirect(url_for('profile'))
 
 @app.route('/profile/reset-password/',methods=('GET','POST'))
 @login_required
 def reset_password():
     current_user_id = current_user.client_id
     if request.method == 'POST':
-        confirm_password = request.form['confirm-password']
+        confirm_password = request.form['password']
         new_password = request.form['new-password']
         if not utilities.checkValidInput(new_password, confirm_password):
             return render_template('profile.html',user = current_user,error_passwordreset="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ.",recycled_volume=10, total_volume=20, recycled_percentage=50)
