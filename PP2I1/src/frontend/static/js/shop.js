@@ -9,90 +9,86 @@ const PRODUCT_BASE_URL = "/static/images/products/";
 let ids_list = [];
 let total = 0;
 
-function updateTotalAmount(){
-    total = 0;
-    cartAmountDiv.innerHTML ='';
-    if (cartItems.length==0){
-        total = 0;
-    }
-    else{
-        cartItems.forEach(item => {
-            let price = parseFloat(item.price.replace('€',''))
-            total += price;
-        });
-    }
-    cartAmountDiv.innerHTML = 'Total :' + total + ' €';
+function updateTotalAmount() {
+	total = 0;
+	cartAmountDiv.innerHTML = '';
+	if (cartItems.length == 0) {
+		total = 0;
+	} else {
+		cartItems.forEach(item => {
+			let price = parseFloat(item.price.replace('€', ''))
+			total += price;
+		});
+	}
+	cartAmountDiv.innerHTML = 'Total :' + total + ' €';
 }
 
 function addToCart(item) {
-    cartItems.push(item);
-    ids_list.push(item.product_id);
-    updateCart();
+	cartItems.push(item);
+	ids_list.push(item.product_id);
+	updateCart();
 }
 
 function updateCart() {
-    cartListDiv.innerHTML = '';
-    if (cartItems.length == 0) {
-        cartListDiv.innerHTML = '<li id="emptyCart">Vide actuellement</li>';
-    }
-    else {
-        for (var i = 0; i < cartItems.length; i++) {
-            var itemLi = document.createElement('li');
-            var img = document.createElement('img');
-            let img_filename = cartItems[i].img_src.split('/').pop();
-            img.src = PRODUCT_BASE_URL + img_filename;
-            img.style.width = '50px';
-            img.style.height = '50px';
-            itemLi.appendChild(img);
-            var textNode = document.createTextNode(cartItems[i].name + ' - ' + cartItems[i].price);
-            itemLi.appendChild(textNode);
-            
-            var removeButton = document.createElement('button');
-            removeButton.textContent = 'X';
-            removeButton.className = 'removeButton';
-            removeButton.onclick = function() { removeFromCart(i); };
-            itemLi.appendChild(removeButton);
-            
-            cartListDiv.appendChild(itemLi);
-        }
+	cartListDiv.innerHTML = '';
+	if (cartItems.length == 0) {
+		cartListDiv.innerHTML = '<li id="emptyCart">Vide actuellement</li>';
+	} else {
+		for (var i = 0; i < cartItems.length; i++) {
+			var itemLi = document.createElement('li');
+			var img = document.createElement('img');
+			let img_filename = cartItems[i].img_src.split('/').pop();
+			img.src = PRODUCT_BASE_URL + img_filename;
+			img.style.width = '50px';
+			img.style.height = '50px';
+			itemLi.appendChild(img);
+			var textNode = document.createTextNode(cartItems[i].name + ' - ' + cartItems[i].price);
+			itemLi.appendChild(textNode);
 
-    }
-    updateTotalAmount();
+			var removeButton = document.createElement('button');
+			removeButton.textContent = 'X';
+			removeButton.className = 'removeButton';
+			removeButton.onclick = function () {
+				removeFromCart(i);
+			};
+			itemLi.appendChild(removeButton);
+
+			cartListDiv.appendChild(itemLi);
+		}
+
+	}
+	updateTotalAmount();
 }
 
 function removeFromCart(index) {
-    var index = cartItems.indexOf(index);
-    ids_list.splice(index, 1);
-    cartItems.splice(index, 1);
-    updateCart();
+	var index = cartItems.indexOf(index);
+	ids_list.splice(index, 1);
+	cartItems.splice(index, 1);
+	updateCart();
 }
 
 const allSameAdressCheckbox = document.querySelector('#all-same-adress');
 const adressesInputs = document.querySelectorAll('.adress-input');
 
 allSameAdressCheckbox.addEventListener('change', () => {
-    if (allSameAdressCheckbox.checked) {
-        adressesInputs.forEach(input => {
-            input.disabled = true;
-        });
-        adressesInputs[0].disabled = false;
-    }
-    else {
-        adressesInputs.forEach(input => {
-            input.disabled = false;
-        });
-    }
-}
-);
+	if (allSameAdressCheckbox.checked) {
+		adressesInputs.forEach(input => {
+			input.disabled = true;
+		});
+		adressesInputs[0].disabled = false;
+	} else {
+		adressesInputs.forEach(input => {
+			input.disabled = false;
+		});
+	}
+});
 
 adressesInputs.forEach(input => {
-    input.addEventListener('input', () => {
-        if (allSameAdressCheckbox.checked) {
-            adressesInputs.forEach(a => {
-                a.value = input.value;
-        }
-        );
-    }
-    }
-        );
-    });
+	input.addEventListener('input', () => {
+		if (allSameAdressCheckbox.checked) {
+			adressesInputs.forEach(a => {
+				a.value = input.value;
+			});
+		}
+	});
+});
