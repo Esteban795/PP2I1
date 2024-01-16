@@ -47,7 +47,7 @@ def send_images(fichier : str):
 
 @app.route('/')
 def home():
-    return render_template('base.html')
+    return render_template('homepage.html')
 
 @app.route('/signup/', methods=('GET', 'POST'))
 def signup():
@@ -576,4 +576,4 @@ def reset_email():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=8080)
+    app.run(debug=True,port=8080)
