@@ -178,22 +178,12 @@ def cart_success():
     return render_template("cart_success.html",products=final_products)
 
 def getTrucks():
-    trucks = []
     DATA_FIELDS = ['truck_id','numberplate','capacity']
-    SQL = """
-        SELECT * FROM trucks
-    """
+    SQL = "SELECT * FROM trucks"
     cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for truck in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = truck[i]
-        trucks.append(infos)
-    return trucks
+    return [dict(zip(DATA_FIELDS,truck)) for truck in cursor.fetchall()]
 
 def getBinsInformation():
-    bins_data = []
     DATA_FIELDS = ['first_name','last_name','lat','long','volume','used','last_emptied','bought_at','numberplate','waste_type_name','product_name']
     SQL = """
         SELECT first_name,last_name,lat,long,volume,used,last_emptied,bought_at,numberplate, waste_type_name,product_name FROM bins
@@ -204,31 +194,15 @@ def getBinsInformation():
     """
     #LEFT JOIN because some bins might have never been emptied yet!
     cursor.execute(SQL)
-    bins = cursor.fetchall()
-    for bin in bins:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = bin[i]
-        bins_data.append(infos)
-    return bins_data
+    return [dict(zip(DATA_FIELDS,bin)) for bin in cursor.fetchall()]
 
 def getWasteTypes():
-    waste_types = []
     DATA_FIELDS = ['waste_id','waste_type_name']
-    SQL = """
-        SELECT * FROM waste_type
-    """
+    SQL = "SELECT * FROM waste_type"
     cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for product in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = product[i]
-        waste_types.append(infos)
-    return waste_types
+    return [dict(zip(DATA_FIELDS,waste_type)) for waste_type in cursor.fetchall()]
 
 def getPurchases():
-    purchases = []
     DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
     SQL = """
         SELECT bin_id,first_name,last_name,email,bought_at,price FROM bins
@@ -236,31 +210,13 @@ def getPurchases():
         JOIN products ON bins.product_id = products.product_id
     """
     cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for purchase in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = purchase[i]
-        purchases.append(infos)
-    return purchases
+    return [dict(zip(DATA_FIELDS,purchase)) for purchase in cursor.fetchall()]
 
 def getUsers():
-    users = []
     DATA_FIELDS = ['last_name', 'first_name', 'email', 'client_id', 'status']
-    SQL = """
-        SELECT last_name, first_name, email, client_id, status
-        FROM clients
-    """
+    SQL = "SELECT last_name, first_name, email, client_id, status FROM clients"
     cursor.execute(SQL)
-    temp = cursor.fetchall()
-    for usr in temp:
-        infos = {}
-        for i in range(len(DATA_FIELDS)):
-            infos[DATA_FIELDS[i]] = usr[i]
-        users.append(infos)
-    return users
-
-
+    return [dict(zip(DATA_FIELDS, user)) for user in cursor.fetchall()]
 
 @app.route('/admin/')
 #@utilities.admin_required
@@ -276,9 +232,6 @@ def admin():
     user_list = getUsers()
     error_deleteUser = request.args.get('error_deleteUser',None)
     return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror,user_list=user_list,error_deleteUser=error_deleteUser)
-
-
-
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
 #@utilities.admin_required
@@ -303,7 +256,7 @@ def add_product():
 
 @app.route('/admin/modify-product/',methods=('GET','POST'))
 #@utilities.admin_required
-def modify_product_not_selected():
+def modify_product_not_selected(): #PAS ENCORE FAIT
     return redirect(url_for('admin',error="Veuillez sélectionner un produit à modifier."))
 
 @app.route('/admin/modify-product/<int:product_id>',methods=('GET','POST'))
@@ -319,7 +272,7 @@ def modify_product(product_id : int):
             cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
             old_pic = cursor.fetchone()[0]
             os.remove(os.path.join(UPLOAD_FOLDER,old_pic))
-        name = request.form['product-name'] or None
+        name = request.form['product-name'] or None   # DIFFERENT FROM request.form.get('product-name',None)
         price = request.form['price'] or None
         volume = request.form['volume'] or None
         desc = request.form['desc'] or None
@@ -388,7 +341,7 @@ def delete_purchase(bin_id : int):
 
 @app.route('/admin/purchases/modify-purchases/<int:bin_id>',methods=('GET','POST'))
 #@utilities.admin_required
-def modify_purchase(bin_id : int):
+def modify_purchase(bin_id : int): #PAS FAIT
     pass
 
 @app.route("/admin/start-pickup/",methods=('GET','POST'))
@@ -438,13 +391,12 @@ def ban_user(client_id: int):
     if request.method == 'POST':
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(-1, client_id))
         conn.commit()
-        redirect(url_for('admin'))
+        return redirect(url_for('admin'))
     return render_template('admin.html')
 
 @app.route('/admin/ban-user/<client_id>', methods=('GET','POST'))
 #@utilities.admin_required
 def banUser(client_id):
-    #current_user_id = current_user.client_id
     if request.method == 'POST':
         confirm_password = request.form['password']
         if not utilities.checkValidInput(confirm_password):
@@ -452,7 +404,7 @@ def banUser(client_id):
         hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
         confirm_password = hash_object.hexdigest()
         if current_user.password != confirm_password:
-            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
+            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide."))
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (-1, client_id))
         conn.commit()
         return redirect(url_for('admin'))
@@ -468,13 +420,11 @@ def unbanUser(client_id: int):
         hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
         confirm_password = hash_object.hexdigest()
         if current_user.password != confirm_password:
-            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide.",user=current_user))
+            return redirect(url_for('admin',error_deleteUser="Veuillez entre un mot de passe valide."))
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(0, client_id))
         conn.commit()
         return redirect(url_for('admin'))
     return redirect(url_for('admin',user=current_user))
-
-
 
 @app.route('/admin/make_admin/<client_id>', methods=('GET','POST')) 
 #@utilities.admin_required
@@ -492,13 +442,13 @@ def make_admin(client_id: int):
         return redirect(url_for('admin'))
     return redirect(url_for('admin',user=current_user))
 
-@app.route('/admin/unrank_admin/<client_id>', methods=('GET','POST')) 
+@app.route('/admin/unrank_admin/<int:client_id>', methods=('GET','POST')) 
 #@utilities.admin_required
 def unrank_admin(client_id: int):
     if request.method == 'POST':
         confirm_password = request.form['password']
         if not utilities.checkValidInput(confirm_password):
-            return redirect(url_for(admin,user=current_user,error_deleteUser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
+            return redirect(url_for('admin',user=current_user,error_deleteUser="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
         hash_object = hashlib.sha256(confirm_password.encode('utf-8'))
         confirm_password = hash_object.hexdigest()
         if current_user.password != confirm_password:
