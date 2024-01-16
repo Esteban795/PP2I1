@@ -367,6 +367,10 @@
 				<p class="error"> {{error_deleteUser}} </p>
 			{% endif%}
 			<div class="user-management-container flex-column">
+				<div class="flex-center">
+					<label for="admin-only"> Montrer uniquement les administrateurs : </label>
+					<input type="checkbox" name="admin-only" id="admin-only-checkbox">
+				</div>
 				<div id="table-container">
 					<table id="purchase-history-table">
 						<thead>
@@ -386,7 +390,7 @@
 								</tr>
 							{% else %}
 									{% for usr in user_list %}
-										<tr>
+										<tr class="user-row {{ 'admin' if usr.status == 1 else ''}}">
 											<td> {{ usr.last_name }} </td>
 											<td> {{ usr.first_name }}  </td>
 											<td> {{ usr.email }} </td>

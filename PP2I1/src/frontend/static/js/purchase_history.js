@@ -164,3 +164,23 @@ transactionCancelProductSelection.forEach((button) => {
   });
 }
 );
+
+
+
+const userRows = document.querySelectorAll('.user-row');
+const adminOnlyCheckbox = document.querySelector('#admin-only-checkbox');
+
+adminOnlyCheckbox.addEventListener('change', (event) => {
+  if (event.target.checked) {
+    userRows.forEach((row) => {
+      if (!row.classList.contains('admin')) {
+        row.classList.add('hidden');
+      }
+    });
+  } else {
+    userRows.forEach((row) => {
+      row.classList.remove('hidden');
+    });
+  }
+}
+);
