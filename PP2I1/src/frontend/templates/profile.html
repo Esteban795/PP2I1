@@ -1,0 +1,353 @@
+{%extends "base.html"%}
+{%block title%}Mon profil{%endblock%}
+{%block stylesheets%} 
+<link href="/static/css/profile.css" rel="stylesheet">
+{%endblock%}
+{%block content%}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+<div class="flex-row">
+	<div class="column" style="position:relative;">
+		{% if bins_count > 0 %}
+			<img class="btn-prev slider-buttons svg-white" src="/static/images/chevron-left.svg" alt="chevron-left">
+			<img class="btn-next slider-buttons svg-white" src="/static/images/chevron-right.svg" alt="chevron-right">
+		{% endif %}
+		<div class="slide stats flex-column">
+			<h1 class="title text-white text-center">
+				<span class="fadein-animation"> Quelques </span>
+				<span class="fadein-animation"> statistiques </span>
+				<span class="fadein-animation"> à </span>
+				<span class="fadein-animation"> propos </span>
+				<span class="fadein-animation"> de </span>
+				<br>
+				<span class="fadein-animation"> vous... </span>
+			</h1>
+			<div class="flex-row flex-center statistics-container">
+				<div class="fullheight-stat-container flex-column">
+					<div>
+						<div class="text-end stat-number">
+							<h4> {{ bins_count }} </h4>
+						</div>
+						<div class="item skewY--10 flex-column" data-value="{{ bins_count}}" data-max-value="20">
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<div class="stat-card flex-column">
+								<h5 class="stat-title"> C'est le nombre de poubelles que vous possédez. </h5>
+								<div class="stat-desc-container flex-center">
+									<p class="stat-desc"> Enfin, de poubelles de chez <i> nous </i> que vous possédez. Vous êtes peut-être collectionneur de poubelles.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="flex-row statistics-container flex-space-evenly">
+				<div class="fullheight-stat-container flex-column">
+					<div>
+						<div class="text-end stat-number">
+							<h4> {{volume_infos.picked_up_volume}}kg </h4>
+						</div>
+						<div class="item skewY--10 flex-column" data-value="{{volume_infos.picked_up_volume}}" data-max-value="1000">
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<div class="stat-card flex-column">
+								<h5 class="stat-title"> ...de déchets depuis que vous nous avez rejoints, en {{ joined_at }}. </h5>
+								<div class="stat-desc-container flex-center">
+									<p class="stat-desc"> Vous souhaitez réduire encore plus votre consommation ? C'est par <a class="visited-h1-color" href="/">ici</a> que ça se passe.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="fullheight-stat-container flex-column">
+					<div>
+						<div class="text-end stat-number">
+							<h4> {{ volume_infos.recycled_volume }} </h4>
+						</div>
+						<div class="item skewY--10 flex-column" data-value="{{ volume_infos.recycled_volume }}" data-max-value="1000">
+							<span></span>
+							<span></span>
+							<span></span>
+							<span></span>
+							<div class="stat-card flex-column">
+								<h5 class="stat-title"> de déchets recyclés, parmi ceux ramassés. </h5>
+								<div class="stat-desc-container flex-center">
+									<p class="s	box-sizing: border-box;tat-desc flex-center">
+										{% if volume_infos.picked_up_volume > 0 %}
+											Vous avez recyclé  {{ recycled_percentage }}% de vos déchets.
+											{% if recycled_percentage > 80 %}
+												Un vrai professionnel du tri. Bravo !
+											{% elif recycled_percentage > 60 %}
+												Il vous reste encore des choses à apprendre, mais on est déjà épatés !
+											{% elif recycled_percentage > 40 %}
+												Vous êtes sur la bonne voie ! Continuez à trier vos déchets, et à les déposer dans les bonnes poubelles.
+											{% elif recycled_percentage > 20 %}
+												Ne vous découragez pas ! Trier, ce n'est pas aussi difficile que ça en a l'air.
+											{% elif recycled_percentage > 0 %}
+												C'est un bon début, mais on est sûr que vous pouvez faire mieux !
+											{% else %}
+												Vous n'avez pas encore recyclé de déchets. Il est temps de vous y mettre !
+												Tenez, voici <a href="/articles/"> une ressource</a> qui contient plein d'informations!
+											{% endif %}
+										{% else %}
+											Vous n'avez pas encore vidé une seule poubelle de chez nous. Allons-y !
+										{% endif %}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% for bin_info in bins_infos %}
+		<div class="slide" data-lat="{{ bin_info.lat}}" data-long="{{ bin_info.long 	}}">
+			<div class="stretcher-center">
+				<div class="bin-entries-container bin-entry flex-column flex-center" data-lat="{{ bin_info.lat}}" data-long="bin_info.long">
+					<div class="bin-entry-img-container flex-center">
+						<img class="bin-entry-img" src="/static/images/products/{{ bin_info.img_url}}" alt="poubelle">
+					</div>
+					<div class="flex-row">
+						<div class="flex-column">
+							<p class="text-center"> Remplie à..</p>
+							<div class="circle-wrap">
+								<div class="circle">
+									<div class="mask full" style="--end-degrees:{{ 180 * bin_info.used / bin_info.volume}}deg;">
+										<div class="fill"></div>
+									</div>
+									<div class="mask" style="--end-degrees:{{ 180 * bin_info.used / bin_info.volume}}deg;">
+										<div class="fill"></div>
+									</div>
+									<div class="inside-circle" > {{ 100 * bin_info.used / bin_info.volume }}% </div>
+								</div>
+							</div>
+						</div>
+						<div class="flex-column">
+							<p class="text-center"> Achetée il y a...</p>
+							<div class="circle-wrap">
+								<div class="circle">
+									<div class="mask full" style="--end-degrees:{{ 180 * bin_info.existence_time_percentage}}deg;">
+										<div class="fill"></div>
+									</div>
+									<div class="mask" style="--end-degrees:{{ 180 * bin_info.existence_time_percentage}}deg;">
+										<div class="fill"></div>
+									</div>
+									<div class="inside-circle"> {{ bin_info.bought_at}} ans </div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+	<div class="column" id="map" style="background-color: white;z-index: 0;"></div>
+</div>
+
+<div class="purchase-history-container flex-column">
+	<h1> Historique des achats </h1>
+	<div class="flex-row add-purchase-container">
+		<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
+	</div>
+	<div id="purchase-history-options" class="flex-row">
+		<input type="search" name="searchbar" id="search-bar" placeholder="Search...">
+		<div class="flex-column">
+			<label for="filter" class="text-center"> Trier par : </label>
+			<select id="filter-options" name="filter">
+				<optgroup label="Trier par..">
+					<option selected>Plus récent</option>
+					<option>Plus ancien</option>
+					<option>Prix croissant</option>
+					<option>Prix décroissant</option>
+				</optgroup>
+			</select>
+		</div>
+		<div class="flex-column">
+			<label for="table-options" class="text-center"> Gérer les colonnes : </label>
+			<div class="multiselect">
+				<div class="select-box"  onclick="showCheckboxes()">
+					<select style="width:fit-content;">
+						<option> Sélectionnez les colonnes </option>
+					</select>
+					<div class="over-select"> </div>
+				</div>
+				<div id="checkboxes">
+					<label class="label-columns-checkboxes">
+						<input class="columns-checkboxes" type="checkbox" value="date" checked/> Date
+					</label>
+					<label class="label-columns-checkboxes">
+						<input class="columns-checkboxes" type="checkbox" value='client-name' checked/> Client
+					</label>
+					<label class="label-columns-checkboxes">
+						<input class="columns-checkboxes" type="checkbox" value="email" checked/> Email 
+					</label>
+					<label class="label-columns-checkboxes">
+						<input class="columns-checkboxes" type="checkbox" value="price" checked/> Prix
+					</label>
+				</div>
+			</div>			
+		</div>
+		<div class="flex-column">
+			<label for="how-many-results" class="text-center"> Nombre de résultats : </label>
+			<select id="number-of-results-select" name="how-many-results" style="width: fit-content;">
+				<optgroup label="Afficher au plus..."> 
+					<option value="all" selected> Tous les résultats </option>
+					<option>5</option>
+					<option>6</option>
+					<option>7</option>
+					<option>8</option>
+					<option>9</option>
+					<option>10</option>
+				</optgroup>
+			</select>
+		</div>
+	</div>
+	<div id="table-container">
+		<table id="purchase-history-table">
+			<thead>
+				<tr>
+					<th class="text-left border-top-bottom"> DATE </th>
+					<th class="text-left border-top-bottom"> CLIENT </th>
+					<th class="text-left border-top-bottom"> EMAIL </th>
+					<th class="text-left border-top-bottom"> PRIX </th>
+				</tr>
+			</thead>
+			<tbody>
+				{% if purchases == [] %}
+					<tr>
+						<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
+					</tr>
+				{% else %}
+						{% for purchase in purchases %}
+							<tr>
+								<td> {{ purchase.bought_at }} </td>
+								<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
+								<td> {{ purchase.email }} </td>
+								<td> {{ purchase.price }}€ </td>
+							</tr>
+						{% endfor %}
+				{% endif %}
+			</tbody>
+		</table>
+	</div>
+</div>
+
+<div class = "separation-line"></div>
+<div class = "profile-management">
+	<h1 id = "title-management">Mon profil : </h1>
+	<h2 class = "user-info">Mes infos :</h2>
+	<h3 id = "user-name">Mon nom : {{user.first_name}} {{user.last_name}}</h3>
+	<form method="POST" id="firstname-change-form" action="/profile/reset-first-name/">
+		<input type="text" name="new-first-name" placeholder = "Entrez votre prénom" required>
+		<input class = "submit-button" type="submit" value="Valider" onclick="FirstnameChangeConfirmationDialog.showModal(); return false;"">
+	</form>
+	<form method="POST" id="lastname-change-form" action="/profile/reset-last-name/">
+		<input type="text" name="new-last-name" placeholder="Entrez votre nom" required>
+		<input class = "submit-button" type="submit" value="Valider" onclick="LastnameChangeConfirmationDialog.showModal(); return false;"">
+	</form>
+	{% if error_name %}
+	<p class="error"> {{error_name}} </p>
+	{% endif%}
+	<h3 id = "user-mail">Mon email : {{user.email}}</h3>
+	<form method="POST" id="email-change-form" action="/profile/reset-email/">
+		<input type="email" name="new-email" placeholder="Entrez votre nouvel email" required>
+		<input class = "submit-button" type="submit" value="Valider" onclick="EmailChangeConfirmationDialog.showModal(); return false;"">
+	</form>
+	{% if error_mail %}
+	<p class="error"> {{error_mail}} </p>
+	{% endif%}
+	<h2 class = security>Sécurité</h2>
+	<h3 id = "reset-password">Réinitialiser mon mot de passe :</h3>
+	<form method="POST" id="password-change-form" action="/profile/reset-password/">
+		<div class="flex-row">
+			<div class="flex-column flex-center">
+				<div class="flex-row margin-20">
+					<label for="password"> Ancien mot de passe :</label>
+					<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+				</div>
+				<div class="flex-row margin-20">
+					<label for="new-password"> Nouveau mot de passe :</label>
+					<input type="password" name="new-password" placeholder="Entrez votre nouveau mot de passe" required>
+				</div>
+			</div>
+			<div class="flex-center">
+				<input class="submit-button" id="password-submit" type="submit" value="Valider" onclick="PasswordChangeConfirmationDialog.showModal(); return false;">
+			</div>
+			
+		</div>	
+	</form>
+	{% if error_passwordreset %}
+	<p class="error"> {{error_passwordreset}} </p>
+	{% endif%}
+	<form method="GET" id="logout-form" action="/logout/">
+		<button class = "submit-button" id="logout-button" type="submit" value="Se déconnecter" onclick="logoutConfirmationDialog.showModal(); return false;">Se déconnecter</button>
+	</form>
+	<h3 id="delete-user">Supprimer mon compte :</h3>
+	<form method="POST" id="delete-user-form" action="/profile/delete-user/">
+		<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+		<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+	</form>
+	{% if error_deleteuser %}
+	<p class="error"> {{error_deleteuser}} </p>
+	{% endif%}
+	<dialog id="FirstnameChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre prénom ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('FirstnameChangeConfirmationDialog').close(); document.getElementById('firstname-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('FirstnameChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="LastnameChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre nom ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('LastnameChangeConfirmationDialog').close(); document.getElementById('lastname-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('LastnameChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="EmailChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre email ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('EmailChangeConfirmationDialog').close(); document.getElementById('email-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('EmailChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="PasswordChangeConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir changer votre mot de passe ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('PasswordChangeConfirmationDialog').close(); document.getElementById('password-change-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('PasswordChangeConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="logoutConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir vous déconnecter ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('logoutConfirmationDialog').close(); document.getElementById('logout-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('logoutConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+	<dialog id="deleteConfirmationDialog">
+		<p>Êtes-vous sûr de vouloir supprimer votre compte ?</p>
+		<div class="dial-flex-row">
+			<button class="submit-button" id="confirmButton" onclick="document.getElementById('deleteConfirmationDialog').close(); document.getElementById('delete-user-form').submit();">Confirmer</button>
+			<button class="submit-button" id="cancelButton" onclick="document.getElementById('deleteConfirmationDialog').close();">Annuler</button>
+		</div>
+	</dialog>
+</div>
+<script src="/static/js/profile.js"></script>
+<script src="/static/js/purchase_history.js"></script>
+<script>
+	let marker = null;
+	{% for marker in bins_infos%}
+		marker = L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map)
+		marker.addEventListener('click', function(e) {
+			map.setView(e.latlng, 13);
+		});
+	{% endfor %}
+	   
+</script>
+{%endblock%}

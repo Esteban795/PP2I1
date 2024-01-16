@@ -17,7 +17,7 @@ class Client(UserMixin):
         self.last_name = last_name
         self.email = email
         self.password = password
-        self.created_at = created_at
+        self.created_at = dt.strptime(created_at, "%Y-%m-%d %H:%M:%S") if created_at else None
         self.pick_up_volume = picked_up_volume
         self.recycled_volume = recycled_volume
         self.status = status
