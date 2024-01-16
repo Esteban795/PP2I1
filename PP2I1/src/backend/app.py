@@ -245,199 +245,6 @@ def getAllPurchases():
         purchases.append(infos)
     return purchases
 
-@app.route('/admin/')
-#@utilities.admin_required
-def admin():
-    route = session.get('route',None)
-    error = request.args.get('error',None)
-    derror = request.args.get('derror',None)
-    bins_data = getBinsInformation()
-    products = getProductsList()
-    waste_types = getWasteTypes()
-    purchases = getAllPurchases()
-    trucks = getTrucks()
-    return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror)
-
-@app.route('/admin/add-product/',methods=('GET','POST'))
-#@utilities.admin_required
-def add_product():
-    if request.method == 'POST':
-        name = request.form['product-name']
-        price = request.form['price']
-        volume = request.form['volume']
-        desc = request.form['desc']
-        stock = request.form['stock']
-        f = request.files['img']
-        if not utilities.checkValidInput(name,price,volume,desc,stock,f.filename):
-            error = "Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."
-            return redirect(url_for('admin',error=error))
-        file_uuid = utilities.generateImgUUID(f.filename)
-        filepath = os.path.join(UPLOAD_FOLDER,file_uuid)
-        f.save(filepath)
-        cursor.execute("INSERT INTO products (product_name,price,volume,desc,stock,img_url) VALUES (?,?,?,?,?,?)",(name,price,volume,desc,stock,file_uuid))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return render_template('admin.html') #no get request here
-
-@app.route('/admin/modify-product/',methods=('GET','POST'))
-#@utilities.admin_required
-def modify_product_not_selected():
-    return redirect(url_for('admin',error="Veuillez sélectionner un produit à modifier."))
-
-@app.route('/admin/modify-product/<int:product_id>',methods=('GET','POST'))
-#@utilities.admin_required
-def modify_product(product_id : int):
-    if request.method == 'POST':
-        f = request.files['img']
-        file_uuid = utilities.generateImgUUID(f.filename)
-        if f.filename != '': #no picture was uploaded, use already existing one
-            file_uuid = utilities.generateImgUUID(f.filename)
-            filepath = os.path.join(UPLOAD_FOLDER,file_uuid)
-            f.save(filepath)
-            cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
-            old_pic = cursor.fetchone()[0]
-            os.remove(os.path.join(UPLOAD_FOLDER,old_pic))
-        name = request.form['product-name'] or None
-        price = request.form['price'] or None
-        volume = request.form['volume'] or None
-        desc = request.form['desc'] or None
-        stock = request.form['stock'] or None
-        safe_filename = file_uuid if f.filename != '' else None #because empty word still has an uuid
-        SQL = """
-            UPDATE products 
-            SET 
-                product_name = coalesce(?,product_name),
-                price = coalesce(?,price),
-                volume = coalesce(?,volume),
-                desc = coalesce(?,desc),
-                stock = coalesce(?,stock),
-                img_url = coalesce(?,img_url)
-            WHERE product_id = ?
-        """
-        cursor.execute(SQL,(name,price,volume,desc,stock,safe_filename,product_id))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return render_template('admin.html') #no get request here
-
-@app.route('/admin/delete/<int:product_id>',methods=('GET','POST'))
-#@utilities.admin_required
-def delete_product(product_id : int):
-    if request.method == 'POST':
-        cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
-        filename = cursor.fetchone()[0]
-        filepath = os.path.join(UPLOAD_FOLDER,filename)
-        os.remove(filepath)
-        cursor.execute("DELETE FROM products WHERE product_id = ?",(product_id,))
-        conn.commit()
-    return redirect(url_for('admin'))
-
-@app.route('/admin/add-transaction/',methods=('GET','POST'))
-#@utilities.admin_required
-def add_transaction_not_selected():
-    return redirect(url_for('admin',derror="Veuillez sélectionner un produit."))
-
-@app.route('/admin/add-transaction/<int:product_id>',methods=('GET','POST'))
-#@utilities.admin_required
-def add_transaction(product_id : int):
-    if request.method == 'POST':
-        date = request.form['date-transac']
-        email = request.form['email']
-        lat = request.form['latitude']
-        long = request.form['longitude']
-        if not utilities.checkValidInput(date,email,lat,long):
-            return redirect(url_for('admin',derror="Veuillez remplir tous les champs ou ne pas utiliser que des espaces dans un champ."))
-        waste_type_id = request.form['waste-type']
-        cursor.execute("SELECT client_id FROM clients WHERE email = ?",(email,))
-        client_id = cursor.fetchone()[0]
-        cursor.execute("INSERT INTO bins (owner_id,product_id,lat,long,waste_id,bought_at) VALUES (?,?,?,?,?,?)",(client_id,product_id,lat,long,waste_type_id,date))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return redirect(url_for('admin')) #get request redirected directly
-
-@app.route("/admin/purchases/delete-transaction/<int:bin_id>",methods=('GET','POST'))
-#@utilities.admin_required
-def delete_purchase(bin_id : int):
-    if request.method == 'POST':
-        cursor.execute("DELETE FROM pickup WHERE bin_id = ?",(bin_id,))
-        cursor.execute("DELETE FROM bins WHERE bin_id = ?",(bin_id,))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return redirect(url_for('admin'))
-
-@app.route('/admin/purchases/modify-purchases/<int:bin_id>',methods=('GET','POST'))
-#@utilities.admin_required
-def modify_purchase(bin_id : int):
-    pass
-
-@app.route("/admin/start-pickup/",methods=('GET','POST'))
-#@utilities.admin_required
-def start_pickup():
-    if request.method == 'POST':
-        truck_numberplate = request.form['truck']
-        SQL = """
-            SELECT capacity FROM trucks WHERE numberplate = ?
-        """
-        cursor.execute(SQL,(truck_numberplate,))
-        maxcapacity = cursor.fetchone()[0]
-        SQL = """
-            SELECT lat,long,volume,used,bin_id FROM bins
-            JOIN products ON products.product_id = bins.product_id
-            GROUP BY lat,long
-        """
-        cursor.execute(SQL)
-        db_results = cursor.fetchall()
-        if not db_results: #db is empty
-            return redirect(url_for('admin'))
-        bins_ids = [x[4] for x in db_results]
-        bins_coords = [(x[0],x[1]) for x in db_results]
-        bins_volume = [x[2] for x in db_results]
-        bins_used_volume = [x[3] for x in db_results]
-        weight_used,chosen_bins = knapsack(maxcapacity,bins_used_volume,[100 * bins_used_volume[i] / bins_volume[i] for i in range(len(bins_volume)) ])
-        chosen_bins = [True for i in range(len(db_results))]
-        chosen_bins = [bins_coords[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
-        chosen_bins_ids = [bins_ids[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
-        chosen_bins_used = [bins_used_volume[i] for i in range(len(chosen_bins)) if chosen_bins[i]]
-        chosen_bins.append(BASE_COORDS)
-        tsp_solver = saTSPSolver(chosen_bins,utilities.getHaversineDistance)
-        tsp_res,best_route_length = tsp_solver.simulatedAnnealing()
-        base_coords_index = tsp_res.index(len(chosen_bins) - 1)
-        tsp_res = [chosen_bins[i] for i in tsp_res]
-        session['route'] = utilities.circularTranslationArray(tsp_res,base_coords_index)
-        for i in range(len(chosen_bins_ids)):
-            cursor.execute("UPDATE bins SET last_emptied_by = ?, last_emptied = ? WHERE bin_id = ?",(truck_numberplate,datetime.datetime.now().replace(microsecond=0),chosen_bins_ids[i]))
-            cursor.execute("INSERT INTO pickup(truck_id,bin_id,picked_up) VALUES (?,?,?)",(truck_numberplate,chosen_bins_ids[i],chosen_bins_used[i]))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return redirect(url_for('admin'))
-
-
-@app.route('/admin/ban-user', methods=('GET','POST')) 
-#@utilities.admin_required
-def ban_user(client_id: int):
-    if request.method == 'POST':
-        cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(-1, client_id))
-        conn.commit()
-        redirect(url_for('admin'))
-    return render_template('admin.html')
-
-@app.route('/admin/unban-user', methods=('GET','POST')) 
-#@utilities.admin_required
-def unban_user(client_id: int):
-    if request.method == 'POST':
-        cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(0, client_id))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return render_template('admin.html')
-
-@app.route('/admin/user-to-admin', methods=('GET','POST')) 
-#@utilities.admin_required
-def user_to_admin(client_id: int):
-    if request.method == 'POST':
-        cursor.execute('UPDATE clients SET status = ? WHERE client_id = ?', (1, client_id))
-        conn.commit()
-        return redirect(url_for('admin'))
-    return render_template('admin.html')
-
 def getPurchases(client_id):
     DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
     SQL = """
@@ -604,7 +411,7 @@ def getWasteTypes():
     cursor.execute(SQL)
     return [dict(zip(DATA_FIELDS,waste_type)) for waste_type in cursor.fetchall()]
 
-def getPurchases():
+def getAllPurchases():
     DATA_FIELDS = ['bin_id','first_name','last_name','email','bought_at','price']
     SQL = """
         SELECT bin_id,first_name,last_name,email,bought_at,price FROM bins
@@ -629,7 +436,7 @@ def admin():
     bins_data = getBinsInformation()
     products = getProductsList()
     waste_types = getWasteTypes()
-    purchases = getPurchases()
+    purchases = getAllPurchases()
     trucks = getTrucks()
     user_list = getUsers()
     error_deleteUser = request.args.get('error_deleteUser',None)
