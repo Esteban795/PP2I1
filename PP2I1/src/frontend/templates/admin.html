@@ -360,6 +360,148 @@
 		</div>
 	</div>
 
+	<!-- <div class="grid-layout"> -->
+		<div class="div1 account-management flex-column">
+			<h1> Gestion compte utilisateur </h1>
+			{% if error_deleteUser %}
+				<p class="error"> {{error_deleteUser}} </p>
+			{% endif%}
+			<div class="user-management-container flex-column">
+				<div class="flex-center">
+					<label for="admin-only"> Montrer uniquement les administrateurs : </label>
+					<input type="checkbox" name="admin-only" id="admin-only-checkbox">
+				</div>
+				<div id="table-container">
+					<table id="purchase-history-table">
+						<thead>
+							<tr>
+								<th class="text-left border-top-bottom"> NOM </th>
+								<th class="text-left border-top-bottom"> PRENOM </th>
+								<th class="text-left border-top-bottom"> EMAIL </th>
+								<th class="text-left border-top-bottom"> QUALITE </th>
+								<th class="text-left border-top-bottom"> STATUS </th>
+								<th class="text-left border-top-bottom"> ACTIONS </th>
+							</tr>
+						</thead>
+						<tbody>
+							{% if users == [] %}
+								<tr>
+									<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
+								</tr>
+							{% else %}
+									{% for usr in user_list %}
+										<tr class="user-row {{ 'admin' if usr.status == 1 else ''}}">
+											<td> {{ usr.last_name }} </td>
+											<td> {{ usr.first_name }}  </td>
+											<td> {{ usr.email }} </td>
+											<td> {{ "Admin" if usr.status==1 else "Client" }} </td>
+											<td> {{ "Ban" if usr.status==-1 else "Actif" }} </td>
+											<td class="flex-row flex-space-evenly"> 
+												{% if usr.status==0 %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Bannir ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/ban-user/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Bannir"/>
+												{% elif usr.status==-1 %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Débannir ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/unban-user/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Débannir"/>
+												{% else %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Impossible de bannir.</h1> 
+															<p class='text-center'> L'utilisateur est administrateur. </p>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Impossible de bannir"/>
+												{% endif %}
+											</td>
+											<td class="flex-row flex-space-evenly"> 
+												{% if usr.status==0 %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Rendre admin ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/make_admin/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Rendre Admin"/>
+												{% elif usr.status==1 %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Supprimer droit admin à ?</h1> 
+															<p> Mot de passe nécessaire : </p>
+														</div>	
+														<div>
+															<form method="POST" action="/admin/unrank_admin/{{ usr.client_id }}">
+																<input type="password" name="password" placeholder="Entrez votre mot de passe" required>
+																<input class = "submit-button" id="delete-user-button" type="submit" value="Valider" onclick="deleteConfirmationDialog.showModal(); return false;">
+															</form>
+														</div>
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Enlever admin"/>
+												{% else %}
+												<dialog>
+													<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+													<div class="flex-column flex-center">
+														<div>
+															<h1>Impossible de rendre admin. </h1> 
+															<p class="text-center"> L'utilisateur est banni. </p>
+														</div>	
+													</div>
+												</dialog>
+												<input class="open-dialog-button btn-submit" type="button" value="Impossible de rendre admin"/>
+												{% endif %}
+											</td>
+										</tr>
+									{% endfor %}
+							{% endif %}
+						</tbody>
+					</table>
+				</div>
+			</div>
+	<!--</div>-->
+
+
 	
 	<script type="text/javascript" src="/static/js/map.js"></script>
 	<script type="text/javascript" src="/static/js/products_admin.js"></script>

@@ -1,8 +1,7 @@
-
 .content{
   display: flex;
-  flex-direction: row;
-  /* align-items: center; */
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
   margin-top: 20px;
@@ -25,6 +24,14 @@
   background: #004c4a;
 }
 
+.flex-row-content{
+  display: flex;
+  flex-direction: row;;
+  /* align-items: center; */
+  width: 100%;
+  height: 750px;
+}
+
 .middleZone{
   display: flex;
   flex-direction: column;
@@ -32,6 +39,7 @@
   width: 70%;
   margin-top: 20px;
   overflow-x:scroll;
+  overflow-y: auto;
 }
 
 .itemList{
@@ -52,14 +60,12 @@
   gap: 1px;
   width: 80%;
   margin: 20px auto;
-  /* background-color: grey; */
 }
 
 .itemName {
   font-size: 2em;
   font-weight: bold;
 }
-
 
 .itemBuying{
   display: flex;
@@ -70,8 +76,6 @@
   margin-top: 0;
 
 }
-
-
 
 #cart_text{
   text-align: center;
@@ -120,15 +124,13 @@
   display: flex;
   flex-direction: column;
   color:#000000;
-  position: fixed;
-  right:0;
-  bottom:50px;
-  top:100px;
   height:auto;
   background-color: #f8f8f8;
   overflow-y: auto;
   width: 25%;
   border: #000000 solid 1px;
+  margin-left:auto;
+  max-height: 1000px;
 }
 
 .shoppingHeader{
