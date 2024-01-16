@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/css/sign_up.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/sign_up.css"/>
     <title> S'inscrire </title>
 </head>
 
@@ -32,12 +32,12 @@
       <div class="column content-right box-shadow">
         <div class="form-wrapper">
           <div class="logo">
-            <img src="../static/images/trash.svg" alt="Logo" width="48" height="48"/>
+            <img src="/static/images/trash.svg" alt="Logo" width="48" height="48"/>
           </div>
           <h1 class="text-title text-center"> S'inscrire : </h1>
           {% if error%}
           <p class="error"> <strong> {{error}} </strong></p>
-          {% endif%}
+          {% endif %}
           <form method="post">
             <div class="field-group">
               <label for="first-name" class="label"> Prénom :</label>
@@ -55,8 +55,8 @@
               <div class="label-wrapper">
                 <label class="label" for="txt-password"> Mot de passe: </label>
                 <label class="label label--right" onclick="toggleEye()">
-                  <img src="../static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
-                  <img src="../static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
+                  <img src="/static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
+                  <img src="/static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
                   <line x1="1" y1="1" x2="23" y2="23"></line>
                 </label>
               </div>
@@ -69,7 +69,7 @@
               <input class="input" type="password" id="txt-password-repeat" name="password-repeat"/>
             </div>
             <div class="field-group">
-              <input class="btn-submit transition-duration-300" type="submit" value="Sign up" />
+              <input class="btn-submit transition-duration-300" type="submit" value="S'inscrire" />
             </div>
           </form>
         </div>
@@ -81,7 +81,7 @@
         <div class="parent text-white">
           <div class="div1 box-shadow">
             <figure class="grid-container">
-              <img src="../static/images/montagne.jpg" alt="montagne">
+              <img src="/static/images/montagne.jpg" alt="montagne">
               <figcaption class="text-center">
                 <h1> Qui sommes-nous ?</h1>
               </figcaption>
@@ -98,7 +98,7 @@
           </div>
           <div class="div2 box-shadow">
             <figure class="grid-container">
-              <img src="../static/images/sunset.jpg" alt="sunset">
+              <img src="/static/images/sunset.jpg" alt="sunset">
               <div class="overlay overlay-width text-center" style="bottom:0; right:0;">
                 <h1  class="title"> Les fondateurs.</h1>
                 <h4>
@@ -114,7 +114,7 @@
           </div>
           <div class="div3 box-shadow">
             <figure class="grid-container">
-              <img src="../static/images/foret2.jpg" alt="foret2">
+              <img src="/static/images/foret2.jpg" alt="foret2">
               <div class="overlay overlay-width text-center" style="bottom:0;">
                 <h1 class="title"> Les origines.</h1>
                 <h4>
@@ -133,7 +133,7 @@
               <figcaption class="text-center">
                 <h1> Ce que nous vous proposons. </h1>
               </figcaption>
-              <img src="../static/images/ocean.jpg" alt="ocean">
+              <img src="/static/images/ocean.jpg" alt="ocean">
               <div class="overlay overlay-height text-center" style="top:0;">
                 <h1 class="title caption"> Ce que nous vous proposons.</h1>
                 <h4>

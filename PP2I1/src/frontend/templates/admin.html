@@ -1,0 +1,393 @@
+{%extends "base.html"%}
+{%block title%} Page administrateur {%endblock%}
+{%block stylesheets%} 
+	<link href="/static/css/admin.css" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A==" crossorigin=""/>
+	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+{%endblock%}
+{%block content%}
+	<div class="map-container flex-row">
+		<div class="column map" id="map"> </div>
+		<div class="column locations-container flex-column">
+			<h1 class="text-center">  Localisations des poubelles </h1>
+			<div class="flex-row flex-end" style="width: 100%;">
+				{% if bins_data != [] %}
+					<dialog>
+						<img class="red-filter close-dialog-button" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+						<h1 class="text-center"> Lancer un ramassage </h1>
+						<div class="flex-column flex-center">
+							<form action="/admin/start-pickup/" method="post">
+								<div class="field-group flex-column flex-center">
+									<label for="truck" class="label"> Veuillez sélectionner le camion qui effectuera le ramassage : </label>
+									<select name="truck" style="width:fit-content;">
+										{% for truck in trucks %}
+											<option value="{{ truck.numberplate }}"> {{ truck.numberplate }} ( {{ truck.capacity }}kg)</option>
+										{% endfor %}
+									</select>
+								</div>
+								<div class="field-group flex-column flex-center" style="overflow-y: scroll;">
+									<label for="priorities" class="label"> Y a-t-il des poubelles à vider en priorité ? </label>
+									<div style="max-height: 300px;overflow-y: scroll;">
+										{% for bin in bins_data %}
+											<label class="label">
+												<input type="checkbox" name="priorities" value="{{ bin.bin_id }}" />
+												{{ bin.last_name }} {{ bin.first_name }} {{ bin.lat, bin.long }}
+											</label>
+										{% endfor %}
+									</div>
+								</div>
+								<div>
+									<input class="btn-submit transition-duration-300" type="submit" value="Valider">
+								</div>
+							</form>
+						</div>
+					</dialog>
+					<input class="open-dialog-button padding-2em btn transition-duration-300" type="button" value="Lancer un ramassage"/>
+				{% endif %}
+			</div>
+			<div class="data-container flex-row" style="margin-top: 20px;">
+				{% if bins_data == [] %}
+					{% block nobins %}
+						<p> Aucune poubelle n'a été enregistrée.</p>
+					{% endblock %}
+				{% else %}
+						{% for bin in bins_data %}
+							<div class="bin-entry" data-long="{{ bin.long }}" data-lat="{{ bin.lat}}">
+								<div class="bin-entry-infos">
+									<p> Volume utilisé : {{ bin.used }} </p>
+									<p> Volume maximum : {{ bin.volume}} </p>
+									<p> Dernier vidage : {{ bin.last_emptied }}</p>
+									<p> Dernier vidage par : 
+										{% if bin.numberplate %}
+											{{ bin.numberplate }}
+										{% else %}
+											Jamais vidé.
+										{% endif %}
+									</p>
+									<p> Type de déchet :  {{ bin.waste_type_name}}</p>
+								</div>
+								<div class="bin-entry-name">
+									<p> {{ bin.last_name }}  {{ bin.first_name }}</p>
+								</div>
+							</div>
+						{% endfor %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="grid-layout">
+		<div class="div1 products-management flex-row">
+			<div class="management-option selected-option" data-id="0">
+				<p> Ajouter </p>
+			</div>
+			<div class="management-option" data-id="1">
+				<p> Modifier </p>
+			</div>
+		</div>
+		<div class="div2">
+			<div class="form-wrapper">
+				<h1 class="text-center" id="option-title"> Ajouter un produit : </h1>
+				{% if error %}
+					<p class="error"> <strong> {{ error }} </strong></p>
+				{% endif %}
+				<form id="form-products" enctype="multipart/form-data" action="/admin/add-product/" class="flex-column" method="post">
+					<div class="field-group">
+						<label for="product-name" class="label"> Nom du produit : </label>
+						<input class="input" type="text" name="product-name">
+					</div>
+					<div class="field-group">
+						<label for="img" class="label">Sélectionnez une image : </label>
+						<input onchange="previewImage(event)" accept="image/png,image/jpeg,image/jpg" type="file" name="img">
+					</div>
+					<div class="field-group">
+						<label for="price" class="label"> Prix du produit : </label>
+						<input class="input" type="text" name="price">
+					</div>
+					<div class="field-group">
+						<label class="label" for="desc"> Description du produit : </label>
+						<input class="input" type="text" name="desc" />
+					</div>
+					<div class="field-group">
+						<label class="label" for="volume"> Volume de la poubelle : </label>
+						<input class="input" type="text" name="volume" />
+					</div>
+					<div class="field-group">
+						<label class="label" for="stock"> Stock : </label>
+						<input class="input" type="text" name="stock"/>
+					</div>
+					<div class="field-group">
+						<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
+					</div>
+				</form>
+			</div>
+		</div>
+		<div class="div3">
+			<div id="add-preview" class="product-entry flex-row">
+				<div class="product-entry-img">
+					<img class="product-entry-img" src="/static/images/products/lagrossedaronnedetom.png" alt="product-img"/>
+				</div>
+				<section class="itemInfo">
+					<h2 class="itemName"> 
+						<span class="fields"> Titre </span>
+						- 
+						<span class="fields"> Volume </span>
+					</h2>
+					<p class="itemDesc fields"> 
+						Description
+					</p>
+				</section>
+				<section class="itemBuying">
+					<p class = "itemPrice fields"> Prix </p>
+					<p> En stock : <span class="fields"> stock</span> </p>
+					<button> Ajouter au panier </button>
+				</section>
+			</div>
+			<div class="hidden select-product flex-column">
+				{% if products == [] %}
+					<p> Aucun produit n'a été enregistré. </p>
+				{% else %}
+					{% block products %}
+						{% for product in products %}
+							<div class="product-entry-container">
+								<div class="product-entry flex-row" data-id="{{product.product_id}}">
+									<div class="product-entry-img">
+										<img src="/static/images/products/{{ product.img_url }}" alt="product-img"/>
+									</div>
+									<section class="itemInfo">
+										<h2 class="itemName"> 
+											<span class="fields"> {{ product.product_name}} </span>
+											- 
+											<span class="fields"> {{product.volume}}L </span>
+										</h2>
+										<p class="itemDesc fields"> 
+											{{ product.desc}} 
+										</p>
+									</section>
+									<section class="itemBuying">
+										<p class="itemPrice fields"> {{ product.price}}€ </p>
+										<p> En stock : <span class="fields">  {{product.stock}} </span> </p>
+										<button> Ajouter au panier </button>
+									</section>
+								</div>
+								<div class="option-buttons" style="display: none;">
+									<form method="post" action="/admin/delete/{{product.product_id}}">
+										<div class="button cancel-selection">
+											<img class="red-filter" src="/static/images/cross.svg" alt="button" style="width:20px;"></img>
+										</div>
+										<button class="button" name="delete-button" type="submit">
+											<img class="red-filter" src="/static/images/delete.svg" alt="delete button" style="width:20px;">
+										</button>
+									</form>
+								</div>
+							</div>
+						{% endfor %}
+					{% endblock %}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	<div class="purchase-history-container flex-column">
+		<h1> Historique des achats </h1>
+		<div class="flex-row add-purchase-container">
+			<h2 class="padding-2em text-faded-gray"> Historique de toutes les transactions</h2>
+			<div>
+				<dialog class="dialog-box">
+					<img class="red-filter close-dialog-button sticky" src="/static/images/cross.svg" alt="cross-quit" style="width: 20px;">
+					<div class="flex-row" style="min-height:100%;">
+						<div id="dialog-form-container" class="flex-column">
+							<h1> Ajouter une transaction </h1>	
+							<form id="dialog-form" method="dialog" action="/admin/add-transaction/">
+								<div class="field-group">
+									<label for="date-transac" class="label"> Date de la transaction : </label>
+									<input class="input" type="text" name="date-transac">
+								</div>
+								<div class="field-group">
+									<label for="client-name" class="label"> Client : </label>
+									<input class="input" type="input" name="client-name">
+								</div>
+								<div class="field-group">
+									<label for="email" class="label"> Email : </label>
+									<input class="input" type="text" name="email">
+								</div>
+								<div class="field-group">
+									<label class="label" for="price"> Prix : </label>
+									<input class="input" type="text" name="price"/>
+								</div>
+								<div class="field-group">
+									<input class="btn-submit transition-duration-300" type="submit" value="Valider" />
+								</div>
+							</form>
+						</div>
+						<div class="flex-column" style="flex:2;overflow-y: scroll;">
+							{% if products == [] %}
+								<p> Aucun produit n'a été enregistré. </p>
+							{% else %}
+								{% block products_dialog_box %}
+									{% for product in products %}
+										<div class="product-entry-container">
+											<div class="transaction-product-entry flex-row" data-product-id="{{product.product_id}}">
+												<div class="product-entry-img">
+													<img src="/static/images/products/{{ product.img_url }}" alt="product-img"/>
+												</div>
+												<section class="itemInfo">
+													<h2 class="itemName"> 
+														<span class="fields"> {{ product.name}} </span>
+														- 
+														<span class="fields"> {{product.volume}}L </span>
+													</h2>
+													<p class="itemDesc fields"> 
+														{{ product.desc}} 
+													</p>
+												</section>
+												<section class="itemBuying">
+													<p class="itemPrice fields"> {{ product.price}}€ </p>
+													<p> En stock : <span class="fields">  {{product.stock}} </span> </p>
+													<button> Ajouter au panier </button>
+												</section>
+											</div>
+											<div class="option-buttons" style="display: none;">
+												<form method="post" action="/admin/delete/{{product.product_id}}">
+													<div class="button transaction-cancel-product-selection">
+														<img class="red-filter" src="/static/images/cross.svg" alt="button" style="width:20px;"></img>
+													</div>
+													<button class="button" name="delete-button" type="submit">
+														<img class="red-filter" src="/static/images/delete.svg" alt="delete button" style="width:20px;">
+													</button>
+												</form>
+											</div>
+										</div>
+									{% endfor %}
+								{% endblock %}
+							{% endif %}
+						</div>
+					</div>
+				</dialog>
+				<input class="open-dialog-button dialog-box-button padding-2em btn transition-duration-300" type="button" value="Ajouter une transaction"/>
+			</div>
+		</div>
+		<div id="purchase-history-options" class="flex-row">
+			<input type="search" name="searchbar" id="search-bar" placeholder="Search...">
+			<div class="flex-column">
+				<label for="filter" class="text-center"> Trier par : </label>
+				<select id="filter-options" name="filter">
+					<optgroup label="Trier par..">
+						<option selected>Plus récent</option>
+						<option>Plus ancien</option>
+						<option>Prix croissant</option>
+						<option>Prix décroissant</option>
+					</optgroup>
+				</select>
+			</div>
+			<div class="flex-column">
+				<label for="table-options" class="text-center"> Gérer les colonnes : </label>
+				<div class="multiselect">
+					<div class="select-box"  onclick="showCheckboxes()">
+						<select style="width:fit-content;">
+							<option> Sélectionnez les colonnes </option>
+						</select>
+						<div class="over-select"> </div>
+					</div>
+					<div id="checkboxes">
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="date" checked/> Date
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value='client-name' checked/> Client
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="email" checked/> Email 
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="price" checked/> Prix
+						</label>
+						<label class="label-columns-checkboxes">
+							<input class="columns-checkboxes" type="checkbox" value="actions" checked/> Actions
+						</label>
+					</div>
+				</div>			
+			</div>
+			<div class="flex-column">
+				<label for="how-many-results" class="text-center"> Nombre de résultats : </label>
+				<select id="number-of-results-select" name="how-many-results" style="width: fit-content;">
+					<optgroup label="Afficher au plus..."> 
+						<option value="all" selected> Tous les résultats </option>
+						<option>5</option>
+						<option>6</option>
+						<option>7</option>
+						<option>8</option>
+						<option>9</option>
+						<option>10</option>
+					</optgroup>
+				</select>
+			</div>
+		</div>
+		<div id="table-container">
+			<table id="purchase-history-table">
+				<thead>
+					<tr>
+						<th class="text-left border-top-bottom"> DATE </th>
+						<th class="text-left border-top-bottom"> CLIENT </th>
+						<th class="text-left border-top-bottom"> EMAIL </th>
+						<th class="text-left border-top-bottom"> PRIX </th>
+						<th class="text-left border-top-bottom"> ACTIONS </th>
+					</tr>
+				</thead>
+				<tbody>
+					{% if purchases == [] %}
+						<tr>
+							<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
+						</tr>
+					{% else %}
+							{% for purchase in purchases %}
+								<tr>
+									<td> {{ purchase.bought_at }} </td>
+									<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
+									<td> {{ purchase.email }} </td>
+									<td> {{ purchase.price }}€ </td>
+									<td class="flex-row flex-space-evenly"> 
+										<form method="post" action="/admin/purchases/delete-transaction/{{purchase.bin_id}}">
+											<button class="btn-submit" type="submit"> Supprimer </button>
+										</form>
+										<a href="/admin/purchases/modify-purchases/{{ purchase.bin_id }}">
+											<button class="btn-submit" type="button"> Modifier </button>
+										</a>
+									</td>
+								</tr>
+							{% endfor %}
+					{% endif %}
+				</tbody>
+			</table>
+		</div>
+	</div>
+
+	
+	<script type="text/javascript" src="/static/js/map.js"></script>
+	<script type="text/javascript" src="/static/js/products_admin.js"></script>
+	<script type="text/javascript" src="/static/js/purchase_history.js"></script>
+	<script type="text/javascript">
+		
+		{%for marker in bins_data%}
+			L.marker([{{ marker['lat'] }}, {{ marker['long'] }}]).addTo(map).bindPopup("{{ marker['last_name'] }} {{ marker['first_name'] }} ")
+		{% endfor %}
+
+		{% if route %}
+			let pointsCoords = new Array();
+			let xsum = 0;
+			let ysum = 0;
+			let a = 0;
+			let b = 0;
+			{% for p in route %}
+				a = {{ p[0] }};
+				b = {{ p[1] }};
+				xsum += a;
+				ysum += b;
+				pointsCoords.push(L.latLng(a, b));
+			{% endfor %}
+			let polyline = L.polyline(pointsCoords, {color: 'red'}).addTo(map);
+			let mid_x = xsum / pointsCoords.length;
+			let mid_y = ysum / pointsCoords.length;
+			map.setView([mid_x, mid_y], 8);
+		{% endif %}
+
+	</script>
+{% endblock %}

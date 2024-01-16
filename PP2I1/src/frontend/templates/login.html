@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" type="text/css" href="../static/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="/static/css/login.css"/>
     <title> Se connecter </title>
 </head>
 
@@ -11,13 +11,13 @@
         <div class="content-center">
           <div class="form-wrapper">
             <div class="logo">
-              <img src="../static/images/trash.svg" alt="Logo" width="48" height="48"/>
+              <img src="/static/images/trash.svg" alt="Logo" width="48" height="48"/>
             </div>
 
             <h1 class="text-title"> Se connecter </h1>
             <div class="text-center">
                 Pas de compte ? 
-                <a href="#register" class="transition-duration-300"> Créez-en un ici! </a>
+                <a href="/signup/" class="transition-duration-300"> Créez-en un ici! </a>
             </div>
             {% if error %}
             <p class="error"> {{error}} </p>
@@ -31,22 +31,27 @@
                 <div class="label-wrapper">
                   <label class="label" for="txt-password"> Mot de passe : </label>
                   <label class="label label--right" onclick="toggleEye()">
-                      <img src="../static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
-                      <img src="../static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
+                      <img src="/static/images/eye-on.svg" alt="eye" class="label-icon eye is--show" width="24" height="24" color="lightblue"/>
+                      <img src="/static/images/eye-off.svg" alt="eye-off" class="label-icon eye-off is--hide" width="24" height="24" color="lightblue"/>
                       <line x1="1" y1="1" x2="23" y2="23"></line>
                     <span class="label-text"> Show </span>
                   </label>
                 </div>
                 <input class="input" type="password" id="txt-password" name="password"/>
               </div>
-
+              <div class="field-group checkbox-div">
+                <input type="checkbox" class="transition-duration-300 checkbox-color" value="Remember me ?" name="remember-checkbox">
+                <div class="label-wrapper">
+                  <label for="remember-checkbox" class="label"> Remember me ?</label>
+                </div>
+              </div>
               <div class="field-group">
                 <input class="btn-submit transition-duration-300" type="submit" value="Log In" />
               </div>
             </form>
 
             <div class="field-group text-center">
-              <a href="#forgot-password" class="transition-duration-300"> Mot de passe oublié ?</a>
+              <a class="transition-duration-300"> Mot de passe oublié ?</a>
             </div>
         </div>
       </div>
