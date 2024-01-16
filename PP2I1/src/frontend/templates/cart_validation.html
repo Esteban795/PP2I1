@@ -1,0 +1,51 @@
+{%extends "base.html"%}
+{%block title%}Shop {%endblock%}
+{%block stylesheets%} 
+<link href="/static/css/cart_validation.css" rel="stylesheet">
+{%endblock%}
+{%block content%}
+<section class="middleZone">
+	<h1 class="h1-color">Validation du panier</h1>
+	{% if error %}
+	<p class="error">{{ error }}</p>
+	{% endif %}
+	<form class="flex-column" action="/shop/cart-validation/" method="post">
+		<div id="validation-div" class="flex-row flex-space-evenly">
+			<div class="flex-row flex-center">
+				<label for="use-same-adress text-center"> Utiliser la même adresse partout ?</label>
+				<input id="all-same-adress" type="checkbox" name="use-same-adress">
+			</div>
+			<div>
+				<input class="btn" type="submit" value="Valider le panier">
+			</div>
+		</div>
+		<ul class="itemList">
+			{% if cart == [] %}
+			<p> Votre panier est vide ! </p>
+			{% else %}
+			{% for product in cart %}
+			<div class="flex-row flex-center">
+				<div class="item flex-row">
+					<img class = "itemPic" src="/static/images/products/{{ product.img_url}}" alt="Poubelle Grise">
+					<section class = "itemInfo">
+						<h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
+						<p class="itemDesc">
+							{{ product.desc }}
+						</p>
+					</section>
+					<section class="itemBuying">
+						<p class = "itemPrice"> {{ product.price }}€ </p>
+					</section>
+				</div>
+				<div class="flex-center">
+					<label for="adress">Rentrez votre adresse :</label>
+					<input data-item-index="{{loop.index}}" type="text" class="adress-input" name="adress">
+				</div>
+			</div>
+			{% endfor  %}
+			{% endif %}
+		</ul>
+	</form>
+</section>
+<script src="/static/js/cart_validation.js"></script>
+{%endblock%}

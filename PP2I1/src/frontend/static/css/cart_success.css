@@ -1,0 +1,47 @@
+* {
+	font-family: 'Inter', sans-serif;
+	list-style-type: none;
+}
+
+.h1-color {
+	color: #139a76;
+}
+
+.text-center {
+	text-align: center;
+}
+
+.flex-column {
+	display: flex;
+	flex-flow: column;
+}
+
+.flex-row {
+	display: flex;
+	flex-flow: row wrap;
+}
+
+.flex-space-evenly {
+	justify-content: space-evenly;
+}
+
+.flex-center {
+	justify-content: center;
+	align-items: center;
+}
+
+.fadein-animation {
+	opacity: 0;
+	filter: blur(10px);
+	animation-duration: 0.8s;
+	animation-timing-function: cubic-bezier(0.11, 0, 0.5, 0);
+	animation-fill-mode: forwards;
+	animation-name: fade-in;
+}
+
+@keyframes fade-in {
+	100% {
+		opacity: 1;
+		filter: blur(0);
+	}
+}

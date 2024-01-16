@@ -1,0 +1,68 @@
+.content {
+	display: flex;
+	flex: 1 0 auto;
+	flex-direction: column;
+	align-items: center;
+	align-self: center;
+	width: 80%;
+	margin: 20px auto 50px auto;
+}
+
+.article-container {
+	margin-top: 50px;
+	box-shadow: 0px 0px 50px -14px #6f6594;
+	border-radius: 15px;
+	overflow: hidden;
+	height: auto;
+}
+
+.project-container {
+	margin-top: 50px;
+	margin-bottom: 50px;
+	margin-left: -100px;
+	margin-right: -100px;
+	box-shadow: 0px 0px 50px -14px #6f6594;
+	border-radius: 15px;
+	overflow: hidden;
+	height: auto;
+}
+
+.container-info {
+	display: flex;
+	align-items: center;
+	grid-template-columns: auto 1fr;
+	column-gap: 5px;
+	justify-content: center;
+}
+
+.image-container img {
+	max-width: 200px;
+	max-height: 200px;
+}
+
+.image-left img {
+	float: right;
+}
+
+.image-right img {
+	float: left;
+}
+
+.text {
+	text-align: justify;
+}
+
+hr {
+	border: none;
+	border-top: 3px double #333;
+	color: #333;
+	overflow: visible;
+	text-align: center;
+	height: 5px;
+	width: 100%;
+}
+
+.centered-text {
+	text-align: center;
+	font-size: larger;
+}
