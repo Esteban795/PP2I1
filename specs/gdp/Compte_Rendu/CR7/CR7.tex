@@ -1,0 +1,207 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage{geometry}
+\geometry{hmargin=2.5cm,vmargin=1.5cm}
+
+\usepackage{wrapfig}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb}
+
+\usepackage[dvipsnames]{xcolor}
+\colorlet{darkblue}{blue!60!black}
+\colorlet{darkgreen}{green!60!black}
+
+\usepackage{graphicx} %Loading the package
+\graphicspath{{data/}} %Setting the graphicspath
+
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+\usepackage{hyperref}
+
+\usepackage{tcolorbox}
+\usepackage{ulem}
+
+\usepackage{titlesec}
+
+\usepackage{hyperref}
+
+
+
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+
+
+\usepackage{array} %%% Permet de faire des tabular mieux
+\usepackage{longtable} %%%permet des tableaux sur plusieurs pages
+
+
+\newcommand{\imp}[0]{$\implies$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mise en page des fonction section, sub, .... %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{Chapitre \thechapter\ :}{20pt}{\Huge}
+
+\titleformat{\part}[display]
+{\Huge\scshape\filright}
+{THEME \thepart}
+{20pt}
+{\thispagestyle{plain}}
+\makeatother
+
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\renewcommand{\thepart}{MO\arabic{chapter}\_\Roman{part}}
+\makeatletter
+
+\renewcommand{\thechapter}{MO\arabic{chapter}}
+\makeatletter
+
+\renewcommand{\thesection}{\Roman{section}.}
+
+\renewcommand{\thesubsection}{\Roman{section}.\arabic{subsection}.}
+\makeatletter
+
+\renewcommand{\thesubsubsection}{MO\arabic{chapter}\_ \Roman{section}.\A{subsection}.\alph{subsubsection}.}
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\linesep}[0]{\begin{center}
+                        \rule{0.90\linewidth}{0.15pt}
+                        \end{center}}
+
+
+%\usepackage[titles]{tocloft}
+%\renewcommand*\cftchapnumwidth{3em}
+%\renewcommand*\cftsecnumwidth{4.3em}
+%\renewcommand*\cftsubsecnumwidth{5.3em}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Set-up fonction encadrement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newtcolorbox{Encadrer}{colback=white,
+colframe=black}
+
+\newtcbox{\encadrer}{colframe=black, colback=white, nobeforeafter,box align=base,size=fbox}
+
+\newtcbox{\encasumup}{colframe=black, colback=white, nobeforeafter,box align=base,size=fbox, left=6pt,right=6pt}
+
+\newtcolorbox{sumup}{colback=white, colframe=black, fonttitle=\bfseries, title={test}}
+
+\usepackage[tikz]{bclogo}
+\renewcommand\bcStyleTitre[1]{
+\smash{\raisebox{1em}{\colorbox{white}{\color{black}\encasumup{ Résumé }}}}}%
+
+\newtcolorbox{definition}[2][]{%
+colback=green!5!white,colframe=green!55!black,fonttitle=\bfseries,
+title={Definition} \thetcbcounter: #2,#1}
+
+\newtcolorbox{important}{colback=white,
+colframe=red!55!black}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Set-up header and foot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyheadings}
+\pagestyle{plain}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{PPII \\ -- \\ Compte Rendu 7}
+\date{04 / 01 / 2024}
+\author{BS}
+
+\begin{document}
+\maketitle
+
+\tableofcontents \bigskip
+
+\noindent\rule{\linewidth}{0.5mm} \bigskip
+
+                \begin{tabular}{|l | l|}
+                        \hline
+                Motif de réunion & Réunion hebdomadaire \\
+                        \hline
+                Durée de la réunion & 30min \\
+                        \hline
+                Lieu & Visio (discord) \\
+                        \hline
+                Présent & EM \\
+                        & ED (ft CODMW3)\\
+                        & TB  \\
+                        & BS \\
+                        \hline
+                Retard  & / \\
+                        \hline
+                Absent  & / \\
+                        \hline
+                \end{tabular}
+
+
+\section{Ordre du jour}
+\begin{itemize}
+        \item Frontend
+        \item Backend
+        \item Retour sur la ToDO-List
+\end{itemize}
+
+\noindent\rule{\linewidth}{0.5mm} \bigskip
+\section{Retour sur la ToDO-List}
+\begin{itemize}
+        \item gestion compte utilisateur : a faire
+        \item header ok
+        \item footer ok
+        \item homepage : a finir (contenu)
+        \item profil : en cours (reste Historique achat)
+        \item Admin : reste gestion utilisateur
+        \\
+        \item Compte utilisateur : fait, à valider
+        \item shop : fini
+        \item Page profil : ok (tout le backend est fait)
+        \item Panier et validation : ok
+        \item gestion des comptes : ok 
+\end{itemize}
+
+\noindent\rule{\linewidth}{0.5mm} \bigskip
+\section{Frontend}
+Reste a faire les confirmations, la home page, gestion utilisateur page admin et historique achat page utilisateur
+
+\noindent\rule{\linewidth}{0.5mm} \bigskip
+\section{Backend}
+Tout est fini
+
+\noindent\rule{\linewidth}{0.5mm} \bigskip
+\section{ToDO-List}
+\subsection*{Frontend}
+\begin{itemize}
+        \item \textcolor{red}{Contenu homepage}
+        \item \textcolor{red}{Confirmations}
+        \item \textcolor{red}{Gestion utilisateur (admin)}
+        \item \textcolor{red}{Historique achat (user)}
+        \item \textcolor{red}{Footer}
+        \item \textcolor{red}{Article}
+\end{itemize}
+
+\subsection*{Backend}
+\begin{itemize}
+        \item \textcolor{red}{Article}
+\end{itemize}
+\subsection*{Autres}
+\begin{itemize}
+        \item \textcolor{red}{Diapo enactus}
+        \item \textcolor{darkgreen}{Diapo soutenance}
+        \item \textcolor{darkgreen}{Test shop}
+        \item \textcolor{darkgreen}{Logo}
+        \item \textcolor{darkgreen}{Slogan}
+        \item \textcolor{darkgreen}{Nom}
+\end{itemize}
+
+\textcolor{red}{A faire dans la semaine} \\
+\textcolor{darkgreen}{Important, mais moins urgent} \\
+\textcolor{blue}{Moins urgent}
+\end{document}

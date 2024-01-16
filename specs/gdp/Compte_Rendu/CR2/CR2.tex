@@ -1,0 +1,238 @@
+\documentclass[10pt,a4paper]{report}
+\usepackage{geometry}
+\geometry{hmargin=2.5cm,vmargin=1.5cm}
+
+\usepackage{wrapfig}
+
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amsfonts, amssymb}
+
+\usepackage[dvipsnames]{xcolor}
+\colorlet{darkblue}{blue!60!black}
+
+\usepackage{graphicx} %Loading the package
+\graphicspath{{data/}} %Setting the graphicspath
+
+\newcommand{\tabitem}{~~\llap{\textbullet}~~}
+
+\usepackage{hyperref}
+
+\usepackage{tcolorbox}
+\usepackage{ulem}
+
+\usepackage{titlesec}
+
+\usepackage{hyperref}
+
+
+
+\usepackage{subcaption}
+\captionsetup{compatibility=false}
+
+
+\usepackage{array} %%% Permet de faire des tabular mieux
+\usepackage{longtable} %%%permet des tableaux sur plusieurs pages
+
+
+\newcommand{\imp}[0]{$\implies$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% mise en page des fonction section, sub, .... %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{Chapitre \thechapter\ :}{20pt}{\Huge}
+
+\titleformat{\part}[display]
+{\Huge\scshape\filright}
+{THEME \thepart}
+{20pt}
+{\thispagestyle{plain}}
+\makeatother
+
+\titleformat{\section}
+{\normalfont\Large\bfseries}{\thesection}{1em}{}
+
+\titleformat{\subsection}
+{\normalfont\large\bfseries}{\thesubsection}{1em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\renewcommand{\thepart}{MO\arabic{chapter}\_\Roman{part}}
+\makeatletter
+
+\renewcommand{\thechapter}{MO\arabic{chapter}}
+\makeatletter
+
+\renewcommand{\thesection}{\Roman{section}.}
+
+\renewcommand{\thesubsection}{\Roman{section}.\arabic{subsection}.}
+\makeatletter
+
+\renewcommand{\thesubsubsection}{MO\arabic{chapter}\_ \Roman{section}.\A{subsection}.\alph{subsubsection}.}
+\makeatletter
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\linesep}[0]{\begin{center}
+                        \rule{0.90\linewidth}{0.15pt}
+                        \end{center}}
+
+
+%\usepackage[titles]{tocloft}
+%\renewcommand*\cftchapnumwidth{3em}
+%\renewcommand*\cftsecnumwidth{4.3em}
+%\renewcommand*\cftsubsecnumwidth{5.3em}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Set-up fonction encadrement %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\newtcolorbox{Encadrer}{colback=white,
+colframe=black}
+
+\newtcbox{\encadrer}{colframe=black, colback=white, nobeforeafter,box align=base,size=fbox}
+
+\newtcbox{\encasumup}{colframe=black, colback=white, nobeforeafter,box align=base,size=fbox, left=6pt,right=6pt}
+
+\newtcolorbox{sumup}{colback=white, colframe=black, fonttitle=\bfseries, title={test}}
+
+\usepackage[tikz]{bclogo}
+\renewcommand\bcStyleTitre[1]{
+\smash{\raisebox{1em}{\colorbox{white}{\color{black}\encasumup{ Résumé }}}}}%
+
+\newtcolorbox{definition}[2][]{%
+colback=green!5!white,colframe=green!55!black,fonttitle=\bfseries,
+title={Definition} \thetcbcounter: #2,#1}
+
+\newtcolorbox{important}{colback=white,
+colframe=red!55!black}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Set-up header and foot %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{fancyheadings}
+\pagestyle{plain}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\title{PPII \\ -- \\ Compte Rendu 2}
+\date{12 / 11 / 2023}
+\author{SB}
+
+\begin{document}
+\maketitle
+
+\tableofcontents \bigskip
+
+\rule{\linewidth}{0.5mm} \bigskip
+
+                \begin{tabular}{|l | l|}
+                        \hline
+                Motif de réunion & Réunion hebdomadaire \\
+                        \hline
+                Durée de la réunion & 1h \\
+                        \hline
+                Lieu & Visio (discord) \\
+                        \hline
+                Présent & EM \\
+                        & BS \\
+                        & ED \\
+                        & TB  \\
+                        \hline
+                Retard  & / \\
+                        \hline
+                Absent  & / \\
+                        \hline
+                \end{tabular}
+
+
+\section{Ordre du jour}
+\begin{itemize}
+        \item Frontend
+        \item Point sur l'algorithmique
+        \item Features page admin / profil
+        \item Développement magasin
+\end{itemize}
+
+\rule{\linewidth}{0.5mm} \bigskip
+\section{Frontend}
+\ \\
+
+Retour sur la page de login et de sign up faites par EM : Tout le monde est en accord avec la "DA", on reste là-dessus. \\
+
+Une demande de modification : interchanger la section signup et l'image. \\
+
+Idée de TB pour des sources d'inspiration : 
+\begin{itemize}
+        \item \url{https://www.paris.fr/pages/la-collecte-44}
+        \item \url{https://www.grandlyon.com/services/jours-de-collecte-des-dechets }
+        \item \url{https://sitetom.syctom-paris.fr/les-dechets/les-categories-de-dechets.html}
+\end{itemize}
+
+\uline{Liste pages à faire :} (\sout{déjà faite})
+\begin{itemize}
+        \item Page d'accueil
+        \item About us (cf sign up)
+        \item \sout{sign up}
+        \item \sout{log in}
+        \item profil
+        \item admin
+        \item shop
+\end{itemize}
+
+\rule{\linewidth}{0.5mm} \bigskip
+\section{Algorithmie}
+\ \\
+
+Form : A faire (voir comment gérer les transmissions) \\
+
+ED : Voir comment récuperer les données d'un form et les mettre dans la BD (avec flask) \\
+
+EM : Début de l'interface de la BD faite. (stage initial), en cours de réaprentissage de sqlite3 \\
+
+EM, ED : Voir comment faire du multiprocessing en python!
+
+Knapsack : fait\ \\
+
+Voyageur de commerce : fait
+
+
+\rule{\linewidth}{0.5mm} \bigskip
+\section{Features}
+\subsection{Page profil}
+\begin{itemize}
+        \item Statistiques (volume ramassé depuis le début, date du dernier ramassage de la poubelle (et historique des ramassages))
+        \item statistiques du volume pour chacune des poubelles (carton, recyclage, ordures menagères)
+        \item Volume actuelle des poubelles
+        \item Suppression du compte, changement mdp, rgpd, request les données que possede l'entreprise, ...
+        \item Map avec sa / ses poubelles ?
+\end{itemize}
+
+\subsection{Page admin}
+\begin{itemize}
+        \item Map avec toutes les poubelles dans un iframe (EM gère)
+        \item Statistiques de chacune des poubelles
+        \item Date des derniers ramassages
+        \item Gestion des profils (afficher les clients, ban, ...)
+        \item Afficher la planification des prochains ramassages (actualisé en "temps réel" par l'algo)
+\end{itemize}
+
+
+
+\rule{\linewidth}{0.5mm} \bigskip
+\section{Développement magasin}
+\begin{itemize}
+        \item Mention géolocalisation 
+        \item Une poubelle par type (+ différents volumes, + différentes couleurs) 
+        \item Panier (ajout, suppression)
+\end{itemize}
+
+
+\rule{\linewidth}{0.5mm} \bigskip
+\section{ToDO-List}
+\begin{itemize}
+        \item Page sign up : changer image et form de sign up 
+        \item créer la DB
+        \item TB, BS : apprendre HTML et CSS (flexbox, grid)
+        \item ED, EM : voir comment utiliser flask avec les form.
+\end{itemize}
+
+
+
+\end{document}

@@ -9,6 +9,7 @@
 
 \usepackage[dvipsnames]{xcolor}
 \colorlet{darkblue}{blue!60!black}
+\colorlet{darkgreen}{green!60!black}
 
 \usepackage{graphicx} %Loading the package
 \graphicspath{{data/}} %Setting the graphicspath
@@ -111,126 +112,87 @@ colframe=red!55!black}
 \pagestyle{plain}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{PPII \\ -- \\ Compte Rendu 2}
-\date{12 / 11 / 2023}
-\author{SB}
+\title{PPII \\ -- \\ Compte Rendu 6}
+\date{18 / 12 / 2023}
+\author{BS}
 
 \begin{document}
 \maketitle
 
 \tableofcontents \bigskip
 
-\rule{\linewidth}{0.5mm} \bigskip
+\noindent\rule{\linewidth}{0.5mm} \bigskip
 
                 \begin{tabular}{|l | l|}
                         \hline
-                Motif de reunion & Réunion hebdomadaire \\
+                Motif de réunion & Réunion hebdomadaire \\
                         \hline
-                Lieu & Visio (discord) \\
+                Durée de la réunion & 15min \\
+                        \hline
+                Lieu & Présentiel \\
                         \hline
                 Présent & EM \\
-                        & BS \\
                         & ED \\
                         & TB  \\
+                        & BS  \\
                         \hline
                 Retard  & / \\
                         \hline
-                Absent  & / \\
+                Absent  & \\
                         \hline
                 \end{tabular}
 
 
 \section{Ordre du jour}
 \begin{itemize}
-        \item Frontend
-        \item Point sur l'algorithmie
-        \item Features page admin / profil
-        \item Developpement magasin
+        \item Retour sur la ToDO-List
 \end{itemize}
 
-\rule{\linewidth}{0.5mm} \bigskip
-\section{Frontend}
-\ \\
-
-Retour sur la page de login et de sign up faites par EM : Tout le monde est en accord avec la "DA", on reste la dessus \\
-
-Une demande de modification : intechanger la section signup et l'image \\
-
-Idée de TB pour inspiration : 
+\noindent\rule{\linewidth}{0.5mm} \bigskip
+\section{Retour sur la ToDO-List}
 \begin{itemize}
-        \item \url{https://www.paris.fr/pages/la-collecte-44}
-        \item \url{https://www.grandlyon.com/services/jours-de-collecte-des-dechets }
-        \item \url{https://sitetom.syctom-paris.fr/les-dechets/les-categories-de-dechets.html}
+        \item Affichage prix : ok
+        \item Page shop faite
+        \\
+        \item Historique achat : ok
+        \\
+        \item Logo : l'ami d'Ewan ne le fera pas... On va voir avec de la génération IA 
 \end{itemize}
 
-\uline{Liste pages à faire :} (\sout{deja faite})
-\begin{itemize}
-        \item Page d'accueil
-        \item About us (cf sign up)
-        \item \sout{sign up}
-        \item \sout{log in}
-        \item profil
-        \item admin
-        \item shop
-\end{itemize}
-
-\rule{\linewidth}{0.5mm} \bigskip
-\section{Algorithmie}
-\ \\
-
-Form : A faire (voir comment gerer les encryptions de passwords) \\
-
-ED : Voir comment recuperer les données d'un form et les mettre dans la BD (avec flask) \\
-
-EM : Debut de l'interface de la BD faite. (stage initial), en cours de réaprentissage de sqlite3 \\
-
-EM, ED : Vori comment faire du multiprocessing en python
-
-Knapsack : fait\ \\
-
-Voyageur de commerce : fait
-
-
-\rule{\linewidth}{0.5mm} \bigskip
-\section{Features}
-\subsection{Page profil}
-\begin{itemize}
-        \item Statistiques (volume ramasser depuis le début, date du derniers ramassge (et historique des ramassages))
-        \item statistiques du volume pour chacune des poubelles (carton, recyclage, ordure menagère)
-        \item Volume actuelle des poubelles
-        \item Suppression du compte, changement mdp, rgpd, request les donnees que possede l'entreprise, ...
-        \item Map avec sa / ses poubelles
-\end{itemize}
-
-\subsection{Page admin}
-\begin{itemize}
-        \item Map avec sa poubelle
-        \item Statistiques de chacune des poubelles
-        \item Date des derniers ramassages
-        \item Gestion des profils (afficher les clients, ban, ...)
-        \item Afficher la plannification des prochains ramassages (actualisé en "temps réel" par l'algo)
-\end{itemize}
-
-
-
-\rule{\linewidth}{0.5mm} \bigskip
-\section{Developpement magasin}
-\begin{itemize}
-        \item Mention Geolocalisation 
-        \item Une poubelle par type (+ différents volumes, + différentes couleurs) 
-        \item Panier (ajout, suppression)
-\end{itemize}
-
-
-\rule{\linewidth}{0.5mm} \bigskip
+\noindent\rule{\linewidth}{0.5mm} \bigskip
 \section{ToDO-List}
+\subsection*{Frontend}
 \begin{itemize}
-        \item Page sign up : changer image et form de sign up 
-        \item créer la DB
-        \item TB, BS : apprendre HTML et CSS (flexbox, grid)
-        \item ED, EM : voir comment utiliser flask avec les form.
+        \item \textcolor{red}{Gestion des comptes utilisateurs (côté admin)}
+        \item \textcolor{red}{Améliorer le header}
+        \item \textcolor{blue}{Finir le footer (contact, qu’est ce qu’on dit?)}
+        \item \textcolor{blue}{Homepage à mettre en place}
+        \item \textcolor{blue}{Page profil}
+        \item \textcolor{blue}{Page Admin}
 \end{itemize}
 
+\subsection*{Backend}
+\begin{itemize}
+        \item \textcolor{red}{Gestion des comptes utilisateurs (côté admin)}
+        \item \textcolor{darkgreen}{Shop}
+        \item \textcolor{darkgreen}{Page profil}
+        \item \textcolor{darkgreen}{panier et validation}
+        \item \textcolor{blue}{gestion compte : changement mdp, suppression de compte}
+\end{itemize}
 
+\subsection*{Autres}
+\begin{itemize}
+        \item \textcolor{blue}{logo}
+        \item \textcolor{blue}{slogan}
+        \item \textcolor{blue}{nom}
+\end{itemize}
+
+\textcolor{red}{A faire dans la semaine} \\
+\textcolor{darkgreen}{Important, mais moins urgent} \\
+\textcolor{blue}{Moins urgent}
+\\
+\bigskip
+
+Petite réunion dûe aux partiels.
 
 \end{document}
