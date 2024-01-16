@@ -1,31 +1,33 @@
 {%extends "base.html"%}
 {%block title%}Shop {%endblock%}
-{%block stylesheets%} <link href="/static/css/cart_success.css" rel="stylesheet"> {%endblock%}
+{%block stylesheets%} 
+<link href="/static/css/cart_success.css" rel="stylesheet">
+{%endblock%}
 {%block content%}
-    <h1 class="h1-color text-center"> Merci de vos achats ! </h1>
-    <div class="flex-column flex-center">
-      <div class="text-center">
-         <h3> Votre commande a bien été prise en compte. </h3>
-         <h3> Vous recevrez un mail de confirmation dans les prochaines minutes. </h3>
-      </div>
-      <div class="text-center">
-         <h3 class="h1-color"> Voici un récapitulatif de votre commande : </h3>
-         <ul class="itemList">
-            {% for product in products %}
-               <li class="item fadein-animation">
-                  <img class = "itemPic" src="/static/images/products/{{ product.img_url}}" alt="Poubelle Grise" style="max-width: 300px;">
-                  <section class="itemInfo">
-                     <h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
-                     <p class="itemDesc">
-                        {{ product.desc }}
-                     </p>
-                  </section>
-                  <section class="itemBuying">
-                     <p class = "itemPrice"> {{ product.price }}€ </p>
-                  </section>
-               </li>
-            {% endfor  %}
-         </ul>
-      </div>
-    </div>
+<h1 class="h1-color text-center"> Merci de vos achats ! </h1>
+<div class="flex-column flex-center">
+	<div class="text-center">
+		<h3> Votre commande a bien été prise en compte. </h3>
+		<h3> Vous recevrez un mail de confirmation dans les prochaines minutes. </h3>
+	</div>
+	<div class="text-center">
+		<h3 class="h1-color"> Voici un récapitulatif de votre commande : </h3>
+		<ul class="itemList">
+			{% for product in products %}
+			<li class="item fadein-animation">
+				<img class = "itemPic" src="/static/images/products/{{ product.img_url}}" alt="Poubelle Grise" style="max-width: 300px;">
+				<section class="itemInfo">
+					<h2 class="itemName"> {{ product.product_name }} - {{ product.volume }}L </h2>
+					<p class="itemDesc">
+						{{ product.desc }}
+					</p>
+				</section>
+				<section class="itemBuying">
+					<p class = "itemPrice"> {{ product.price }}€ </p>
+				</section>
+			</li>
+			{% endfor  %}
+		</ul>
+	</div>
+</div>
 {%endblock%}

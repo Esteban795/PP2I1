@@ -9,8 +9,8 @@
 <div class="flex-row">
 	<div class="column" style="position:relative;">
 		{% if bins_count > 0 %}
-			<img class="btn-prev slider-buttons svg-white" src="/static/images/chevron-left.svg" alt="chevron-left">
-			<img class="btn-next slider-buttons svg-white" src="/static/images/chevron-right.svg" alt="chevron-right">
+		<img class="btn-prev slider-buttons svg-white" src="/static/images/chevron-left.svg" alt="chevron-left">
+		<img class="btn-next slider-buttons svg-white" src="/static/images/chevron-right.svg" alt="chevron-right">
 		{% endif %}
 		<div class="slide stats flex-column">
 			<h1 class="title text-white text-center">
@@ -78,23 +78,23 @@
 								<div class="stat-desc-container flex-center">
 									<p class="s	box-sizing: border-box;tat-desc flex-center">
 										{% if volume_infos.picked_up_volume > 0 %}
-											Vous avez recyclé  {{ recycled_percentage }}% de vos déchets.
-											{% if recycled_percentage > 80 %}
-												Un vrai professionnel du tri. Bravo !
-											{% elif recycled_percentage > 60 %}
-												Il vous reste encore des choses à apprendre, mais on est déjà épatés !
-											{% elif recycled_percentage > 40 %}
-												Vous êtes sur la bonne voie ! Continuez à trier vos déchets, et à les déposer dans les bonnes poubelles.
-											{% elif recycled_percentage > 20 %}
-												Ne vous découragez pas ! Trier, ce n'est pas aussi difficile que ça en a l'air.
-											{% elif recycled_percentage > 0 %}
-												C'est un bon début, mais on est sûr que vous pouvez faire mieux !
-											{% else %}
-												Vous n'avez pas encore recyclé de déchets. Il est temps de vous y mettre !
-												Tenez, voici <a href="/articles/"> une ressource</a> qui contient plein d'informations!
-											{% endif %}
+										Vous avez recyclé  {{ recycled_percentage }}% de vos déchets.
+										{% if recycled_percentage > 80 %}
+										Un vrai professionnel du tri. Bravo !
+										{% elif recycled_percentage > 60 %}
+										Il vous reste encore des choses à apprendre, mais on est déjà épatés !
+										{% elif recycled_percentage > 40 %}
+										Vous êtes sur la bonne voie ! Continuez à trier vos déchets, et à les déposer dans les bonnes poubelles.
+										{% elif recycled_percentage > 20 %}
+										Ne vous découragez pas ! Trier, ce n'est pas aussi difficile que ça en a l'air.
+										{% elif recycled_percentage > 0 %}
+										C'est un bon début, mais on est sûr que vous pouvez faire mieux !
 										{% else %}
-											Vous n'avez pas encore vidé une seule poubelle de chez nous. Allons-y !
+										Vous n'avez pas encore recyclé de déchets. Il est temps de vous y mettre !
+										Tenez, voici <a href="/articles/"> une ressource</a> qui contient plein d'informations!
+										{% endif %}
+										{% else %}
+										Vous n'avez pas encore vidé une seule poubelle de chez nous. Allons-y !
 										{% endif %}
 									</p>
 								</div>
@@ -148,7 +148,6 @@
 	</div>
 	<div class="column" id="map" style="background-color: white;z-index: 0;"></div>
 </div>
-
 <div class="purchase-history-container flex-column">
 	<h1> Historique des achats </h1>
 	<div class="flex-row add-purchase-container">
@@ -178,24 +177,24 @@
 				</div>
 				<div id="checkboxes">
 					<label class="label-columns-checkboxes">
-						<input class="columns-checkboxes" type="checkbox" value="date" checked/> Date
+					<input class="columns-checkboxes" type="checkbox" value="date" checked/> Date
 					</label>
 					<label class="label-columns-checkboxes">
-						<input class="columns-checkboxes" type="checkbox" value='client-name' checked/> Client
+					<input class="columns-checkboxes" type="checkbox" value='client-name' checked/> Client
 					</label>
 					<label class="label-columns-checkboxes">
-						<input class="columns-checkboxes" type="checkbox" value="email" checked/> Email 
+					<input class="columns-checkboxes" type="checkbox" value="email" checked/> Email 
 					</label>
 					<label class="label-columns-checkboxes">
-						<input class="columns-checkboxes" type="checkbox" value="price" checked/> Prix
+					<input class="columns-checkboxes" type="checkbox" value="price" checked/> Prix
 					</label>
 				</div>
-			</div>			
+			</div>
 		</div>
 		<div class="flex-column">
 			<label for="how-many-results" class="text-center"> Nombre de résultats : </label>
 			<select id="number-of-results-select" name="how-many-results" style="width: fit-content;">
-				<optgroup label="Afficher au plus..."> 
+				<optgroup label="Afficher au plus...">
 					<option value="all" selected> Tous les résultats </option>
 					<option>5</option>
 					<option>6</option>
@@ -219,24 +218,23 @@
 			</thead>
 			<tbody>
 				{% if purchases == [] %}
-					<tr>
-						<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
-					</tr>
+				<tr>
+					<td class="text-center" colspan="5"> Aucune transaction n'a été effectuée. </td>
+				</tr>
 				{% else %}
-						{% for purchase in purchases %}
-							<tr>
-								<td> {{ purchase.bought_at }} </td>
-								<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
-								<td> {{ purchase.email }} </td>
-								<td> {{ purchase.price }}€ </td>
-							</tr>
-						{% endfor %}
+				{% for purchase in purchases %}
+				<tr>
+					<td> {{ purchase.bought_at }} </td>
+					<td> {{ purchase.last_name }} {{ purchase.first_name }} </td>
+					<td> {{ purchase.email }} </td>
+					<td> {{ purchase.price }}€ </td>
+				</tr>
+				{% endfor %}
 				{% endif %}
 			</tbody>
 		</table>
 	</div>
 </div>
-
 <div class = "separation-line"></div>
 <div class = "profile-management">
 	<h1 id = "title-management">Mon profil : </h1>
@@ -278,8 +276,7 @@
 			<div class="flex-center">
 				<input class="submit-button" id="password-submit" type="submit" value="Valider" onclick="PasswordChangeConfirmationDialog.showModal(); return false;">
 			</div>
-			
-		</div>	
+		</div>
 	</form>
 	{% if error_passwordreset %}
 	<p class="error"> {{error_passwordreset}} </p>
