@@ -11,7 +11,7 @@ class Client(UserMixin):
                  created_at : float = dt.timestamp(dt.now()),
                  picked_up_volume : int = 0,
                  recycled_volume : int = 0,
-                 status : bool = False):
+                 status : int = 0):
         self.client_id = client_id
         self.first_name = first_name
         self.last_name = last_name

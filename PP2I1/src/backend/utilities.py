@@ -28,7 +28,7 @@ def runLengthDecoding(d : dict[int,int]) -> list[int]:
             lst.append(i)
     return lst
 
-def getLatLongFromStreetAdress(address : str) -> tuple[float,float] or tuple[None,None]:
+def getLatLongFromStreetAdress(address : str):
     url = f'https://nominatim.openstreetmap.org/search?q={urllib.parse.quote(address)}&format=json'
     response = requests.get(url).json()
     if len(response) == 0:
@@ -57,6 +57,7 @@ def generateImgUUID(filename : str) -> str:
 def admin_required(func):
     @wraps(func)
     def wrapper(*args,**kwargs):
+        print(current_user.is_authenticated,current_user.status)
         if current_user.is_authenticated and current_user.status == 1:
             return func(*args, **kwargs)
         abort(403)

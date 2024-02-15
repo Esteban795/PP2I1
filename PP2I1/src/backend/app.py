@@ -25,9 +25,10 @@ CREATION_DATE = dt.datetime(2015,11,1)
 
 @login_manager.user_loader
 def load_user(client_id : int):
-    cursor.execute("SELECT client_id,first_name,last_name,email,pwd,created_at,recycled_volume,status FROM clients WHERE client_id = ?", (client_id,))
+    cursor.execute("SELECT * FROM clients WHERE client_id = ?", (client_id,))
     db_data = cursor.fetchone()
     if db_data is not None:
+        print(db_data)
         client = Client(*db_data)
         return client
     return None
@@ -428,7 +429,7 @@ def getUsers():
     return [dict(zip(DATA_FIELDS, user)) for user in cursor.fetchall()]
 
 @app.route('/admin/')
-#@utilities.admin_required
+@utilities.admin_required
 def admin():
     route = session.get('route',None)
     error = request.args.get('error',None)
@@ -443,7 +444,7 @@ def admin():
     return render_template('admin.html',trucks=trucks,route=route,bins_data=bins_data,products=products,error=error,waste_types=waste_types,purchases=purchases,derror=derror,user_list=user_list,error_deleteUser=error_deleteUser)
 
 @app.route('/admin/add-product/',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def add_product():
     if request.method == 'POST':
         name = request.form['product-name']
@@ -464,12 +465,12 @@ def add_product():
     return render_template('admin.html') #no get request here
 
 @app.route('/admin/modify-product/',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def modify_product_not_selected(): #PAS ENCORE FAIT
     return redirect(url_for('admin',error="Veuillez sélectionner un produit à modifier."))
 
 @app.route('/admin/modify-product/<int:product_id>',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def modify_product(product_id : int):
     if request.method == 'POST':
         f = request.files['img']
@@ -504,7 +505,7 @@ def modify_product(product_id : int):
     return render_template('admin.html') #no get request here
 
 @app.route('/admin/delete/<int:product_id>',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def delete_product(product_id : int):
     if request.method == 'POST':
         cursor.execute("SELECT img_url FROM products WHERE product_id = ?",(product_id,))
@@ -516,12 +517,12 @@ def delete_product(product_id : int):
     return redirect(url_for('admin'))
 
 @app.route('/admin/add-transaction/',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def add_transaction_not_selected():
     return redirect(url_for('admin',derror="Veuillez sélectionner un produit."))
 
 @app.route('/admin/add-transaction/<int:product_id>',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def add_transaction(product_id : int):
     if request.method == 'POST':
         date = request.form['date-transac']
@@ -539,7 +540,7 @@ def add_transaction(product_id : int):
     return redirect(url_for('admin')) #get request redirected directly
 
 @app.route("/admin/purchases/delete-transaction/<int:bin_id>",methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def delete_purchase(bin_id : int):
     if request.method == 'POST':
         cursor.execute("DELETE FROM pickup WHERE bin_id = ?",(bin_id,))
@@ -549,12 +550,12 @@ def delete_purchase(bin_id : int):
     return redirect(url_for('admin'))
 
 @app.route('/admin/purchases/modify-purchases/<int:bin_id>',methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def modify_purchase(bin_id : int): #PAS FAIT
     pass
 
 @app.route("/admin/start-pickup/",methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def start_pickup():
     if request.method == 'POST':
         truck_numberplate = request.form['truck']
@@ -595,7 +596,7 @@ def start_pickup():
 
 
 @app.route('/admin/ban-user', methods=('GET','POST')) 
-#@utilities.admin_required
+@utilities.admin_required
 def ban_user(client_id: int):
     if request.method == 'POST':
         cursor.execute('UPDATE clients SET status = ? WHERE client_id = ? ',(-1, client_id))
@@ -604,7 +605,7 @@ def ban_user(client_id: int):
     return render_template('admin.html')
 
 @app.route('/admin/ban-user/<client_id>', methods=('GET','POST'))
-#@utilities.admin_required
+@utilities.admin_required
 def banUser(client_id):
     if request.method == 'POST':
         confirm_password = request.form['password']
@@ -620,7 +621,7 @@ def banUser(client_id):
     return redirect(url_for('admin',user=current_user))
 
 @app.route('/admin/unban-user/<client_id>', methods=('GET','POST')) 
-#@utilities.admin_required
+@utilities.admin_required
 def unbanUser(client_id: int):
     if request.method == 'POST':
         confirm_password = request.form['password']
@@ -636,7 +637,7 @@ def unbanUser(client_id: int):
     return redirect(url_for('admin',user=current_user))
 
 @app.route('/admin/make_admin/<client_id>', methods=('GET','POST')) 
-#@utilities.admin_required
+@utilities.admin_required
 def make_admin(client_id: int):
     if request.method == 'POST':
         confirm_password = request.form['password']
@@ -652,7 +653,7 @@ def make_admin(client_id: int):
     return redirect(url_for('admin',user=current_user))
 
 @app.route('/admin/unrank_admin/<int:client_id>', methods=('GET','POST')) 
-#@utilities.admin_required
+@utilities.admin_required
 def unrank_admin(client_id: int):
     if request.method == 'POST':
         confirm_password = request.form['password']
