@@ -4,3 +4,5 @@ CREATE TABLE waste_type(waste_type_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL
 CREATE TABLE bins(bin_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,owner_id REFERENCES clients(client_id),product_id REFERENCES products(product_id),lat REAL, long REAL, used INTEGER DEFAULT 0,last_emptied DATETIME, last_emptied_by REFERENCES trucks(truck_id) DEFAULT NULL,bought_at DATETIME DEFAULT CURRENT_TIMESTAMP, waste_id REFERENCES waste_type(waste_type_id))
 CREATE TABLE pickup(truck_id REFERENCES trucks(truck_id), bin_id REFERENCES bins(bin_id), pickup_time DATETIME DEFAULT CURRENT_TIMESTAMP,  picked_up INTEGER)
 CREATE TABLE products(product_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, product_name VARCHAR(100), price REAL, img_url VARCHAR(100),desc TEXT, volume INTEGER, stock INTEGER)
+INSERT INTO trucks(numberplate,capacity) VALUES ("7983ZH67",1000)
+INSERT INTO waste_type(waste_type_name) VALUES ("Ordures ménagères")
